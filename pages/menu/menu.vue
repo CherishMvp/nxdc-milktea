@@ -21,8 +21,7 @@
               </view>
             </view>
             <view class="font-size-sm text-color-assist overflow-hidden text-truncate">
-              由<text class="text-color-base" style="margin: 0 10rpx">{{ store.name }}</text
-              >配送
+              由<text class="text-color-base" style="margin: 0 10rpx">{{ store.name }}</text>配送
             </view>
           </view>
           <view class="right">

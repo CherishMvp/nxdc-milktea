@@ -8,7 +8,7 @@ Vue.config.productionTip = false;
 
 App.mpType = 'app';
 
-Vue.prototype.$store = store;
+Vue.prototype.$store = store; //全局挂载store到$store上
 Vue.prototype.$api = api;
 Vue.prototype.$util = util;
 
