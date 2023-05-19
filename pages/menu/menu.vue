@@ -21,7 +21,8 @@
               </view>
             </view>
             <view class="font-size-sm text-color-assist overflow-hidden text-truncate">
-              由<text class="text-color-base" style="margin: 0 10rpx">{{ store.name }}</text>配送
+              由<text class="text-color-base" style="margin: 0 10rpx">{{ store.name }}</text
+              >配送
             </view>
           </view>
           <view class="right">
@@ -420,6 +421,7 @@
         if (good.use_property) {
           let props = [];
           good.property.forEach(({ values }) => {
+            console.log('values', values);
             values.forEach((value) => {
               if (value.is_default) {
                 props.push(type === 'text' ? value.value : value.id);
