@@ -76,6 +76,7 @@
     },
     onLoad() {
       this.member = this.$store.state.member;
+      console.log('member: ', this.member);
     },
     methods: {
       getDate(type) {

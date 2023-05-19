@@ -162,24 +162,53 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex';
+  import { mapState, mapGetters, mapMutations } from 'vuex';
+  import { yunApi } from '@/api/index';
   export default {
     data() {
       return {
+        updateMemberInfo: '',
         newIcon: 'https://img-shop.qmimg.cn/s16/images/2020/05/12/ffb0613dded704b6.png',
       };
     },
     computed: {
+      // 只可以写这两种钩子，
+      // ...mapMutations(['SET_MEMBER']),类似要写在methods中
+
       ...mapState(['member']),
       ...mapGetters(['isLogin']),
+      // 获取用户的成长值，如410/410+90=410/500
       growthValue() {
         if (!this.isLogin) return 0;
         const { currentValue, needValue } = this.member;
+        console.log('current value: ' + currentValue, 'need value: ' + needValue);
         return (currentValue / (currentValue + needValue)) * 100;
       },
     },
     onLoad() {},
+    // 页面一显示就重新刷新获取会员详细信息
+    onShow() {
+      console.log(3);
+      this.updateInfo();
+    },
     methods: {
+      ...mapMutations(['SET_MEMBER']),
+      updateInfo() {
+        var that = this;
+        console.log('重新根据用户openID获取新的数据，写入缓存中');
+        console.log('yunApi', yunApi);
+        uni.request({
+          url: yunApi + '/member',
+          method: 'GET',
+          success: (success) => {
+            console.log('success', success);
+            that.updateMemberInfo = success.data;
+            that.SET_MEMBER(that.updateMemberInfo);
+            uni.setStorageSync('userinfo', that.updateMemberInfo);
+            console.log('that.updateMemberInfo', uni.getStorageSync('userinfo'));
+          },
+        });
+      },
       login() {
         uni.navigateTo({
           url: '/pages/login/login',

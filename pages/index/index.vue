@@ -21,8 +21,9 @@
       <view class="info">
         <view class="integral_section" @tap="integrals">
           <view class="top">
+            <!-- 积分优先取缓存中的值 -->
             <text class="title">我的积分</text>
-            <text class="value">411</text>
+            <text class="value">{{ pointNum }}</text>
           </view>
           <view class="bottom">
             进入积分商城兑换奈雪券及周边好礼
@@ -82,14 +83,21 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex';
+  import { localInfo } from '@/api/index';
 
   export default {
     data() {
-      return {};
+      return {
+        pointNum: '',
+      };
     },
     computed: {
       ...mapState(['member']),
       ...mapGetters(['isLogin']),
+    },
+    onShow() {
+      this.pointNum = localInfo('userinfo').pointNum;
+      console.log('index onLoad', localInfo('userinfo').pointNum);
     },
     methods: {
       takein() {

@@ -13,7 +13,7 @@ const store = new Vuex.Store({
     orderType: 'takein',
     address: {},
     addresses: addresses,
-    member: {},
+    member: uni.getStorageSync('userinfo') || {},
     order: {},
   },
   // 和pinia一样，相当于是计算属性computed

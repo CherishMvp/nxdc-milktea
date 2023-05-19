@@ -22,7 +22,8 @@
             </view>
             <view class="font-size-sm text-color-assist overflow-hidden text-truncate">
               由<text class="text-color-base" style="margin: 0 10rpx">{{ store.name }}</text
-              >配送
+              >配送 由<text class="text-color-base" style="margin: 0 10rpx">{{ store.name }}</text>
+              配送
             </view>
           </view>
           <view class="right">
@@ -34,35 +35,44 @@
             </view>
           </view>
         </view>
-        <view class="coupon">
+        <!-- 横幅公告 -->
+        <view class="coupon" @click="buyCard">
           <text class="title">"霸气mini卡"超级购券活动，赶紧去购买</text>
           <view class="iconfont iconarrow-right"></view>
         </view>
       </view>
+      <!-- 整个下方内容区 -->
       <view class="content">
-        <scroll-view class="menus" :scroll-into-view="menuScrollIntoView" scroll-with-animation scroll-y>
+        <!-- 左侧菜单menu -->
+        <scroll-view class="menus" :scroll-into-view="menuScrollIntoView" show-scrollbar="false" scroll-with-animation scroll-y>
           <view class="wrapper">
-            <view class="menu" :id="`menu-${item.id}`" :class="{ current: item.id === currentCateId }" v-for="(item, index) in goods" :key="index" @tap="handleMenuTap(item.id)">
+            <!-- 此处要注意 currentCateId和item.id都要为number类型；apifox设为了string-->
+            <view class="menu" :id="`menu-${item.id}`" :class="{ current: item.id == currentCateId }" v-for="(item, index) in goods" :key="index" @tap="handleMenuTap(item.id)">
               <text>{{ item.name }}</text>
               <view class="dot" v-show="menuCartNum(item.id)">{{ menuCartNum(item.id) }}</view>
             </view>
           </view>
         </scroll-view>
         <!-- goods list begin -->
-        <scroll-view class="goods" scroll-with-animation scroll-y :scroll-top="cateScrollTop" @scroll="handleGoodsScroll">
+        <!-- 右侧商品列表 -->
+        <scroll-view class="goods" scroll-with-animation scroll-y :scroll-top="cateScrollTop" @scroll="handleGoodsScroll" scrolltolower="scrollToBottom">
           <view class="wrapper">
+            <!-- 商品列表最上方的广告轮播图 -->
             <swiper class="ads" id="ads" autoplay :interval="3000" indicator-dots>
               <swiper-item v-for="(item, index) in ads" :key="index">
-                <image :src="item.image"></image>
+                <image :src="item.image" fade-show="true" @tap="goImageDetail(item)"></image>
               </swiper-item>
             </swiper>
+            <!-- 右侧商品列表 -->
             <view class="list">
               <!-- category begin -->
               <view class="category" v-for="(item, index) in goods" :key="index" :id="`cate-${item.id}`">
+                <!-- 每种商品的商品头 -->
                 <view class="title">
                   <text>{{ item.name }}</text>
                   <image :src="item.icon" class="icon"></image>
                 </view>
+                <!-- 详细内容 -->
                 <view class="items">
                   <!-- 商品 begin -->
                   <view class="good" v-for="(good, key) in item.goods_list" :key="key">
@@ -72,15 +82,20 @@
                       <text class="tips">{{ good.content }}</text>
                       <view class="price_and_action">
                         <text class="price">￥{{ good.price }}</text>
+                        <!-- 判断是否是添加了购物车内容的状态 -->
+                        <!-- 如果未选择，则显示选规格等操作 -->
                         <view class="btn-group" v-if="good.use_property">
                           <button type="primary" class="btn property_btn" hover-class="none" size="mini" @tap="showGoodDetailModal(item, good)"> 选规格 </button>
                           <view class="dot" v-show="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
                         </view>
+                        <!-- 进行商品添加增删 -->
                         <view class="btn-group" v-else>
+                          <!-- 左侧减少商品按钮 -->
                           <button type="default" v-show="goodCartNum(good.id)" plain class="btn reduce_btn" size="mini" hover-class="none" @tap="handleReduceFromCart(item, good)">
                             <view class="iconfont iconsami-select"></view>
                           </button>
                           <view class="number" v-show="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
+                          <!-- 右侧增加商品按钮,初始化时默认给1 -->
                           <button type="primary" class="btn add_btn" size="min" hover-class="none" @tap="handleAddToCart(item, good, 1)">
                             <view class="iconfont iconadd-select"></view>
                           </button>
@@ -100,11 +115,19 @@
       <!-- content end -->
       <!-- 购物车栏 begin -->
       <view class="cart-box" v-if="cart.length > 0">
+        <view @tap="clickCard" class="isfree-card" v-if="isFreeCard">
+          <uni-icons type="wallet" color="#3de5" size="24" />
+          卡券{{ cardNumber }}张
+        </view>
         <view class="mark">
           <image src="/static/images/menu/cart.png" class="cart-img" @tap="openCartPopup"></image>
           <view class="tag">{{ getCartGoodsNumber }}</view>
         </view>
-        <view class="price">￥{{ getCartGoodsPrice }}</view>
+        <view class="price">
+          ￥{{ getCartGoodsPrice }}
+          <view style="font-size: 30rpx; font-weight: 300; text-decoration: line-through; margin-left: 8rpx">￥{{ 457 }}</view>
+        </view>
+
         <button type="primary" class="pay-btn" @tap="toPay" :disabled="disabledPay">
           {{ disabledPay ? `差${spread}元起送` : '去结算' }}
         </button>
@@ -164,6 +187,53 @@
     </modal>
     <!-- 商品详情模态框 end -->
     <!-- 购物车详情popup -->
+    <uni-popup type="bottom" background-color="#fff" ref="popup" :mask-click="true" @maskClick="closePopup">
+      <view class="cart-popup">
+        <view class="top" @tap="handleCartClear">
+          <uni-icons type="trash" color="#adb838" size="26"></uni-icons>
+          <text>清空</text>
+        </view>
+        <scroll-view class="cart-list" scroll-y>
+          <view class="wrapper">
+            <view class="item" v-for="(item, index) in cart" :key="index">
+              <view class="left">
+                <view class="name">{{ item.name }}</view>
+                <view class="props">{{ item.props_text }}</view>
+              </view>
+              <view class="center">
+                <text>￥{{ item.price }}</text>
+              </view>
+              <view class="right">
+                <button type="default" plain size="mini" class="btn" hover-class="none" @tap="handleCartItemReduce(index)">
+                  <view class="iconfont iconsami-select"></view>
+                </button>
+                <view class="number">{{ item.number }}</view>
+                <button type="primary" class="btn" size="min" hover-class="none" @tap="handleCartItemAdd(index)">
+                  <view class="iconfont iconadd-select"></view>
+                </button>
+              </view>
+            </view>
+            <view class="item" v-if="orderType == 'takeout' && store.packing_fee">
+              <view class="left">
+                <view class="name">包装费</view>
+              </view>
+              <view class="center">
+                <text>￥{{ parseFloat(store.packing_fee) }}</text>
+              </view>
+              <view class="right invisible">
+                <button type="default" plain size="mini" class="btn" hover-class="none">
+                  <view class="iconfont iconsami-select"></view>
+                </button>
+                <view class="number">1</view>
+                <button type="primary" class="btn" size="min" hover-class="none">
+                  <view class="iconfont iconadd-select"></view>
+                </button>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </uni-popup>
     <popup-layer direction="top" :show-pop="cartPopupVisible" class="cart-popup">
       <template slot="content">
         <view class="top">
@@ -229,7 +299,12 @@
     },
     data() {
       return {
+        h: -10,
+        isFreeCard: true,
+        cardNumber: 0,
+        scrollTop: '',
         goods: [], //所有商品
+        // 右侧商品列表最上方轮播图广告图片链接
         ads: [
           { image: 'https://img-shop.qmimg.cn/s23107/2020/04/27/4ebdb582a5185358c4.jpg?imageView2/2/w/600/h/600' },
           { image: 'https://images.qmai.cn/s23107/2020/05/08/c25de6ef72d2890630.png?imageView2/2/w/600/h/600' },
@@ -238,10 +313,10 @@
           { image: 'https://img-shop.qmimg.cn/s23107/2020/04/17/8aeb78516d63864420.jpg?imageView2/2/w/600/h/600' },
         ],
         loading: true,
-        currentCateId: 6905, //默认分类
+        currentCateId: 88, //默认分类；默认分类设置为最上方的那个分类，设为88
         cateScrollTop: 0,
         menuScrollIntoView: '',
-        cart: [], //购物车
+        cart: [], //购物车；可以考虑从缓存读取数据，若缓存没有再从服务器读取，同时考虑及时更新缓存内容
         goodDetailModalVisible: false, //是否饮品详情模态框
         good: {}, //当前饮品
         category: {}, //当前饮品所在分类
@@ -295,6 +370,13 @@
     methods: {
       ...mapMutations(['SET_ORDER_TYPE']),
       ...mapActions(['getStore']),
+      buyCard() {
+        console.log(1);
+        uni.navigateTo({ url: '/pages/giftcard/giftcard' });
+      },
+      goImageDetail(item) {
+        console.log('前往轮播图活动页面', item);
+      },
       async init() {
         //页面初始化
         this.loading = true;
@@ -316,28 +398,49 @@
         });
       },
       handleMenuTap(id) {
+        console.log('根据唯一的id跳转', id);
         //点击菜单项事件
         if (!this.sizeCalcState) {
           this.calcSize();
         }
-
         this.currentCateId = id;
         this.$nextTick(() => (this.cateScrollTop = this.goods.find((item) => item.id == id).top));
+        console.log('this.cateScrollTop', this.cateScrollTop);
+      },
+      scrollToBottom() {
+        console.log('onreachbottom');
       },
       handleGoodsScroll({ detail }) {
         //商品列表滚动事件
         if (!this.sizeCalcState) {
           this.calcSize();
         }
+        console.log('details', detail);
         const { scrollTop } = detail;
+        this.scrollTop = scrollTop;
+        console.log('scrollTop detail', scrollTop);
+        let init_tabs = this.goods.filter((item) => item.top);
         let tabs = this.goods.filter((item) => item.top <= scrollTop).reverse();
+        console.log('init tabs', init_tabs);
+        console.log('tabs', tabs);
+
+        // if (init_tabs.length - tabs.length == 1) {
+        //   tabs.unshift(init_tabs[init_tabs.length]);
+        //   // this.currentCateId = 97;
+        //   // this.h = -180;
+        // }
+        // if (init_tabs.length - tabs.length == 0) {
+        //   tabs = tabs;
+        // }
         if (tabs.length > 0) {
+          // 可以在这里加个限制，当滚动到大于页面的百分之几的时候，将tab赋值为menu中的最后一个就行了
+          // 若当前的tabs和初始化时的tabs相差一，则显示初始化时的tabs的最后一个tabs
           this.currentCateId = tabs[0].id;
         }
       },
       calcSize() {
-        let h = 10;
-
+        let h = this.h;
+        let scroll = this.scrollTop;
         let view = uni.createSelectorQuery().select('#ads');
         view
           .fields(
@@ -345,6 +448,23 @@
               size: true,
             },
             (data) => {
+              uni.getSystemInfo({
+                success: function (res) {
+                  // console.log(res.model);
+                  // console.log(res.pixelRatio);
+                  // console.log(res.windowWidth);
+                  console.log('xx', res.windowHeight);
+                  console.log('scroll11', scroll);
+                  if (scroll > res.windowHeight * 0.7) {
+                    h = res.windowHeight * 0.7;
+                    console.log('scroll22', scroll, 'h', h);
+                  }
+                  // console.log(res.language);
+                  // console.log(res.version);
+                  // console.log(res.platform);
+                },
+              });
+              console.log('datahei', data.height, data);
               h += Math.floor(data.height);
             },
           )
@@ -367,7 +487,9 @@
         });
         this.sizeCalcState = true;
       },
+      // 此处包含所有商品信息。有蛋糕和饮品
       handleAddToCart(cate, good, num) {
+        console.log('cate', cate, 'good', good, 'num', num);
         //添加到购物车
         const index = this.cart.findIndex((item) => {
           if (good.use_property) {
@@ -400,6 +522,7 @@
         }
       },
       showGoodDetailModal(item, good) {
+        console.log('item: ' + item, 'good: ' + good);
         this.good = JSON.parse(JSON.stringify({ ...good, number: 1 }));
         this.category = JSON.parse(JSON.stringify(item));
         this.goodDetailModalVisible = true;
@@ -440,13 +563,17 @@
         this.good.number -= 1;
       },
       handleAddToCartInModal() {
+        // 在弹出层，即modal中队商品进行增删改，即有选择规格加料等商品中
         const product = Object.assign({}, this.good, { props_text: this.getGoodSelectedProps(this.good), props: this.getGoodSelectedProps(this.good, 'id') });
         this.handleAddToCart(this.category, product, this.good.number);
         this.closeGoodDetailModal();
       },
       openCartPopup() {
-        //打开/关闭购物车列表popup
-        this.cartPopupVisible = !this.cartPopupVisible;
+        //打开购物车列表popup,同时不显示卡券
+        this.isFreeCard = false;
+        this.$refs.popup.open('botom');
+        // 关闭之前的默认的弹出框
+        // this.cartPopupVisible = !this.cartPopupVisible;
       },
       handleCartClear() {
         //清空购物车
@@ -455,7 +582,8 @@
           content: '确定清空购物车么',
           success: ({ confirm }) => {
             if (confirm) {
-              this.cartPopupVisible = false;
+              this.$refs.popup.close();
+              // this.cartPopupVisible = false;
               this.cart = [];
             }
           },
@@ -474,19 +602,28 @@
           this.cartPopupVisible = false;
         }
       },
+      closePopup() {
+        console.log(11);
+        this.isFreeCard = true;
+        this.$refs.popup.close();
+      },
+      clickCard() {
+        uni.showToast({ title: '跳转到卡券页面' });
+        // this.$refs.popup.open('bottom');
+      },
       toPay() {
+        // 点击去结算后，会缓存当前商品订单内容
         if (!this.isLogin) {
           uni.navigateTo({ url: '/pages/login/login' });
           return;
         }
-
         uni.showLoading({ title: '加载中' });
         uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)));
-
         uni.navigateTo({
           url: '/pages/pay/pay',
         });
         uni.hideLoading();
+        // 取消loading
       },
     },
   };
