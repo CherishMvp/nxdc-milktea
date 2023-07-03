@@ -46,10 +46,12 @@
         <!-- 左侧菜单menu -->
         <scroll-view class="menus" :scroll-into-view="menuScrollIntoView" show-scrollbar="false" scroll-with-animation scroll-y>
           <view class="wrapper">
-            <!-- 此处要注意 currentCateId和item.id都要为number类型；apifox设为了string-->
-            <view class="menu" :id="`menu-${item.id}`" :class="{ current: item.id == currentCateId }" v-for="(item, index) in goods" :key="index" @tap="handleMenuTap(item.id)">
-              <text>{{ item.name }}</text>
-              <view class="dot" v-show="menuCartNum(item.id)">{{ menuCartNum(item.id) }}</view>
+            <view class="list">
+              <!-- 此处要注意 currentCateId和item.id都要为number类型；apifox设为了string-->
+              <view class="menu" :id="`menu-${item.id}`" :class="{ current: item.id == currentCateId }" v-for="(item, index) in goods" :key="index" @tap="handleMenuTap(item.id)">
+                <text>{{ item.name }}</text>
+                <view class="dot" v-show="menuCartNum(item.id)">{{ menuCartNum(item.id) }}</view>
+              </view>
             </view>
           </view>
         </scroll-view>
@@ -84,22 +86,26 @@
                         <text class="price">￥{{ good.price }}</text>
                         <!-- 判断是否是添加了购物车内容的状态 -->
                         <!-- 如果未选择，则显示选规格等操作 -->
-                        <view class="btn-group" v-if="good.use_property">
-                          <button type="primary" class="btn property_btn" hover-class="none" size="mini" @tap="showGoodDetailModal(item, good)"> 选规格 </button>
-                          <view class="dot" v-show="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
-                        </view>
-                        <!-- 进行商品添加增删 -->
-                        <view class="btn-group" v-else>
-                          <!-- 左侧减少商品按钮 -->
-                          <button type="default" v-show="goodCartNum(good.id)" plain class="btn reduce_btn" size="mini" hover-class="none" @tap="handleReduceFromCart(item, good)">
-                            <view class="iconfont iconsami-select"></view>
-                          </button>
-                          <view class="number" v-show="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
-                          <!-- 右侧增加商品按钮,初始化时默认给1 -->
-                          <button type="primary" class="btn add_btn" size="min" hover-class="none" @tap="handleAddToCart(item, good, 1)">
-                            <view class="iconfont iconadd-select"></view>
-                          </button>
-                        </view>
+                        <!-- 2023-05-23 23:23:25 这里应该是判断是否打烊，可以判断是否可以进行商品挑选的 -->
+                        <div v-if="!isclose">
+                          <view class="btn-group" v-if="good.use_property">
+                            <!-- <span>{{ good.use_property }}</span> -->
+                            <button type="primary" class="btn property_btn" hover-class="none" size="mini" @tap="showGoodDetailModal(item, good)"> 选规格 </button>
+                            <view class="dot" v-show="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
+                          </view>
+                          <!-- 进行商品添加增删 -->
+                          <view class="btn-group" v-else>
+                            <!-- 左侧减少商品按钮 -->
+                            <button type="default" v-show="goodCartNum(good.id)" plain class="btn reduce_btn" size="mini" hover-class="none" @tap="handleReduceFromCart(item, good)">
+                              <view class="iconfont iconsami-select"></view>
+                            </button>
+                            <view class="number" v-show="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
+                            <!-- 右侧增加商品按钮,初始化时默认给1 -->
+                            <button type="primary" class="btn add_btn" size="min" hover-class="none" @tap="handleAddToCart(item, good, 1)">
+                              <view class="iconfont iconadd-select"></view>
+                            </button>
+                          </view>
+                        </div>
                       </view>
                     </view>
                   </view>
@@ -114,24 +120,32 @@
       </view>
       <!-- content end -->
       <!-- 购物车栏 begin -->
-      <view class="cart-box" v-if="cart.length > 0">
-        <view @tap="clickCard" class="isfree-card" v-if="isFreeCard">
-          <uni-icons type="wallet" color="#3de5" size="24" />
-          卡券{{ cardNumber }}张
-        </view>
-        <view class="mark">
-          <image src="/static/images/menu/cart.png" class="cart-img" @tap="openCartPopup"></image>
-          <view class="tag">{{ getCartGoodsNumber }}</view>
-        </view>
-        <view class="price">
-          ￥{{ getCartGoodsPrice }}
-          <view style="font-size: 30rpx; font-weight: 300; text-decoration: line-through; margin-left: 8rpx">￥{{ 457 }}</view>
-        </view>
-
-        <button type="primary" class="pay-btn" @tap="toPay" :disabled="disabledPay">
-          {{ disabledPay ? `差${spread}元起送` : '去结算' }}
-        </button>
+      <view v-if="isclose" class="cart-box">
+        <div>
+          <span>休息中（营业时间：9:00-21:00）</span>
+        </div>
       </view>
+      <view v-else>
+        <view class="cart-box" v-if="cart.length > 0">
+          <view @tap="clickCard" class="isfree-card" v-if="isFreeCard">
+            <uni-icons type="wallet" color="#3de5" size="24" />
+            卡券{{ cardNumber }}张
+          </view>
+          <view class="mark">
+            <image src="/static/images/menu/cart.png" class="cart-img" @tap="openCartPopup"></image>
+            <view class="tag">{{ getCartGoodsNumber }}</view>
+          </view>
+          <view class="price">
+            ￥{{ getCartGoodsPrice }}
+            <view style="font-size: 30rpx; font-weight: 300; text-decoration: line-through; margin-left: 8rpx">￥{{ 457 }}</view>
+          </view>
+
+          <button type="primary" class="pay-btn" @tap="toPay" :disabled="disabledPay">
+            {{ disabledPay ? `差${spread}元起送` : '去结算' }}
+          </button>
+        </view>
+      </view>
+
       <!-- 购物车栏 end -->
     </view>
     <!-- 商品详情模态框 begin -->
@@ -164,26 +178,29 @@
           </view>
         </view>
       </scroll-view>
-      <view class="action">
-        <view class="left">
-          <view class="price">￥{{ good.price }}</view>
-          <view class="props" v-if="getGoodSelectedProps(good)">
-            {{ getGoodSelectedProps(good) }}
+      <div v-if="!isclose">
+        <view class="action">
+          <view class="left">
+            <view class="price">￥{{ good.price }}</view>
+            <view class="props" v-if="getGoodSelectedProps(good)">
+              {{ getGoodSelectedProps(good) }}
+            </view>
+          </view>
+          <!-- 同样的，打烊后不许操作购物内容 -->
+          <view class="btn-group">
+            <button type="default" plain class="btn" size="mini" hover-class="none" @tap="handlePropertyReduce">
+              <view class="iconfont iconsami-select"></view>
+            </button>
+            <view class="number">{{ good.number }}</view>
+            <button type="primary" class="btn" size="min" hover-class="none" @tap="handlePropertyAdd">
+              <view class="iconfont iconadd-select"></view>
+            </button>
           </view>
         </view>
-        <view class="btn-group">
-          <button type="default" plain class="btn" size="mini" hover-class="none" @tap="handlePropertyReduce">
-            <view class="iconfont iconsami-select"></view>
-          </button>
-          <view class="number">{{ good.number }}</view>
-          <button type="primary" class="btn" size="min" hover-class="none" @tap="handlePropertyAdd">
-            <view class="iconfont iconadd-select"></view>
-          </button>
+        <view class="add-to-cart-btn" @tap="handleAddToCartInModal">
+          <view>加入购物车</view>
         </view>
-      </view>
-      <view class="add-to-cart-btn" @tap="handleAddToCartInModal">
-        <view>加入购物车</view>
-      </view>
+      </div>
     </modal>
     <!-- 商品详情模态框 end -->
     <!-- 购物车详情popup -->
@@ -195,23 +212,29 @@
         </view>
         <scroll-view class="cart-list" scroll-y>
           <view class="wrapper">
-            <view class="item" v-for="(item, index) in cart" :key="index">
-              <view class="left">
-                <view class="name">{{ item.name }}</view>
-                <view class="props">{{ item.props_text }}</view>
-              </view>
-              <view class="center">
-                <text>￥{{ item.price }}</text>
-              </view>
+            <view class="good" v-for="(good, key) in cart" :key="key">
+              <image :src="good.image" class="image" />
               <view class="right">
-                <button type="default" plain size="mini" class="btn" hover-class="none" @tap="handleCartItemReduce(index)">
-                  <view class="iconfont iconsami-select"></view>
-                </button>
-                <view class="number">{{ item.number }}</view>
-                <button type="primary" class="btn" size="min" hover-class="none" @tap="handleCartItemAdd(index)">
-                  <view class="iconfont iconadd-select"></view>
-                </button>
+                <text class="name">{{ good.name }}</text>
+                <text v-if="good.use_property" class="tips">{{ good.props_text }}</text>
+                <view class="price_and_action">
+                  <text class="price">￥{{ good.price }}</text>
+                  <!-- 进行商品添加增删 -->
+                  <view class="btn-group">
+                    <!-- 左侧减少商品按钮 -->
+                    <button v-show="goodCartNum(good.id)" type="default" plain class="btn reduce_btn" size="mini" hover-class="none" @tap="handleCartItemReduce(key)">
+                      <view class="iconfont iconsami-select"></view>
+                    </button>
+                    <!-- <view class="number">{{ goodCartNum(good.id) }}</view> -->
+                    <!-- 右侧增加商品按钮,初始化时默认给1 -->
+                    <view class="number">{{ good.number }}</view>
+                    <button v-show="goodCartNum(good.id)" type="primary" class="btn add_btn" size="min" hover-class="none" @tap="handleCartItemAdd(key)">
+                      <view class="iconfont iconadd-select"></view>
+                    </button>
+                  </view>
+                </view>
               </view>
+              <hr />
             </view>
             <view class="item" v-if="orderType == 'takeout' && store.packing_fee">
               <view class="left">
@@ -234,53 +257,6 @@
         </scroll-view>
       </view>
     </uni-popup>
-    <popup-layer direction="top" :show-pop="cartPopupVisible" class="cart-popup">
-      <template slot="content">
-        <view class="top">
-          <text @tap="handleCartClear">清空</text>
-        </view>
-        <scroll-view class="cart-list" scroll-y>
-          <view class="wrapper">
-            <view class="item" v-for="(item, index) in cart" :key="index">
-              <view class="left">
-                <view class="name">{{ item.name }}</view>
-                <view class="props">{{ item.props_text }}</view>
-              </view>
-              <view class="center">
-                <text>￥{{ item.price }}</text>
-              </view>
-              <view class="right">
-                <button type="default" plain size="mini" class="btn" hover-class="none" @tap="handleCartItemReduce(index)">
-                  <view class="iconfont iconsami-select"></view>
-                </button>
-                <view class="number">{{ item.number }}</view>
-                <button type="primary" class="btn" size="min" hover-class="none" @tap="handleCartItemAdd(index)">
-                  <view class="iconfont iconadd-select"></view>
-                </button>
-              </view>
-            </view>
-            <view class="item" v-if="orderType == 'takeout' && store.packing_fee">
-              <view class="left">
-                <view class="name">包装费</view>
-              </view>
-              <view class="center">
-                <text>￥{{ parseFloat(store.packing_fee) }}</text>
-              </view>
-              <view class="right invisible">
-                <button type="default" plain size="mini" class="btn" hover-class="none">
-                  <view class="iconfont iconsami-select"></view>
-                </button>
-                <view class="number">1</view>
-                <button type="primary" class="btn" size="min" hover-class="none">
-                  <view class="iconfont iconadd-select"></view>
-                </button>
-              </view>
-            </view>
-          </view>
-        </scroll-view>
-      </template>
-    </popup-layer>
-    <!-- 购物车详情popup -->
   </view>
   <view class="loading" v-else>
     <image src="/static/images/loading.gif"></image>
@@ -299,7 +275,8 @@
     },
     data() {
       return {
-        h: -10,
+        isclose: false, //是否打烊
+        h: -5,
         isFreeCard: true,
         cardNumber: 0,
         scrollTop: '',
@@ -326,6 +303,25 @@
     },
     async onLoad() {
       await this.init();
+    },
+    onShow() {
+      // 获取本地时间与 UTC 时间的时间差（单位为分钟）
+      const localOffset = new Date().getTimezoneOffset();
+      // 计算目标时区与 UTC 时间的时间差
+      const beijingOffset = -480; // 北京时间为东八区，UTC+8
+      const offsetDiff = beijingOffset - localOffset;
+      // 使用时间差来获取当前北京时间
+      const now = new Date(Date.now() + offsetDiff * 60 * 1000);
+      // 判断当前时间是否在早上 9 点到晚上 9 点之间
+      const hour = now.getHours();
+      const isBetween9and21 = hour >= 9 && hour < 23;
+      if (isBetween9and21) {
+        this.isclose = false;
+        console.log('当前时间在早上9点到晚上9点之间！');
+      } else {
+        this.isclose = true;
+        console.log('当前时间不在早上9点到晚上9点之间！');
+      }
     },
     computed: {
       ...mapState(['orderType', 'address', 'store']),
@@ -355,7 +351,7 @@
       },
       getCartGoodsPrice() {
         //计算购物车总价
-        return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0);
+        return this.cart?.reduce((acc, cur) => acc + cur.number * cur.price, 0) || 0;
       },
       disabledPay() {
         //是否达到起送价
@@ -381,18 +377,17 @@
         //页面初始化
         this.loading = true;
         await this.getStore();
-        this.goods = await this.$api('goods');
+        // this.goods = await this.$api('goods');
+        this.goods = await this.$api('mockGoods');
         this.loading = false;
         this.cart = uni.getStorageSync('cart') || [];
       },
       takout() {
         if (this.orderType == 'takeout') return;
-
         if (!this.isLogin) {
           uni.navigateTo({ url: '/pages/login/login' });
           return;
         }
-
         uni.navigateTo({
           url: '/pages/address/address?is_choose=true',
         });
@@ -405,7 +400,8 @@
         }
         this.currentCateId = id;
         this.$nextTick(() => (this.cateScrollTop = this.goods.find((item) => item.id == id).top));
-        console.log('this.cateScrollTop', this.cateScrollTop);
+        // console.log('this.cateScrollTop', this.cateScrollTop);
+        if (this.currentCateId == 88) this.cateScrollTop = 0;
       },
       scrollToBottom() {
         console.log('onreachbottom');
@@ -415,14 +411,15 @@
         if (!this.sizeCalcState) {
           this.calcSize();
         }
-        console.log('details', detail);
+        // console.log('details', detail);
         const { scrollTop } = detail;
         this.scrollTop = scrollTop;
-        console.log('scrollTop detail', scrollTop);
+        if (scrollTop == 129) this.scrollTop = 0;
+        // console.log('scrollTop detail', this.scrollTop);
         let init_tabs = this.goods.filter((item) => item.top);
         let tabs = this.goods.filter((item) => item.top <= scrollTop).reverse();
-        console.log('init tabs', init_tabs);
-        console.log('tabs', tabs);
+        // console.log('init tabs', init_tabs);
+        // console.log('tabs', tabs);
 
         // if (init_tabs.length - tabs.length == 1) {
         //   tabs.unshift(init_tabs[init_tabs.length]);
@@ -440,7 +437,6 @@
       },
       calcSize() {
         let h = this.h;
-        let scroll = this.scrollTop;
         let view = uni.createSelectorQuery().select('#ads');
         view
           .fields(
@@ -453,12 +449,6 @@
                   // console.log(res.model);
                   // console.log(res.pixelRatio);
                   // console.log(res.windowWidth);
-                  console.log('xx', res.windowHeight);
-                  console.log('scroll11', scroll);
-                  if (scroll > res.windowHeight * 0.7) {
-                    h = res.windowHeight * 0.7;
-                    console.log('scroll22', scroll, 'h', h);
-                  }
                   // console.log(res.language);
                   // console.log(res.version);
                   // console.log(res.platform);
@@ -501,6 +491,7 @@
         if (index > -1) {
           this.cart[index].number += num;
         } else {
+          // TODO:这个地方会做视频属性处理添加进购物车
           this.cart.push({
             id: good.id,
             cate_id: cate.id,
@@ -513,6 +504,9 @@
             props: good.props,
           });
         }
+        console.log('totally good', this.cart);
+        uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)));
+        console.log('universe', uni.getStorageSync('cart'));
       },
       handleReduceFromCart(item, good) {
         const index = this.cart.findIndex((item) => item.id === good.id);
@@ -583,6 +577,8 @@
           success: ({ confirm }) => {
             if (confirm) {
               this.$refs.popup.close();
+              this.isFreeCard = true;
+
               // this.cartPopupVisible = false;
               this.cart = [];
             }
@@ -599,7 +595,9 @@
           this.cart[index].number -= 1;
         }
         if (!this.cart.length) {
-          this.cartPopupVisible = false;
+          this.isFreeCard = true;
+          this.$refs.popup.close();
+          // this.cartPopupVisible = false;
         }
       },
       closePopup() {

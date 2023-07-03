@@ -69,6 +69,7 @@
         });
       },
       handleSwipeClick(id) {
+        console.log('address', this.addresses);
         uni.showModal({
           title: '提示',
           content: '确定要删除？',

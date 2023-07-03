@@ -64,6 +64,7 @@
     async onLoad() {
       (this.customPoints = await this.$api('customPoints')), (this.attendanceList = await this.$api('attendanceList'));
       this.todayAttendance = await this.$api('todayAttendance');
+      console.log('todayAttendance', this.todayAttendance);
       const date = new Date();
       let year = date.getFullYear();
       let month = date.getMonth();

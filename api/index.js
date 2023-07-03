@@ -1,6 +1,6 @@
 import packages from './packages';
 import store from './store';
-import goods from './goods';
+import { goods, mockGoods } from './goods';
 import levelBenefits from './level-benefits';
 import member from './member';
 import rechargeCards from './rechargeCards';
@@ -18,6 +18,7 @@ const json = {
   packages,
   store,
   goods,
+  mockGoods,
   levelBenefits,
   member,
   rechargeCards,

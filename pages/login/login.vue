@@ -5,7 +5,7 @@
       <view class="tips">
         一杯好茶，一口软欧包
         <br />
-        在奈雪遇见两种美好
+        在桑格利亚遇见两种美好
       </view>
     </view>
     <view class="bottom">
@@ -39,7 +39,7 @@
           </view>
           <view class="grid">
             <image src="/static/images/mine/nxbz.png"></image>
-            <view>奈雪宝藏</view>
+            <view>桑格利亚宝藏</view>
           </view>
         </view>
         <view class="font-size-base text-color-primary">会员权益说明</view>
@@ -121,33 +121,37 @@
                   url: 'https://nest.ai0626.online/user/code',
                   method: 'POST',
                   data: query,
+                  complete() {
+                    uni.showToast({
+                      title: '登录成功',
+                      icon: 'success',
+                      duration: 3000,
+                      success(result) {
+                        uni.navigateBack();
+                        that.SET_MEMBER(that.memberInfo);
+
+                        // 去tabbar的页面（shopcar）直接就是不带返回
+                        // uni.reLaunch({ url: '/pages/index/shopcar?hasBack=false' });
+                      },
+                    });
+                    // 存入本地缓存，防止
+                  },
                   success(result) {
                     console.log('result', result);
-                    setTimeout(() => {
-                      uni.showToast({
-                        title: '登录成功',
-                        icon: 'success',
-                        success(result) {
-                          uni.navigateBack();
-                          // 存入本地缓存，防止
-                          that.SET_MEMBER(that.memberInfo);
-                          // 去tabbar的页面（shopcar）直接就是不带返回
-                          // uni.reLaunch({ url: '/pages/index/shopcar?hasBack=false' });
-                        },
-                      });
-                    }, 1000);
+
                     // mock返回的数据
                     // 将token存入pinia中
                     // 登录成功后，要调用nest接口，将openId作为用户唯一标识写入数据库
                     // URI.createUser(result.data.openid);
-                    // 奈雪这里可以改为获取用户订单数据
+                    // 桑格利亚这里可以改为获取用户订单数据
                     uni.request({
                       // url: ProductApi.BASE_URL + `/product/${result.data.openid}`,
                       url: 'https://nest.ai0626.online/shengxian/product/' + result.data.openid,
                       method: 'POST',
                     });
                   },
-                  fail() {
+                  fail(err) {
+                    console.log('err', err);
                     uni.showToast({ title: '登录失败', icon: 'error' });
                   },
                 });

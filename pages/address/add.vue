@@ -37,7 +37,8 @@
         </list-cell>
       </view>
       <view class="btn-section">
-        <button type="primary" size="default" @tap="save">保存</button>
+        <button type="primary" size="mini" @click="setAddress">导入微信地址</button>
+        <button type="primary" size="mini" @tap="save">保存</button>
       </view>
     </view>
   </view>
@@ -45,6 +46,7 @@
 
 <script>
   import listCell from '@/components/list-cell/list-cell';
+  import { mapState, mapMutations } from 'vuex';
 
   export default {
     components: {
@@ -53,6 +55,7 @@
     data() {
       return {
         form: {
+          id: '',
           accept_name: '',
           sex: 0,
           mobile: '',
@@ -63,13 +66,41 @@
     },
     async onLoad({ id }) {
       //为了方便演示，这里用本地缓存
+      console.log('id', id);
       if (id) {
         this.form = this.$store.state.addresses.find((item) => item.id == id);
       }
     },
+    computed: {
+      ...mapState(['addresses']),
+    },
     methods: {
+      ...mapMutations(['SET_ADDRESS', 'SET_ADDRESSES']),
       save() {
+        console.log('current address', this.form);
+        // this.SET_ADDRESSES(this.form);
         uni.navigateBack();
+      },
+      async setAddress() {
+        var that = this;
+        const res = await uni.chooseAddress();
+        console.log('res: ', res);
+        if (res[1].errMsg === 'chooseAddress:ok') {
+          //   address.value = res;
+          that.form.street = res[1].cityName + res[1].countyName + res[1].detailInfo;
+          that.form.accept_name = res[1].userName;
+          that.form.mobile = res[1].telNumber;
+          console.log('res-address', res);
+          console.log('this address', that.addresses);
+          let id = that.addresses.length;
+          that.form.id = id + 1;
+          //   const index = that.addresses.findIndex((item) => item.id == id);
+          const addresses = JSON.parse(JSON.stringify(that.addresses));
+          console.log('final address form', that.form);
+          addresses.splice(id, 0, that.form);
+          that.SET_ADDRESSES(addresses);
+          //   uni.setStorageSync('address', res[1]);
+        }
       },
     },
   };
@@ -127,8 +158,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-
+      flex-direction: column;
       button {
+        margin-bottom: 30rpx;
         font-size: $font-size-base;
         height: 90rpx;
         border-radius: 50rem !important;

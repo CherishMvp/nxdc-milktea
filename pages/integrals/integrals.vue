@@ -108,6 +108,7 @@
         });
 
         this.stepsOption = stepsOptions;
+        console.log('this.stepsOption', this.stepsOption);
       },
       async getPointsMall() {
         this.pointsMall = await this.$api('pointsMall');

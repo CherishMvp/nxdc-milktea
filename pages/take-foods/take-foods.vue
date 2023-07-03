@@ -9,6 +9,7 @@
       <button type="primary" class="drink-btn" size="default" @tap="menu">去点餐</button>
       <view class="font-size-sm text-color-primary" @tap="orders">查看历史订单</view>
     </view>
+    <!-- 展示点完的订单信息（包括待取餐等信息） -->
     <template v-else>
       <view class="order-box">
         <view class="bg-white">
@@ -31,7 +32,7 @@
                 <view class="d-flex align-items-center just-content-center" v-if="order.typeCate == 1">
                   <view class="sort-num">{{ order.sort_num }}</view>
                 </view>
-                <!-- steps begin -->
+                <!-- steps begin：展示订单制作状态；typeCate用来区分外卖和自取的两种订单状态 -->
                 <view class="d-flex just-content-center">
                   <view class="steps d-flex flex-column" :class="{ 'w-80': order.typeCate == 1, 'w-100': order.typeCate == 2 }">
                     <view class="steps__img-column">
@@ -80,12 +81,12 @@
                 </view>
                 <!-- steps end -->
                 <view v-if="order.status <= 1" class="d-flex just-content-center align-items-center font-size-base text-color-assist mb-40"> 您前面还有 <text class="text-color-primary mr-10 ml-10">4</text> 单待制作 </view>
-                <!-- goods begin -->
+                <!-- goods begin：点单后的商品信息有哪些 -->
                 <view class="w-100 d-flex flex-column position-relative mt-30" style="margin-bottom: -40rpx">
-                  <view class="w-100 d-flex align-items-center mb-40" v-for="(good, index) in order.goods" :key="index">
+                  <view style="border-bottom: 0.5px solid lightgrey" class="w-100 d-flex align-items-center mb-40" v-for="(good, index) in order.goods" :key="index">
                     <view class="d-flex flex-column w-60 overflow-hidden">
                       <view class="font-size-lg text-color-base mb-10 text-truncate">{{ good.name }}</view>
-                      <view class="font-size-sm text-color-assist text-truncate">{{ good.property }}</view>
+                      <view style="margin-bottom: 20rpx" class="font-size-sm text-color-assist text-truncate">{{ good.props_text }}</view>
                     </view>
                     <view class="d-flex w-40 align-items-center justify-content-between pl-30">
                       <view class="font-size-base text-color-base">x{{ good.number }}</view>
@@ -107,7 +108,9 @@
                 </view>
                 <view class="pay-cell">
                   <view>金额总计</view>
-                  <view class="font-weight-bold">￥{{ order.amount }}</view>
+                  <!-- 可以直接在后端计算，得到一个总的商品价格，这里用前端方式计算；算出当前购物车中的商品总价 -->
+                  <view class="font-weight-bold">￥{{ getCartGoodsPrice }}</view>
+                  <!-- <view class="font-weight-bold">￥{{ order.amount }}</view> -->
                 </view>
               </view>
             </list-cell>
@@ -171,19 +174,52 @@
 
 <script>
   import listCell from '@/components/list-cell/list-cell';
-  import { mapState } from 'vuex';
+  import { mapState, mapMutations } from 'vuex';
+  import orders from '@/api/orders';
 
   export default {
     components: {
       listCell,
     },
     data() {
-      return {};
+      return {
+        cart: {},
+      };
+    },
+    onShow() {
+      console.log('takein onshow', Object.keys(this.order).length);
+      this.cart = uni.getStorageSync('cart');
+      // TODO:实际上order信息都要从后端返回。只有支付成功后，才会有这个order订单信息
+      // 订单数据不能用缓存去做，直接读取服务器就行了。
+      // 可以先从vuex读取是否有数据
+      if (!Object.keys(this.order).length) {
+        console.log('vuex无订单数据，直接从服务器获取', this.order);
+        // 则直接从服务器或者缓存中读取
+        let orderInfo = this.orderType == 'takein' ? orders[0] : orders[1];
+        // 此处猜测status为商品的制作状态。4为完成，1为刚刚开始的状态；自取只有，1.2.4三种状态；外卖有1.2.3.4
+        orderInfo = Object.assign(orderInfo, { status: 5 });
+        orderInfo.goods = this.cart;
+        console.log('目前的订单有：', orderInfo);
+        this.SET_ORDER(orderInfo);
+      } else {
+        this.order.goods = this.cart;
+        this.SET_ORDER(this.order);
+      }
+    },
+    onHide() {
+      console.log('takein hide');
     },
     computed: {
-      ...mapState(['order']),
+      ...mapState(['order', 'orderType']),
+      getCartGoodsPrice() {
+        //计算购物车总价
+        this.cart = uni.getStorageSync('cart');
+        if (this.cart) return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0);
+        else return 0;
+      },
     },
     methods: {
+      ...mapMutations(['SET_ORDER']),
       orders() {
         if (!this.$store.getters.isLogin) {
           uni.navigateTo({ url: '/pages/login/login' });

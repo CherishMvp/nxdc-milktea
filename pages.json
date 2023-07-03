@@ -10,7 +10,7 @@
     {
       "path": "pages/menu/menu",
       "style": {
-        "navigationBarTitleText": "奈雪の茶",
+        "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -18,7 +18,7 @@
     {
       "path": "pages/take-foods/take-foods",
       "style": {
-        "navigationBarTitleText": "奈雪の茶",
+        "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -26,7 +26,7 @@
     {
       "path": "pages/mine/mine",
       "style": {
-        "navigationBarTitleText": "奈雪乐园",
+        "navigationBarTitleText": "桑格利亚乐园",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -34,7 +34,7 @@
     {
       "path": "pages/pay/pay",
       "style": {
-        "navigationBarTitleText": "奈雪の茶",
+        "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -42,7 +42,7 @@
     {
       "path": "pages/remark/remark",
       "style": {
-        "navigationBarTitleText": "奈雪の茶",
+        "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -92,7 +92,7 @@
     {
       "path": "pages/address/add",
       "style": {
-        "navigationBarTitleText": "奈雪の茶",
+        "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -171,7 +171,7 @@
     {
       "path": "pages/review/review",
       "style": {
-        "navigationBarTitleText": "奈雪の茶",
+        "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -179,7 +179,7 @@
     {
       "path": "pages/activities/invite",
       "style": {
-        "navigationBarTitleText": "奈雪の茶",
+        "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -187,7 +187,7 @@
     {
       "path": "pages/services/services",
       "style": {
-        "navigationBarTitleText": "奈雪の茶",
+        "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -195,7 +195,7 @@
     {
       "path": "pages/invoice/invoice",
       "style": {
-        "navigationBarTitleText": "奈雪の茶",
+        "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -220,7 +220,7 @@
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
+    "navigationBarTitleText": "Only One 桑格利亚",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },

@@ -36,7 +36,7 @@ export default {
   multi_mark: 'NXHNSZ0055',
   per_price: '1.00',
   balance: '0.00',
-  name: '卓悦中心ONE AVENUE店',
+  name: 'Only One 桑格利亚店',
   updated_at: '1578227762',
   packing_fee: '2.00',
   delivery_cost: '2.00',

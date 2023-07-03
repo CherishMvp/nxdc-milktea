@@ -231,6 +231,9 @@ page {
     .wrapper {
       width: 100%;
       height: 100%;
+      .list {
+        padding-bottom: 90rpx;
+      }
       // 菜单menu布局
       .menu {
         display: flex;
@@ -280,7 +283,6 @@ page {
 
       .ads {
         height: calc(300 / 550 * 510rpx);
-
         image {
           width: 100%;
           height: 100%;
@@ -291,7 +293,7 @@ page {
       .list {
         width: 100%;
         font-size: $font-size-base;
-        padding-bottom: 130rpx;
+        padding-bottom: 450rpx;
 
         .category {
           width: 100%;
@@ -301,7 +303,10 @@ page {
             display: flex;
             align-items: center;
             color: $text-color-base;
-
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background-color: #ffffff;
             .icon {
               width: 38rpx;
               height: 38rpx;
@@ -621,26 +626,36 @@ page {
 
 .cart-box {
   position: absolute;
-  bottom: -2rpx;
-  left: 0rpx;
-  right: 0rpx;
+  bottom: 8rpx;
+  left: 20rpx;
+  right: 20rpx;
   height: 138rpx;
-
-  // border-radius: 48rpx;
+  border-radius: 48rpx;
   box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.2);
   background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
   z-index: 9999;
-
+  div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span {
+      color: #adb838;
+      font-size: large;
+    }
+  }
   .isfree-card {
+    border-radius: 48rpx 0;
+    box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.2);
     height: 100%;
     justify-content: center;
     align-items: center;
     display: flex;
     flex-direction: column;
-    width: 150rpx;
+    width: 140rpx;
     background-color: #adb838;
   }
   // fix image and tag do not margin-top -xx
@@ -709,21 +724,140 @@ page {
     overflow: hidden;
     min-height: 1vh;
     max-height: 60vh;
-
+    font-size: 32rpx;
     .wrapper {
       height: 100%;
       display: flex;
       flex-direction: column;
       padding: 0 30rpx;
       margin-bottom: 156rpx;
+      .good {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30rpx 0;
+        position: relative;
+        &::after {
+          content: ' ';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          background-color: $border-color;
+          height: 2rpx;
+          transform: scaleY(0.6);
+        }
 
+        .image {
+          width: 160rpx;
+          height: 160rpx;
+          margin-right: 20rpx;
+          border-radius: 8rpx;
+        }
+
+        .right {
+          flex: 1;
+          height: 160rpx;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: space-evenly;
+          padding-right: 14rpx;
+          .name {
+            font-size: $font-size-base;
+            margin-bottom: 10rpx;
+          }
+
+          .tips {
+            width: 100%;
+            height: 40rpx;
+            line-height: 40rpx;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: $font-size-sm;
+            color: $text-color-assist;
+            margin-bottom: 10rpx;
+          }
+
+          .price_and_action {
+            width: 100%;
+            display: flex;
+            // flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+
+            .price {
+              // font-size: $font-size-base;
+              font-size: 30rpx;
+              color: black;
+              font-weight: 400;
+              .origin-price {
+                font-size: 26rpx;
+                font-weight: 350;
+              }
+            }
+
+            .btn-group {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              position: relative;
+
+              .btn {
+                padding: 0 20rpx;
+                box-sizing: border-box;
+                font-size: $font-size-sm;
+                height: 44rpx;
+                line-height: 44rpx;
+
+                &.property_btn {
+                  border-radius: 24rpx;
+                }
+
+                &.add_btn,
+                &.reduce_btn {
+                  padding: 0;
+                  width: 44rpx;
+                  border-radius: 44rpx;
+                }
+              }
+
+              .dot {
+                position: absolute;
+                background-color: #ffffff;
+                border: 1px solid $color-primary;
+                color: $color-primary;
+                font-size: $font-size-sm;
+                width: 36rpx;
+                height: 36rpx;
+                line-height: 36rpx;
+                text-align: center;
+                border-radius: 100%;
+                right: -12rpx;
+                top: -10rpx;
+              }
+
+              .number {
+                width: 54rpx;
+                height: 44rpx;
+                line-height: 44rpx;
+                text-align: center;
+              }
+            }
+          }
+        }
+      }
       .item {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 30rpx 0;
         position: relative;
-
         &::after {
           content: ' ';
           position: absolute;
@@ -738,12 +872,16 @@ page {
         .left {
           flex: 1;
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
           overflow: hidden;
           margin-right: 30rpx;
-
+          .icon {
+            width: 138rpx;
+            height: 138rpx;
+            margin-left: 10rpx;
+          }
           .name {
-            font-size: $font-size-sm;
+            font-size: $font-size-base;
             color: $text-color-base;
           }
           .props {

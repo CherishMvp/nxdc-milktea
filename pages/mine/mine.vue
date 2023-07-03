@@ -41,7 +41,7 @@
             <view class="value font-size-extra-lg font-weight-bold text-color-base">
               {{ isLogin ? member.couponNum : '***' }}
             </view>
-            <view class="font-size-sm text-color-assist">奈雪券</view>
+            <view class="font-size-sm text-color-assist">桑格利亚券</view>
           </view>
           <view class="user-grid" @tap="integrals">
             <view class="value font-size-extra-lg font-weight-bold text-color-base">
@@ -90,7 +90,7 @@
           </view>
           <view class="grid">
             <image src="/static/images/mine/nxbz.png"></image>
-            <view>奈雪宝藏</view>
+            <view>桑格利亚宝藏</view>
           </view>
         </view>
       </view>
@@ -120,7 +120,7 @@
           <view class="image">
             <image src="/static/images/mine/nxsc.png"></image>
           </view>
-          <view>奈雪商城</view>
+          <view>桑格利亚商城</view>
         </view>
         <view class="grid">
           <view class="image">
@@ -156,7 +156,7 @@
     </view>
     <!-- service box end -->
     <!-- tips begin -->
-    <view class="d-flex just-content-center align-items-center text-color-assist" style="padding: 30rpx 0; font-size: 22rpx"> 会员卡适用于奈雪的茶和奈雪酒屋指定范围 </view>
+    <view class="d-flex just-content-center align-items-center text-color-assist" style="padding: 30rpx 0; font-size: 22rpx"> 会员卡适用于桑格利亚的茶和桑格利亚酒屋指定范围 </view>
     <!-- tisps end -->
   </view>
 </template>
@@ -198,7 +198,7 @@
         console.log('重新根据用户openID获取新的数据，写入缓存中');
         console.log('yunApi', yunApi);
         uni.request({
-          url: yunApi + '/member',
+          url: yunApi + '/drinkmember',
           method: 'GET',
           success: (success) => {
             console.log('success', success);
@@ -403,7 +403,7 @@
 
   .user-grid {
     width: 25%;
-    padding: 30rpx;
+    padding: 30rpx 25rpx;
     display: flex;
     flex-direction: column;
     align-items: center;

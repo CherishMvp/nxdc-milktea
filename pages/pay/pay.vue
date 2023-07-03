@@ -34,6 +34,7 @@
               <view class="time">立即用餐</view>
             </view>
           </list-cell>
+          <!-- 这一步联系人获取可以开通读取手机号码权限后，将手机号码写入用户信息，直接读取 -->
           <list-cell class="contact" last :hover="false">
             <view class="flex-fill d-flex justify-content-between align-items-center">
               <view class="title flex-fill">联系电话</view>
@@ -49,7 +50,7 @@
             <view class="w-100 d-flex flex-column">
               <view class="d-flex align-items-center font-size-base text-color-base">
                 <view class="flex-fill">预计送达时间</view>
-                <view class="mr-10">15:18</view>
+                <view style="font-size: medium" class="mr-10">{{ expTime }}</view>
                 <image src="/static/images/navigator-1.png" class="arrow"></image>
               </view>
               <view class="font-size-base text-color-primary"> 特殊时期减少接触，请修改下方订单备注 </view>
@@ -61,7 +62,7 @@
       <view class="section-2">
         <view class="cart d-flex flex-column">
           <list-cell last v-for="(item, index) in cart" :key="index">
-            <view class="w-100 d-flex flex-column">
+            <view style="border-bottom: 0.5px solid lightgrey" class="w-100 d-flex flex-column">
               <view class="d-flex align-items-center mb-10">
                 <view class="name-and-props overflow-hidden">
                   <view class="text-color-base font-size-lg">
@@ -73,8 +74,9 @@
                   <view>￥{{ item.price }}</view>
                 </view>
               </view>
-              <view class="text-truncate font-size-base text-color-assist">
-                {{ item.props_text }}
+              <!-- if not props_text no show -->
+              <view style="margin-bottom: 20rpx" class="text-truncate font-size-base text-color-assist">
+                {{ item.props_text || '' }}
               </view>
             </view>
           </list-cell>
@@ -95,7 +97,7 @@
         </view>
         <list-cell arrow @click="goToPackages">
           <view class="flex-fill d-flex justify-content-between align-items-center">
-            <view class="text-color-base">奈雪券</view>
+            <view class="text-color-base">桑格利亚券</view>
             <view class="text-color-primary">超值购买优惠券大礼包</view>
           </view>
         </list-cell>
@@ -122,21 +124,23 @@
         <list-cell last :hover="false">
           <text>支付方式</text>
         </list-cell>
-        <list-cell>
-          <view class="d-flex align-items-center justify-content-between w-100 disabled">
-            <view class="iconfont iconbalance line-height-100 payment-icon"></view>
-            <view class="flex-fill">余额支付（余额￥0）</view>
-            <view class="font-size-sm">余额不足</view>
-            <view class="iconfont iconradio-button-off line-height-100 checkbox"></view>
-          </view>
-        </list-cell>
-        <list-cell last>
-          <view class="d-flex align-items-center justify-content-between w-100">
-            <view class="iconfont iconwxpay line-height-100 payment-icon" style="color: #7eb73a"></view>
-            <view class="flex-fill">微信支付</view>
-            <view class="iconfont iconradio-button-on line-height-100 checkbox checked"></view>
-          </view>
-        </list-cell>
+        <radio-group @change="radioChange">
+          <list-cell last :hover="false" v-for="(item, index) in items" :key="item.value">
+            <view class="d-flex align-items-center justify-content-between w-100 disabled">
+              <view v-if="item.value == 'wallet'">
+                <span class="iconfont iconbalance line-height-100 payment-icon"></span>
+                <span class="flex-fill">{{ `余额支付（余额￥ (${currentSaveCount})` }}</span>
+                <span class="font-size-sm" style="margin-left: 80rpx" v-if="currentSaveCount < total">余额不足</span>
+              </view>
+              <view v-if="item.value == 'wechat'">
+                <span class="iconfont iconwxpay line-height-100 payment-icon" style="color: #7eb73a"></span>
+                <span class="flex-fill">微信支付</span>
+              </view>
+              <!-- <view class="iconfont iconradio-button-off line-height-100 checkbox"></view> -->
+              <radio :value="item.value" :checked="index === current" />
+            </view>
+          </list-cell>
+        </radio-group>
       </view>
       <!-- 支付方式 end -->
       <!-- 备注 begin -->
@@ -149,10 +153,12 @@
       <!-- 备注 end -->
     </view>
     <!-- 付款栏 begin -->
-    <view class="w-100 pay-box position-fixed fixed-bottom d-flex align-items-center justify-content-between bg-white">
+    <view class="w-100v pay-box position-fixed fixed-bottom d-flex align-items-center justify-content-between bg-white">
       <view class="font-size-sm" style="margin-left: 20rpx">合计：</view>
       <view class="font-size-lg flex-fill">￥{{ amount }}</view>
       <view class="bg-primary h-100 d-flex align-items-center just-content-center text-color-white font-size-base" style="padding: 0 60rpx" @tap="submit"> 付款 </view>
+      <view></view>
+      <view></view>
     </view>
     <!-- 付款栏 end -->
     <modal :show="ensureAddressModalVisible" custom :mask-closable="false" :radius="0" width="90%">
@@ -191,10 +197,25 @@
     data() {
       return {
         cart: [],
+        expTime: '',
         form: {
           remark: '',
         },
+        currentSaveCount: 100,
         ensureAddressModalVisible: false,
+        // 暂时只提供微信接口支付，充值卡暂不考虑
+        items: [
+          {
+            value: 'wechat',
+            name: '微信支付',
+            checked: 'true',
+          },
+          // {
+          //   value: 'wallet',
+          //   name: '余额支付',
+          // },
+        ],
+        current: 0,
       };
     },
     computed: {
@@ -211,8 +232,19 @@
       this.cart = uni.getStorageSync('cart');
       remark && this.$set(this.form, 'remark', remark);
     },
+    onShow() {
+      this.getExpTime();
+    },
     methods: {
       ...mapMutations(['SET_ORDER']),
+      radioChange(evt) {
+        for (let i = 0; i < this.items.length; i++) {
+          if (this.items[i].value === evt.detail.value) {
+            this.current = i;
+            break;
+          }
+        }
+      },
       goToRemark() {
         uni.navigateTo({
           url: '/pages/remark/remark?remark=' + this.form.remark,
@@ -228,20 +260,48 @@
           url: '/pages/packages/index',
         });
       },
+      getExpTime() {
+        // 获取本地时间与 UTC 时间的时间差（单位为分钟）
+        const localOffset = new Date().getTimezoneOffset();
+        // 计算目标时区与 UTC 时间的时间差
+        const beijingOffset = -480; // 北京时间为东八区，UTC+8
+        const offsetDiff = beijingOffset - localOffset;
+        // 使用时间差来获取当前北京时间
+        const now = new Date(Date.now() + offsetDiff * 60 * 1000);
+        // 加上50分钟后得到新时间
+        const newTime = new Date(now.getTime() + 50 * 60 * 1000);
+        // 将时间对象转换为字符串
+        const timeStr = newTime.toLocaleTimeString('zh-CN', { hour12: false });
+        // 对字符串进行处理，生成类似 '15:56' 的时间格式
+        const hour = timeStr.split(':')[0];
+        const minute = timeStr.split(':')[1];
+        const time = `${hour}:${minute}`;
+        this.expTime = time;
+        console.log(`当前北京时间为 ${time}`);
+      },
       submit() {
+        // 如果商品为外卖类型和堂食两种情况
         if (this.orderType == 'takeout') {
+          this.getExpTime();
           this.ensureAddressModalVisible = true;
         } else {
           this.pay();
         }
       },
+      // 调起支付接口，支付后跳转成功，此处可以设计两个接口，如支付宝和微信两个不同情况，同时也可以使用uni.payment支付
       pay() {
         uni.showLoading({ title: '加载中' });
-        //测试订单
+        //测试订单；orders为模拟堂食和外带的两种订单信息，in和out两种模式。
         let order = this.orderType == 'takein' ? orders[0] : orders[1];
+        // 此处猜测status为商品的制作状态。5为完成，1为刚刚开始的状态
         order = Object.assign(order, { status: 1 });
+        console.log('当前提交的订单为：', order);
+        // 这一步直接将order写入数据库就行了，展示页直接读取数据库的信息
+        // 这里使用当前购物车的数据覆盖模拟order的数据，表示当前最新的订单内容
+        order.goods = this.cart;
         this.SET_ORDER(order);
-        uni.removeStorageSync('cart');
+        // 支付成功后清除缓存中的购物车:结算时暂时不清除购物车内容
+        // uni.removeStorageSync('cart');
         uni.reLaunch({
           url: '/pages/take-foods/take-foods',
         });
@@ -254,6 +314,7 @@
 <style lang="scss" scoped>
   .container {
     padding: 30rpx;
+    overflow: auto;
   }
 
   .arrow {
@@ -317,7 +378,7 @@
 
   .pay-box {
     box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.1);
-    height: 100rpx;
+    height: 150rpx;
   }
 
   .modal-content {

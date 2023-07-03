@@ -1,14 +1,23 @@
 <template>
   <view class="container">
     <view class="banner">
-      <image src="https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg" mode="" class="bg"></image>
+      <!-- <image src="https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg" mode="" class="bg"></image> -->
+      <swiper class="bg" id="ads" autoplay circular easing-function="easeOutCubic" :interval="3000" indicator-dots>
+        <swiper-item v-for="(item, index) in ads" :key="index">
+          <image class="bg" :src="item.image" fade-show="true" @tap="goImageDetail(item)"></image>
+        </swiper-item>
+      </swiper>
       <view class="intro">
-        <view class="greet">您好，{{ isLogin ? member.nickname : '游客' }}</view>
-        <view class="note">一杯奶茶，一口软欧包，在奈雪遇见两种美好</view>
+        <view class="note">一杯奶茶，一口软欧包，在桑格利亚遇见两种美好</view>
       </view>
     </view>
     <view class="content">
       <view class="entrance">
+        <!-- <view class="headerbar">我是xxx</view> -->
+        <view class="headerbar">
+          <view class="text"> 您好，{{ isLogin ? member.nickname : '游客' }} </view>
+        </view>
+
         <view class="item" @tap="takein">
           <image src="/static/images/index/zq.png" class="icon"></image>
           <view class="title">自取</view>
@@ -23,10 +32,10 @@
           <view class="top">
             <!-- 积分优先取缓存中的值 -->
             <text class="title">我的积分</text>
-            <text class="value">{{ pointNum }}</text>
+            <text class="value">{{ pointNum || '暂未登录' }}</text>
           </view>
           <view class="bottom">
-            进入积分商城兑换奈雪券及周边好礼
+            进入积分商城兑换桑格利亚券及周边好礼
             <view class="iconfont iconarrow-right"></view>
           </view>
         </view>
@@ -37,10 +46,10 @@
       </view>
       <view class="navigators">
         <view class="left">
-          <view class="grid flex-column just-content-center">
+          <view class="grid flex-column just-content-center" @click="showNaviToast">
             <view class="d-flex align-items-center">
               <image src="/static/images/index/csc.png" class="mark-img"></image>
-              <view class="font-size-sm text-color-base">奈雪的茶商城</view>
+              <view class="font-size-sm text-color-base">桑格利亚的茶商城</view>
             </view>
             <view class="text-color-assist" style="margin-left: 40rpx; font-size: 20rpx">优质茶礼盒，网红零食</view>
           </view>
@@ -65,7 +74,7 @@
           </view>
         </view>
       </view>
-      <view class="member-news">
+      <view class="member-news" @click="showNaviToast">
         <view class="header">
           <view class="title">会员新鲜事</view>
           <view class="iconfont iconRightbutton"></view>
@@ -89,6 +98,14 @@
     data() {
       return {
         pointNum: '',
+        // 右侧商品列表最上方轮播图广告图片链接
+        ads: [
+          { image: 'https://img-shop.qmimg.cn/s23107/2020/04/27/4ebdb582a5185358c4.jpg?imageView2/2/w/600/h/900' },
+          { image: 'https://images.qmai.cn/s23107/2020/05/08/c25de6ef72d2890630.png?imageView2/2/w/600/h/900' },
+          { image: 'https://img-shop.qmimg.cn/s23107/2020/04/10/add546c1b1561f880d.jpg?imageView2/2/w/600/h/600' },
+          { image: 'https://images.qmai.cn/s23107/2020/04/30/b3af19e0de8ed42f61.jpg?imageView2/2/w/600/h/600' },
+          { image: 'https://img-shop.qmimg.cn/s23107/2020/04/17/8aeb78516d63864420.jpg?imageView2/2/w/600/h/600' },
+        ],
       };
     },
     computed: {
@@ -100,6 +117,9 @@
       console.log('index onLoad', localInfo('userinfo').pointNum);
     },
     methods: {
+      showNaviToast() {
+        uni.showToast({ title: '敬请期待' });
+      },
       takein() {
         this.$store.commit('SET_ORDER_TYPE', 'takein');
         uni.switchTab({
@@ -156,21 +176,22 @@
   /* #endif */
 
   .banner {
-    position: relative;
+    position: static;
     width: 100%;
-    height: 600rpx;
+    height: 650rpx;
 
     .bg {
       width: 100%;
-      height: 600rpx;
+      height: 650rpx;
     }
 
     .intro {
       position: absolute;
-      top: calc(50rpx + var(--status-bar-height));
-      left: 40rpx;
-      color: #ffffff;
+      top: calc(70rpx + var(--status-bar-height));
+      right: 40rpx;
+      color: #e1e4b8;
       display: flex;
+      writing-mode: vertical-lr;
       flex-direction: column;
 
       .greet {
@@ -179,7 +200,7 @@
       }
 
       .note {
-        font-size: $font-size-sm;
+        font-size: x-large;
       }
     }
   }
@@ -190,7 +211,7 @@
 
   .entrance {
     position: relative;
-    margin-top: -80rpx;
+    margin-top: -60rpx;
     margin-bottom: 30rpx;
     border-radius: 10rpx;
     background-color: #ffffff;
@@ -199,8 +220,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
+    .headerbar {
+      .text {
+        padding: 15rpx 0 0rpx 25rpx;
+      }
+      background-color: #fff;
+      font-size: medium;
+      font-weight: 300;
+      border-radius: 10rpx;
+      color: #85900c;
+      //opacity: 0.1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
     .item {
+      margin-top: 30rpx;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -219,8 +255,8 @@
       }
 
       .icon {
-        width: 84rpx;
-        height: 84rpx;
+        width: 116rpx;
+        height: 116rpx;
         margin: 20rpx;
       }
 
