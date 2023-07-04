@@ -8185,7 +8185,7 @@ export const b = [
     id: '53',
     sort: 45,
     name: '候子示之',
-    icon: 'http://dummyimage.com/100x100',
+    icon: 'http://dummyimage.com/200x200',
     goods_list: [
       {
         images: 'https://img-shop.qmimg.cn/s23107/2019/04/28/be484557ff7cfa4dba.jpg?imageView2/2/w/400/h/400',
@@ -8498,7 +8498,7 @@ export const b = [
     id: '97',
     sort: 40,
     name: '斗思用时色',
-    icon: 'http://dummyimage.com/100x100',
+    icon: 'http://dummyimage.com/200x200',
     goods_list: [
       {
         images: 'http://dummyimage.com/400x400',
@@ -9501,7 +9501,7 @@ export const mockGoods = [
     id: '32',
     sort: 36,
     name: '咖啡',
-    icon: 'http://dummyimage.com/100x100',
+    icon: 'http://dummyimage.com/200x200',
     goods_list: [
       {
         images: 'http://dummyimage.com/400x400',
@@ -9644,7 +9644,7 @@ export const mockGoods = [
     id: '42',
     sort: 68,
     name: '奶茶',
-    icon: 'http://dummyimage.com/100x100',
+    icon: 'http://dummyimage.com/200x200',
     goods_list: [
       {
         images: 'http://dummyimage.com/400x400',

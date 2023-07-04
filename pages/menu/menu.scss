@@ -389,7 +389,8 @@ page {
                     font-size: $font-size-sm;
                     height: 44rpx;
                     line-height: 44rpx;
-
+                    color: $text-color-white;
+                    background-color: $color-default;
                     &.property_btn {
                       border-radius: 24rpx;
                     }
@@ -624,8 +625,8 @@ page {
   }
 }
 
-.cart-box {
-  position: absolute;
+.toolbar {
+  position: fixed;
   bottom: 8rpx;
   left: 20rpx;
   right: 20rpx;
@@ -734,12 +735,17 @@ page {
       .good {
         display: flex;
         align-items: center;
-        margin-bottom: 30rpx;
+        // margin-bottom: 30rpx;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 30rpx 0;
         position: relative;
+        /* #ifdef H5 */
+        &:last-child {
+          margin-bottom: 88rpx;
+        }
+        /* #endif */
         &::after {
           content: ' ';
           position: absolute;

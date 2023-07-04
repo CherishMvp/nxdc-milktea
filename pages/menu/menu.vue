@@ -50,7 +50,7 @@
               <!-- 此处要注意 currentCateId和item.id都要为number类型；apifox设为了string-->
               <view class="menu" :id="`menu-${item.id}`" :class="{ current: item.id == currentCateId }" v-for="(item, index) in goods" :key="index" @tap="handleMenuTap(item.id)">
                 <text>{{ item.name }}</text>
-                <view class="dot" v-show="menuCartNum(item.id)">{{ menuCartNum(item.id) }}</view>
+                <view class="dot" v-if="menuCartNum(item.id)">{{ menuCartNum(item.id) }}</view>
               </view>
             </view>
           </view>
@@ -90,19 +90,21 @@
                         <div v-if="!isclose">
                           <view class="btn-group" v-if="good.use_property">
                             <!-- <span>{{ good.use_property }}</span> -->
-                            <button type="primary" class="btn property_btn" hover-class="none" size="mini" @tap="showGoodDetailModal(item, good)"> 选规格 </button>
-                            <view class="dot" v-show="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
+                            <button type="default" class="btn property_btn" hover-class="none" size="mini" @tap="showGoodDetailModal(item, good)"> 选规格 </button>
+                            <view class="dot" v-if="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
                           </view>
                           <!-- 进行商品添加增删 -->
                           <view class="btn-group" v-else>
                             <!-- 左侧减少商品按钮 -->
-                            <button type="default" v-show="goodCartNum(good.id)" plain class="btn reduce_btn" size="mini" hover-class="none" @tap="handleReduceFromCart(item, good)">
-                              <view class="iconfont iconsami-select"></view>
+                            <uni-icons v-if="goodCartNum(good.id)" type="minus" size="35" color="#919293" @click="handleReduceFromCart(item, good)"></uni-icons>
+                            <button type="default" v-if="goodCartNum(good.id) && false" class="btn reduce_btn" size="mini" hover-class="none" @tap="handleReduceFromCart(item, good)">
+                              <!-- <view class="iconfont iconsami-select"></view> -->
                             </button>
-                            <view class="number" v-show="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
+                            <view class="number" v-if="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
                             <!-- 右侧增加商品按钮,初始化时默认给1 -->
-                            <button type="primary" class="btn add_btn" size="min" hover-class="none" @tap="handleAddToCart(item, good, 1)">
-                              <view class="iconfont iconadd-select"></view>
+                            <uni-icons type="plus-filled" size="35" color="#adb838" @click="handleAddToCart(item, good, 1)"></uni-icons>
+                            <button v-if="false" type="default" class="btn add_btn" size="min" hover-class="none" @tap="handleAddToCart(item, good, 1)">
+                              <!-- <view class="iconfont iconadd-select"></view> -->
                             </button>
                           </view>
                         </div>
@@ -126,9 +128,10 @@
         </div>
       </view>
       <view v-else>
-        <view class="cart-box" v-if="cart.length > 0">
+        <!-- 吸底工具栏 -->
+        <view class="toolbar" :style="{ paddingBottom: calculateMarginBottom }" v-if="cart.length > 0">
           <view @tap="clickCard" class="isfree-card" v-if="isFreeCard">
-            <uni-icons type="wallet" color="#3de5" size="24" />
+            <uni-icons type="gift-filled" color="#fab714" size="30" />
             卡券{{ cardNumber }}张
           </view>
           <view class="mark">
@@ -140,7 +143,7 @@
             <view style="font-size: 30rpx; font-weight: 300; text-decoration: line-through; margin-left: 8rpx">￥{{ 457 }}</view>
           </view>
 
-          <button type="primary" class="pay-btn" @tap="toPay" :disabled="disabledPay">
+          <button type="default" style="background-color: #adb838" class="pay-btn" @tap="toPay" :disabled="disabledPay">
             {{ disabledPay ? `差${spread}元起送` : '去结算' }}
           </button>
         </view>
@@ -192,7 +195,7 @@
               <view class="iconfont iconsami-select"></view>
             </button>
             <view class="number">{{ good.number }}</view>
-            <button type="primary" class="btn" size="min" hover-class="none" @tap="handlePropertyAdd">
+            <button type="default" class="btn" size="min" hover-class="none" @tap="handlePropertyAdd">
               <view class="iconfont iconadd-select"></view>
             </button>
           </view>
@@ -222,15 +225,11 @@
                   <!-- 进行商品添加增删 -->
                   <view class="btn-group">
                     <!-- 左侧减少商品按钮 -->
-                    <button v-show="goodCartNum(good.id)" type="default" plain class="btn reduce_btn" size="mini" hover-class="none" @tap="handleCartItemReduce(key)">
-                      <view class="iconfont iconsami-select"></view>
-                    </button>
+                    <uni-icons v-if="goodCartNum(good.id)" type="minus" size="35" color="#919293" @click="handleCartItemReduce(key)"></uni-icons>
                     <!-- <view class="number">{{ goodCartNum(good.id) }}</view> -->
                     <!-- 右侧增加商品按钮,初始化时默认给1 -->
                     <view class="number">{{ good.number }}</view>
-                    <button v-show="goodCartNum(good.id)" type="primary" class="btn add_btn" size="min" hover-class="none" @tap="handleCartItemAdd(key)">
-                      <view class="iconfont iconadd-select"></view>
-                    </button>
+                    <uni-icons v-if="goodCartNum(good.id)" type="plus-filled" size="35" color="#adb838" @click="handleCartItemAdd(key)"></uni-icons>
                   </view>
                 </view>
               </view>
@@ -248,7 +247,7 @@
                   <view class="iconfont iconsami-select"></view>
                 </button>
                 <view class="number">1</view>
-                <button type="primary" class="btn" size="min" hover-class="none">
+                <button type="default" class="btn" size="min" hover-class="none">
                   <view class="iconfont iconadd-select"></view>
                 </button>
               </view>
@@ -280,6 +279,7 @@
         isFreeCard: true,
         cardNumber: 0,
         scrollTop: '',
+        testGoods: ['http://dummyimage.com/600x900', 'http://dummyimage.com/600x1100'],
         goods: [], //所有商品
         // 右侧商品列表最上方轮播图广告图片链接
         ads: [
@@ -299,6 +299,7 @@
         category: {}, //当前饮品所在分类
         cartPopupVisible: false,
         sizeCalcState: false,
+        safeAreaInsets: '', //安全区域
       };
     },
     async onLoad() {
@@ -326,6 +327,9 @@
     computed: {
       ...mapState(['orderType', 'address', 'store']),
       ...mapGetters(['isLogin']),
+      calculateMarginBottom() {
+        return this.safeAreaInsets?.bottom + 'px'; // 设置底部外边距的数值
+      },
       goodCartNum() {
         //计算单个饮品添加到购物车的数量
         return (id) =>
@@ -578,7 +582,6 @@
             if (confirm) {
               this.$refs.popup.close();
               this.isFreeCard = true;
-
               // this.cartPopupVisible = false;
               this.cart = [];
             }
@@ -628,5 +631,5 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '~@/pages/menu/menu.scss';
+  @import './menu.scss';
 </style>

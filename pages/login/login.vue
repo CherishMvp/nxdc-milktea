@@ -18,6 +18,12 @@
         微信一键登录
       </button>
       <!-- #endif -->
+      <!-- #ifdef MP-ALIPAY -->
+      <button type="default" style="background-color: #adb838" size="default" class="login-btn" open-type="getUserInfo" lang="zh_CN" @tap="getUserInfo">
+        <image src="/static/images/mine/ali.png"></image>
+        支付宝一键登录
+      </button>
+      <!-- #endif -->
       <view class="d-flex flex-column justify-content-evenly align-items-center text-center" style="height: 30vh">
         <view class="w-100 font-size-base text-color-assist">新用户登录即加入会员，享会员权益</view>
         <view class="w-100 row d-flex just-content-around align-items-center font-size-sm text-color-assist">
