@@ -121,7 +121,7 @@
   };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   /* 吸底工具栏 */
   .toolbar {
     position: fixed;

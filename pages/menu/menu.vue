@@ -1,10 +1,24 @@
 <template>
   <view class="container" v-if="!loading">
+    <!-- #ifdef MP-WEIXIN||MP-ALIPAY -->
+    <uni-nav-bar :border="false" :height="calculateStatusBarHeight" title=""></uni-nav-bar>
+    <!-- #endif -->
     <view class="main" v-if="goods.length">
       <view class="nav">
         <view class="header">
           <view class="left" v-if="orderType == 'takein'">
             <view class="store-name">
+              <view class="right">
+                <view class="dinein" :class="{ active: orderType == 'takein' }" @tap="SET_ORDER_TYPE('takein')">
+                  <text>自取</text>
+                </view>
+                <view class="takeout" :class="{ active: orderType == 'takeout' }" @tap="takout">
+                  <text>外卖</text>
+                </view>
+              </view>
+            </view>
+            <view class="store-location">
+              <image src="/static/images/index/shop.png" style="width: 30rpx; height: 30rpx" class="mr-10"></image>
               <text>{{ store.name }}</text>
               <view class="iconfont iconarrow-right"></view>
             </view>
@@ -14,24 +28,26 @@
             </view>
           </view>
           <view class="left overflow-hidden" v-else>
+            <view class="store-name">
+              <view class="right">
+                <view class="dinein" :class="{ active: orderType == 'takein' }" @tap="SET_ORDER_TYPE('takein')">
+                  <text>自取</text>
+                </view>
+                <view class="takeout" :class="{ active: orderType == 'takeout' }" @tap="takout">
+                  <text>外卖</text>
+                </view>
+              </view>
+            </view>
             <view class="d-flex align-items-center overflow-hidden">
               <image src="/static/images/order/location.png" style="width: 30rpx; height: 30rpx" class="mr-10"></image>
-              <view class="font-size-extra-lg text-color-base font-weight-bold text-truncate">
+              <view class="font-size-medium text-color-base font-weight-bold text-truncate">
                 {{ address.street }}
               </view>
             </view>
             <view class="font-size-sm text-color-assist overflow-hidden text-truncate">
-              由<text class="text-color-base" style="margin: 0 10rpx">{{ store.name }}</text
-              >配送 由<text class="text-color-base" style="margin: 0 10rpx">{{ store.name }}</text>
-              配送
-            </view>
-          </view>
-          <view class="right">
-            <view class="dinein" :class="{ active: orderType == 'takein' }" @tap="SET_ORDER_TYPE('takein')">
-              <text>自取</text>
-            </view>
-            <view class="takeout" :class="{ active: orderType == 'takeout' }" @tap="takout">
-              <text>外卖</text>
+              由
+              <text class="text-color-base" style="margin: 0 10rpx"> {{ store.name }}</text
+              >配送
             </view>
           </view>
         </view>
@@ -96,13 +112,13 @@
                           <!-- 进行商品添加增删 -->
                           <view class="btn-group" v-else>
                             <!-- 左侧减少商品按钮 -->
-                            <uni-icons v-if="goodCartNum(good.id)" type="minus" size="35" color="#919293" @click="handleReduceFromCart(item, good)"></uni-icons>
+                            <uni-icons v-if="goodCartNum(good.id)" type="minus" size="32" color="#919293" @click="handleReduceFromCart(item, good)"></uni-icons>
                             <button type="default" v-if="goodCartNum(good.id) && false" class="btn reduce_btn" size="mini" hover-class="none" @tap="handleReduceFromCart(item, good)">
                               <!-- <view class="iconfont iconsami-select"></view> -->
                             </button>
                             <view class="number" v-if="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
                             <!-- 右侧增加商品按钮,初始化时默认给1 -->
-                            <uni-icons type="plus-filled" size="35" color="#adb838" @click="handleAddToCart(item, good, 1)"></uni-icons>
+                            <uni-icons type="plus-filled" size="32" color="#adb838" @click="handleAddToCart(item, good, 1)"></uni-icons>
                             <button v-if="false" type="default" class="btn add_btn" size="min" hover-class="none" @tap="handleAddToCart(item, good, 1)">
                               <!-- <view class="iconfont iconadd-select"></view> -->
                             </button>
@@ -122,14 +138,14 @@
       </view>
       <!-- content end -->
       <!-- 购物车栏 begin -->
-      <view v-if="isclose" class="cart-box">
+      <view v-if="isclose" class="toolbar">
         <div>
           <span>休息中（营业时间：9:00-21:00）</span>
         </div>
       </view>
       <view v-else>
         <!-- 吸底工具栏 -->
-        <view class="toolbar" :style="{ paddingBottom: calculateMarginBottom }" v-if="cart.length > 0">
+        <view class="toolbar" v-if="cart.length > 0">
           <view @tap="clickCard" class="isfree-card" v-if="isFreeCard">
             <uni-icons type="gift-filled" color="#fab714" size="30" />
             卡券{{ cardNumber }}张
@@ -225,11 +241,11 @@
                   <!-- 进行商品添加增删 -->
                   <view class="btn-group">
                     <!-- 左侧减少商品按钮 -->
-                    <uni-icons v-if="goodCartNum(good.id)" type="minus" size="35" color="#919293" @click="handleCartItemReduce(key)"></uni-icons>
+                    <uni-icons v-if="goodCartNum(good.id)" type="minus" size="32" color="#919293" @click="handleCartItemReduce(key)"></uni-icons>
                     <!-- <view class="number">{{ goodCartNum(good.id) }}</view> -->
                     <!-- 右侧增加商品按钮,初始化时默认给1 -->
                     <view class="number">{{ good.number }}</view>
-                    <uni-icons v-if="goodCartNum(good.id)" type="plus-filled" size="35" color="#adb838" @click="handleCartItemAdd(key)"></uni-icons>
+                    <uni-icons v-if="goodCartNum(good.id)" type="plus-filled" size="32" color="#adb838" @click="handleCartItemAdd(key)"></uni-icons>
                   </view>
                 </view>
               </view>
@@ -300,12 +316,16 @@
         cartPopupVisible: false,
         sizeCalcState: false,
         safeAreaInsets: '', //安全区域
+        statusBar: '',
       };
     },
     async onLoad() {
       await this.init();
     },
     onShow() {
+      // #ifdef MP-ALIPAY
+      my.hideBackHome();
+      // #endif
       // 获取本地时间与 UTC 时间的时间差（单位为分钟）
       const localOffset = new Date().getTimezoneOffset();
       // 计算目标时区与 UTC 时间的时间差
@@ -324,11 +344,19 @@
         console.log('当前时间不在早上9点到晚上9点之间！');
       }
     },
+    mounted() {
+      this.safeAreaInsets = uni.getSystemInfoSync().safeAreaInsets;
+      this.statusBar = uni.getSystemInfoSync().statusBarHeight;
+      console.log('safeAreaInsets', this.safeAreaInsets?.top, 'statusBar', this.statusBar);
+    },
     computed: {
       ...mapState(['orderType', 'address', 'store']),
       ...mapGetters(['isLogin']),
-      calculateMarginBottom() {
-        return this.safeAreaInsets?.bottom + 'px'; // 设置底部外边距的数值
+      calculateMarginTop() {
+        return this.safeAreaInsets?.top + 'px'; // 设置底部外边距的数值
+      },
+      calculateStatusBarHeight() {
+        return this.statusBar + 'px'; // 设置底部外边距的数值
       },
       goodCartNum() {
         //计算单个饮品添加到购物车的数量

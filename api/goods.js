@@ -9496,9 +9496,10 @@ export const c = [
     is_show_backstage: 0,
   },
 ];
+// 默认给的选中ID我们设为了88，所以要对应上
 export const mockGoods = [
   {
-    id: '32',
+    id: '88',
     sort: 36,
     name: '咖啡',
     icon: 'http://dummyimage.com/200x200',

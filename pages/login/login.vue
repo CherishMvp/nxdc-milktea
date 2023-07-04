@@ -143,17 +143,20 @@
                     // 存入本地缓存，防止
                   },
                   success(result) {
-                    console.log('result', result);
+                    const { data } = result.data;
+                    console.log('data', data);
 
                     // mock返回的数据
                     // 将token存入pinia中
+                    uni.setStorageSync('token', data.token);
                     // 登录成功后，要调用nest接口，将openId作为用户唯一标识写入数据库
                     // URI.createUser(result.data.openid);
                     // 桑格利亚这里可以改为获取用户订单数据
                     uni.request({
                       // url: ProductApi.BASE_URL + `/product/${result.data.openid}`,
-                      url: 'https://nest.ai0626.online/shengxian/product/' + result.data.openid,
+                      url: 'https://nest.ai0626.online/shengxian/product/' + data.openid,
                       method: 'POST',
+                      header: { Authorization: 'Bearer ' + uni.getStorageSync('token') },
                     });
                   },
                   fail(err) {
