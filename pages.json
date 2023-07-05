@@ -7,7 +7,9 @@
         "navigationStyle": "custom",
         "mp-alipay": {
           "transparentTitle": "always",
-          "titlePenetrate": "YES"
+          "titlePenetrate": "YES",
+          "allowsBounceVertical": "NO",
+          "disableScroll": false
         }
       }
     },
@@ -23,8 +25,8 @@
         "mp-alipay": {
           "transparentTitle": "always",
           "titlePenetrate": "YES",
+          //这两个配置才有用
           "allowsBounceVertical": "NO",
-          //这个配置才有用
           "disableScroll": true
         }
       }
@@ -45,8 +47,13 @@
         // #endif
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff",
-        "transparentTitle": "always",
-        "titlePenetrate": "YES"
+        "mp-alipay": {
+          "transparentTitle": "always",
+          "titlePenetrate": "YES",
+          //这两个配置才有用
+          "allowsBounceVertical": "NO",
+          "disableScroll": true
+        }
       }
     },
     {
@@ -254,6 +261,9 @@
     "color": "#919293",
     "selectedColor": "#97AF13",
     "backgroundColor": "#fff",
+    "mp-alipay": {
+      "borderStyle": "white"
+    },
     "borderStyle": "white",
     "list": [
       {

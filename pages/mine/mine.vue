@@ -1,11 +1,17 @@
 <template>
   <view class="container">
-    <view class="position-relative">
-      <image src="https://img-shop.qmimg.cn/s16/images/2020/01/20/9a82219bedcae5c2.jpeg" class="bg"></image>
-      <button type="default" size="mini" class="hym-btn" @tap="memberCode">
+    <view class="capsule" :style="capsuleStyle"></view>
+    <view class="custom-div" :style="divStyle">
+      <button type="default" size="mini" class="hym-btn" @click="memberCode">
         <image src="/static/images/mine/hym.png"></image>
         <text>会员码</text>
       </button>
+    </view>
+    <!-- #ifdef MP-WEIXIN||MP-ALIPAY -->
+    <!-- <uni-nav-bar :border="false" :height="calculateStatusBarHeight"></uni-nav-bar> -->
+    <!-- #endif -->
+    <view class="position-relative">
+      <image src="https://img-shop.qmimg.cn/s16/images/2020/01/20/9a82219bedcae5c2.jpeg" class="bg"></image>
     </view>
 
     <view style="padding: 0 30rpx">
@@ -169,6 +175,9 @@
       return {
         updateMemberInfo: '',
         newIcon: 'https://img-shop.qmimg.cn/s16/images/2020/05/12/ffb0613dded704b6.png',
+        statusBar: '',
+        capsuleStyle: {},
+        divStyle: {},
       };
     },
     computed: {
@@ -184,6 +193,23 @@
         console.log('current value: ' + currentValue, 'need value: ' + needValue);
         return (currentValue / (currentValue + needValue)) * 100;
       },
+      calculateStatusBarHeight() {
+        return this.statusBar + 'px'; // 设置底部外边距的数值
+      },
+    },
+    mounted() {
+      this.statusBar = uni.getSystemInfoSync().statusBarHeight;
+      const rect = uni.getMenuButtonBoundingClientRect();
+      this.capsuleStyle = {
+        left: `${rect.left}px`,
+        top: `${rect.top}px`,
+        /* 其他胶囊按钮样式属性 */
+      };
+      this.divStyle = {
+        left: `${rect.left - 140}px`,
+        top: `${rect.top}px`,
+        /* 其他div样式属性 */
+      };
     },
     onLoad() {},
     // 页面一显示就重新刷新获取会员详细信息
@@ -314,6 +340,20 @@
 </script>
 
 <style lang="scss" scoped>
+  .container {
+    position: relative;
+  }
+
+  .capsule {
+    position: absolute;
+    /* 设置胶囊按钮的样式，如宽、高、颜色等 */
+  }
+
+  .custom-div {
+    position: absolute;
+    z-index: 100;
+    /* 设置div的样式，如宽、高、背景色等 */
+  }
   page {
     height: auto;
     min-height: 100%;
@@ -325,10 +365,9 @@
   }
 
   .hym-btn {
-    position: absolute;
-    top: 40rpx;
-    right: 40rpx;
+    position: relative;
     color: $color-primary;
+    background-color: transparent;
     display: flex;
     align-items: center;
     justify-content: center;

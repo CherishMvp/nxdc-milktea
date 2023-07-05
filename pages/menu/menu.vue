@@ -112,13 +112,13 @@
                           <!-- 进行商品添加增删 -->
                           <view class="btn-group" v-else>
                             <!-- 左侧减少商品按钮 -->
-                            <uni-icons v-if="goodCartNum(good.id)" type="minus" size="32" color="#919293" @click="handleReduceFromCart(item, good)"></uni-icons>
+                            <uni-icons v-if="goodCartNum(good.id)" type="minus" size="55rpx" color="#919293" @click="handleReduceFromCart(item, good)"></uni-icons>
                             <button type="default" v-if="goodCartNum(good.id) && false" class="btn reduce_btn" size="mini" hover-class="none" @tap="handleReduceFromCart(item, good)">
                               <!-- <view class="iconfont iconsami-select"></view> -->
                             </button>
                             <view class="number" v-if="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
                             <!-- 右侧增加商品按钮,初始化时默认给1 -->
-                            <uni-icons type="plus-filled" size="32" color="#adb838" @click="handleAddToCart(item, good, 1)"></uni-icons>
+                            <uni-icons type="plus-filled" size="55rpx" color="#adb838" @click="handleAddToCart(item, good, 1)"></uni-icons>
                             <button v-if="false" type="default" class="btn add_btn" size="min" hover-class="none" @tap="handleAddToCart(item, good, 1)">
                               <!-- <view class="iconfont iconadd-select"></view> -->
                             </button>
@@ -241,11 +241,11 @@
                   <!-- 进行商品添加增删 -->
                   <view class="btn-group">
                     <!-- 左侧减少商品按钮 -->
-                    <uni-icons v-if="goodCartNum(good.id)" type="minus" size="32" color="#919293" @click="handleCartItemReduce(key)"></uni-icons>
+                    <uni-icons v-if="goodCartNum(good.id)" type="minus" size="55rpx" color="#919293" @click="handleCartItemReduce(key)"></uni-icons>
                     <!-- <view class="number">{{ goodCartNum(good.id) }}</view> -->
                     <!-- 右侧增加商品按钮,初始化时默认给1 -->
                     <view class="number">{{ good.number }}</view>
-                    <uni-icons v-if="goodCartNum(good.id)" type="plus-filled" size="32" color="#adb838" @click="handleCartItemAdd(key)"></uni-icons>
+                    <uni-icons v-if="goodCartNum(good.id)" type="plus-filled" size="55rpx" color="#adb838" @click="handleCartItemAdd(key)"></uni-icons>
                   </view>
                 </view>
               </view>

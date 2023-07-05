@@ -41,9 +41,17 @@
         </view>
         <!-- #ifdef MP-WEIXIN -->
         <view class="d-flex just-content-center align-items-center">
-          <button type="primary" class="wepay-btn" hover-class="none">
+          <button type="default" style="background-color: #adb838" class="wepay-btn" hover-class="none">
             <image src="/static/images/mine/wechat.png"></image>
             <view>使用微信支付</view>
+          </button>
+        </view>
+        <!-- #endif -->
+        <!-- #ifdef MP-ALIPAY -->
+        <view class="d-flex just-content-center align-items-center">
+          <button type="default" style="background-color: #217cb0" class="wepay-btn" hover-class="none">
+            <image src="/static/images/mine/ali.png"></image>
+            <view>使用支付宝支付</view>
           </button>
         </view>
         <!-- #endif -->
@@ -62,7 +70,9 @@
     data() {
       return {};
     },
-    onShow() {
+    onShow() {},
+    onReady() {
+      console.log('11');
       let i = 1;
       this.makeMemberCode(i);
 
