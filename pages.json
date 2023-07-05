@@ -18,10 +18,10 @@
       "style": {
         // #ifdef MP-WEIXIN
         "navigationBarTitleText": "Only One 桑格利亚",
+        "navigationStyle": "custom",
         // #endif
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff",
-        "navigationStyle": "custom",
         "mp-alipay": {
           "transparentTitle": "always",
           "titlePenetrate": "YES",
@@ -42,11 +42,12 @@
     {
       "path": "pages/mine/mine",
       "style": {
-        // #ifdef MP-WEIXIN
+        // #ifdef H5
         "navigationBarTitleText": "桑格利亚乐园",
         // #endif
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff",
+        "navigationStyle": "custom",
         "mp-alipay": {
           "transparentTitle": "always",
           "titlePenetrate": "YES",

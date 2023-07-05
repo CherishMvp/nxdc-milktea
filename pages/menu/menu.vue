@@ -60,7 +60,7 @@
       <!-- 整个下方内容区 -->
       <view class="content">
         <!-- 左侧菜单menu -->
-        <scroll-view class="menus" :scroll-into-view="menuScrollIntoView" show-scrollbar="false" scroll-with-animation scroll-y>
+        <scroll-view class="menus" :scroll-into-view="menuScrollIntoView" :show-scrollbar="false" scroll-with-animation scroll-y>
           <view class="wrapper">
             <view class="list">
               <!-- 此处要注意 currentCateId和item.id都要为number类型；apifox设为了string-->
@@ -76,7 +76,7 @@
         <scroll-view class="goods" :show-scrollbar="false" scroll-with-animation scroll-y :scroll-top="cateScrollTop" @scroll="handleGoodsScroll" scrolltolower="scrollToBottom">
           <view class="wrapper">
             <!-- 商品列表最上方的广告轮播图 -->
-            <swiper class="ads" autoplay :interval="3000" indicator-dots>
+            <swiper class="ads" :id="'ads'" autoplay :interval="3000" indicator-dots>
               <swiper-item v-for="(item, index) in ads" :key="index">
                 <image :src="item.image" fade-show="true" @tap="goImageDetail(item)"></image>
               </swiper-item>
@@ -289,7 +289,7 @@
     data() {
       return {
         isclose: false, //是否打烊
-        h: -5,
+        h: -4,
         isFreeCard: true,
         cardNumber: 0,
         scrollTop: '',
@@ -438,7 +438,12 @@
           this.calcSize();
         }
         this.currentCateId = id;
-        this.$nextTick(() => (this.cateScrollTop = this.goods.find((item) => item.id == id).top));
+        let itemTop = this.goods.find((item) => item.id == id);
+        console.log('itemTop', itemTop);
+        // this.$nextTick(() => {
+        this.scrollTop = itemTop.top;
+        this.cateScrollTop = itemTop.top;
+        // });
         // console.log('this.cateScrollTop', this.cateScrollTop);
         if (this.currentCateId == 88) this.cateScrollTop = 0;
       },
@@ -458,8 +463,9 @@
         // console.log('scrollTop detail', this.scrollTop);
         let init_tabs = this.goods.filter((item) => item.top);
         let tabs = this.goods.filter((item) => item.top <= scrollTop).reverse();
+
         // console.log('init tabs', init_tabs);
-        // console.log('tabs', tabs);
+        console.log('tabs', tabs);
 
         // if (init_tabs.length - tabs.length == 1) {
         //   tabs.unshift(init_tabs[init_tabs.length]);
@@ -472,7 +478,7 @@
         if (tabs.length > 0) {
           // 可以在这里加个限制，当滚动到大于页面的百分之几的时候，将tab赋值为menu中的最后一个就行了
           // 若当前的tabs和初始化时的tabs相差一，则显示初始化时的tabs的最后一个tabs
-          this.currentCateId = tabs[0].id;
+          // this.currentCateId = tabs[0].id;
         }
       },
       calcSize() {
@@ -496,6 +502,8 @@
               });
               console.log('datahei', data.height, data);
               h += Math.floor(data.height);
+              // this.h = h;
+              // this.scrollTop = h;
             },
           )
           .exec();

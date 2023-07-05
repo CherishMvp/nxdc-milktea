@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <view class="capsule" :style="capsuleStyle"></view>
-    <view class="custom-div" :style="divStyle">
+    <view class="custom-div" :style="[divStyle]">
       <button type="default" size="mini" class="hym-btn" @click="memberCode">
         <image src="/static/images/mine/hym.png"></image>
         <text>会员码</text>
@@ -196,6 +196,9 @@
       calculateStatusBarHeight() {
         return this.statusBar + 'px'; // 设置底部外边距的数值
       },
+      style1() {
+        return this.divStyle;
+      },
     },
     mounted() {
       this.statusBar = uni.getSystemInfoSync().statusBarHeight;
@@ -210,6 +213,8 @@
         top: `${rect.top}px`,
         /* 其他div样式属性 */
       };
+      console.log('this.capule', this.capsuleStyle);
+      console.log('this.style = ', this.divStyle);
     },
     onLoad() {},
     // 页面一显示就重新刷新获取会员详细信息
@@ -351,7 +356,7 @@
 
   .custom-div {
     position: absolute;
-    z-index: 100;
+    z-index: 999;
     /* 设置div的样式，如宽、高、背景色等 */
   }
   page {

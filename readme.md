@@ -60,3 +60,7 @@ uni-app 插件市场地址:[https://ext.dcloud.net.cn/plugin?id=1807](https://ex
 
 - page.json 中这样配置才可以确保支付宝小程序页面不被滚动` { "path": "pages/menu/menu", "style": { // #ifdef MP-WEIXIN "navigationBarTitleText": "Only One 桑格利亚", // #endif "navigationBarTextStyle": "black", "navigationBarBackgroundColor": "#ffffff", "navigationStyle": "custom", "mp-alipay": { "transparentTitle": "always", "titlePenetrate": "YES" }, "disableScroll": true } },`
 - 重点看 wechat 和 ali 的差异化配置项注意点`https://uniapp.dcloud.net.cn/collocation/pages.html#tabbar`
+
+# 2023-07-05 23:15:33
+
+- （vue2）uni-app/小程序绑定 style 对象渲染结果是[object Object]，解决办法：用 `[ ]` 包裹着就行
