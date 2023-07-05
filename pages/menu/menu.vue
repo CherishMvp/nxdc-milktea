@@ -1,9 +1,9 @@
 <template>
   <view class="container" v-if="!loading">
     <!-- #ifdef MP-WEIXIN||MP-ALIPAY -->
-    <uni-nav-bar :border="false" :height="calculateStatusBarHeight" title=""></uni-nav-bar>
+    <uni-nav-bar :border="false" :height="calculateStatusBarHeight"></uni-nav-bar>
     <!-- #endif -->
-    <view class="main" v-if="goods.length">
+    <view class="main" :style="{ height: calculateWindowHeight }" v-if="goods.length">
       <view class="nav">
         <view class="header">
           <view class="left" v-if="orderType == 'takein'">
@@ -73,10 +73,10 @@
         </scroll-view>
         <!-- goods list begin -->
         <!-- 右侧商品列表 -->
-        <scroll-view class="goods" scroll-with-animation scroll-y :scroll-top="cateScrollTop" @scroll="handleGoodsScroll" scrolltolower="scrollToBottom">
+        <scroll-view class="goods" :show-scrollbar="false" scroll-with-animation scroll-y :scroll-top="cateScrollTop" @scroll="handleGoodsScroll" scrolltolower="scrollToBottom">
           <view class="wrapper">
             <!-- 商品列表最上方的广告轮播图 -->
-            <swiper class="ads" id="ads" autoplay :interval="3000" indicator-dots>
+            <swiper class="ads" autoplay :interval="3000" indicator-dots>
               <swiper-item v-for="(item, index) in ads" :key="index">
                 <image :src="item.image" fade-show="true" @tap="goImageDetail(item)"></image>
               </swiper-item>
@@ -280,13 +280,11 @@
 
 <script>
   import modal from '@/components/modal/modal';
-  import popupLayer from '@/components/popup-layer/popup-layer';
   import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 
   export default {
     components: {
       modal,
-      popupLayer,
     },
     data() {
       return {
@@ -317,6 +315,8 @@
         sizeCalcState: false,
         safeAreaInsets: '', //安全区域
         statusBar: '',
+        windowHeight: '',
+        surpluslHeight: '', //cartlist距离底部的距离
       };
     },
     async onLoad() {
@@ -346,8 +346,12 @@
     },
     mounted() {
       this.safeAreaInsets = uni.getSystemInfoSync().safeAreaInsets;
+      this.windowHeight = uni.getSystemInfoSync().windowHeight;
+      let height = uni.getSystemInfoSync().safeArea?.height;
+      console.log('screenHeight = ', this.windowHeight, 'height', height);
       this.statusBar = uni.getSystemInfoSync().statusBarHeight;
       console.log('safeAreaInsets', this.safeAreaInsets?.top, 'statusBar', this.statusBar);
+      // 获取其他容器高度
     },
     computed: {
       ...mapState(['orderType', 'address', 'store']),
@@ -357,6 +361,9 @@
       },
       calculateStatusBarHeight() {
         return this.statusBar + 'px'; // 设置底部外边距的数值
+      },
+      calculateWindowHeight() {
+        return this.windowHeight - this.statusBar + 'px'; // 可使用窗口高度
       },
       goodCartNum() {
         //计算单个饮品添加到购物车的数量
@@ -410,7 +417,7 @@
         this.loading = true;
         await this.getStore();
         // this.goods = await this.$api('goods');
-        this.goods = await this.$api('mockGoods');
+        this.goods = await this.$api('def');
         this.loading = false;
         this.cart = uni.getStorageSync('cart') || [];
       },
@@ -445,6 +452,7 @@
         }
         // console.log('details', detail);
         const { scrollTop } = detail;
+        console.log('scrollTop', scrollTop);
         this.scrollTop = scrollTop;
         if (scrollTop == 129) this.scrollTop = 0;
         // console.log('scrollTop detail', this.scrollTop);
@@ -493,6 +501,7 @@
           .exec();
 
         this.goods.forEach((item) => {
+          console.log('item', item);
           let view = uni.createSelectorQuery().select(`#cate-${item.id}`);
           view
             .fields(

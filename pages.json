@@ -22,9 +22,11 @@
         "navigationStyle": "custom",
         "mp-alipay": {
           "transparentTitle": "always",
-          "titlePenetrate": "YES"
-        },
-        "disableScroll": true
+          "titlePenetrate": "YES",
+          "allowsBounceVertical": "NO",
+          //这个配置才有用
+          "disableScroll": true
+        }
       }
     },
     {
