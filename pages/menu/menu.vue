@@ -60,11 +60,11 @@
       <!-- 整个下方内容区 -->
       <view class="content">
         <!-- 左侧菜单menu -->
-        <scroll-view class="menus" :scroll-into-view="menuScrollIntoView" :show-scrollbar="false" scroll-with-animation scroll-y>
+        <scroll-view class="menus" :scroll-anchoring="true" :scroll-top="mainDistance" :scroll-into-view="menuScrollIntoView" :show-scrollbar="false" scroll-with-animation scroll-y>
           <view class="wrapper">
             <view class="list">
               <!-- 此处要注意 currentCateId和item.id都要为number类型；apifox设为了string-->
-              <view class="menu" :id="`menu-${item.id}`" :class="{ current: item.id == currentCateId }" v-for="(item, index) in goods" :key="index" @tap="handleMenuTap(item.id)">
+              <view class="menu" :id="`menu-${item.id}`" :class="{ current: index == currentCateId, sticky: index == currentCateId }" v-for="(item, index) in goods" :key="index" @tap.stop="handleMenuTap(item.id, index)">
                 <text>{{ item.name }}</text>
                 <view class="dot" v-if="menuCartNum(item.id)">{{ menuCartNum(item.id) }}</view>
               </view>
@@ -73,7 +73,7 @@
         </scroll-view>
         <!-- goods list begin -->
         <!-- 右侧商品列表 -->
-        <scroll-view class="goods" :show-scrollbar="false" scroll-with-animation scroll-y :scroll-top="cateScrollTop" @scroll="handleGoodsScroll" scrolltolower="scrollToBottom">
+        <scroll-view :scroll-anchoring="true" class="goods" :scroll-into-view="scrollIntoView" :show-scrollbar="false" scroll-with-animation scroll-y @scroll="rightScroll" scrolltolower="scrollToBottom">
           <view class="wrapper">
             <!-- 商品列表最上方的广告轮播图 -->
             <swiper class="ads" :id="'ads'" autoplay :interval="3000" indicator-dots>
@@ -304,9 +304,9 @@
           { image: 'https://img-shop.qmimg.cn/s23107/2020/04/17/8aeb78516d63864420.jpg?imageView2/2/w/600/h/600' },
         ],
         loading: true,
-        currentCateId: 88, //默认分类；默认分类设置为最上方的那个分类，设为88
+        currentCateId: 0, //默认分类；默认分类设置为最上方的那个分类，设为88
         cateScrollTop: 0,
-        menuScrollIntoView: '',
+        menuScrollIntoView: null,
         cart: [], //购物车；可以考虑从缓存读取数据，若缓存没有再从服务器读取，同时考虑及时更新缓存内容
         goodDetailModalVisible: false, //是否饮品详情模态框
         good: {}, //当前饮品
@@ -317,6 +317,10 @@
         statusBar: '',
         windowHeight: '',
         surpluslHeight: '', //cartlist距离底部的距离
+        mainDistance: 0, // 存放滚动的高度
+        heightArr: [], // 存放每个类目的高度
+        heightNumber: 0, // 一次递增的累积高度
+        scrollIntoView: null,
       };
     },
     async onLoad() {
@@ -420,6 +424,7 @@
         this.goods = await this.$api('def');
         this.loading = false;
         this.cart = uni.getStorageSync('cart') || [];
+        this.getProductAllData();
       },
       takout() {
         if (this.orderType == 'takeout') return;
@@ -431,19 +436,64 @@
           url: '/pages/address/address?is_choose=true',
         });
       },
-      handleMenuTap(id) {
+      // 获取所有商品数据
+      getProductAllData() {
+        let heightArr = [];
+        let heightNumber = 0; // 一次递增的累积高度
+        const _dataLength = this.goods.length; // 类目数量
+        for (let i = 0; i < _dataLength; i++) {
+          // 50 为类目的标题高度 200 为每个产品的高度
+          let height = 50 + 230 * this.goods[i].goods_list.length;
+          // 我们与上一个高度相加
+          heightNumber += height;
+          // +=  等于  heightNumber = heightNumber + height
+          // 因为我们设置的是rpx，我们需要将rpx转成px
+          heightArr.push(this.rpxTopx(heightNumber));
+        }
+        this.heightArr = heightArr;
+      },
+      // rpx转px
+      rpxTopx(rpx) {
+        const screenWidth = uni.getSystemInfoSync().screenWidth;
+        return (screenWidth * Number.parseInt(rpx)) / 750;
+      },
+      // 右侧滚动触发
+      rightScroll(e) {
+        const { scrollTop } = e.detail;
+        let _index = this.currentCateId; // 左边的高亮下标
+        if (scrollTop > this.mainDistance) {
+          // 如果大于mainDistance表示用户上滑
+          if (_index + 1 < this.heightArr.length && scrollTop >= this.heightArr[_index]) {
+            this.currentCateId = _index + 1;
+          }
+        } else {
+          // 用户下滑
+          // 先判断下标-1要大于0（左边标签第一个时就不减了）
+          // 再判断用户滚动高度是否小于下标上一个总高度，如果小于就-1
+          if (_index - 1 >= 0 && scrollTop < this.heightArr[_index - 1]) {
+            this.currentCateId = _index - 1;
+          }
+        }
+        this.mainDistance = scrollTop; // 最后我们才赋值
+      },
+      handleMenuTap(id, index) {
+        this.currentCateId = index;
+        this.scrollIntoView = 'cate-' + this.goods[index].id;
+        console.log('scrollIntoView', this.scrollIntoView);
+        return;
         console.log('根据唯一的id跳转', id);
         //点击菜单项事件
         if (!this.sizeCalcState) {
           this.calcSize();
         }
         this.currentCateId = id;
+        this.scrollIntoView = 'menu-' + id;
         let itemTop = this.goods.find((item) => item.id == id);
         console.log('itemTop', itemTop);
-        // this.$nextTick(() => {
-        this.scrollTop = itemTop.top;
-        this.cateScrollTop = itemTop.top;
-        // });
+        this.$nextTick(() => {
+          this.scrollTop = itemTop.top;
+          this.cateScrollTop = itemTop.top;
+        });
         // console.log('this.cateScrollTop', this.cateScrollTop);
         if (this.currentCateId == 88) this.cateScrollTop = 0;
       },
@@ -478,7 +528,7 @@
         if (tabs.length > 0) {
           // 可以在这里加个限制，当滚动到大于页面的百分之几的时候，将tab赋值为menu中的最后一个就行了
           // 若当前的tabs和初始化时的tabs相差一，则显示初始化时的tabs的最后一个tabs
-          // this.currentCateId = tabs[0].id;
+          this.currentCateId = tabs[0].id;
         }
       },
       calcSize() {
@@ -490,20 +540,8 @@
               size: true,
             },
             (data) => {
-              uni.getSystemInfo({
-                success: function (res) {
-                  // console.log(res.model);
-                  // console.log(res.pixelRatio);
-                  // console.log(res.windowWidth);
-                  // console.log(res.language);
-                  // console.log(res.version);
-                  // console.log(res.platform);
-                },
-              });
               console.log('datahei', data.height, data);
               h += Math.floor(data.height);
-              // this.h = h;
-              // this.scrollTop = h;
             },
           )
           .exec();
@@ -519,7 +557,7 @@
               (data) => {
                 item.top = h;
                 h += data.height;
-                item.bottom = h;
+                item.bottom = h + 4;
               },
             )
             .exec();

@@ -64,3 +64,9 @@ uni-app 插件市场地址:[https://ext.dcloud.net.cn/plugin?id=1807](https://ex
 # 2023-07-05 23:15:33
 
 - （vue2）uni-app/小程序绑定 style 对象渲染结果是[object Object]，解决办法：用 `[ ]` 包裹着就行
+
+# 2023-07-06 11:53:26
+
+- 新版侧边栏和分类栏方案 1:`https://blog.csdn.net/weixin_44816309/article/details/106869588`
+- 方案 2：`https://blog.csdn.net/caihuahuahua/article/details/119488894`
+- 方案 3：`https://blog.csdn.net/LizequaNNN/article/details/124433574`
