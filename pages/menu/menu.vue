@@ -60,7 +60,7 @@
       <!-- 整个下方内容区 -->
       <view class="content">
         <!-- 左侧菜单menu -->
-        <scroll-view class="menus" :scroll-anchoring="true" :scroll-top="mainDistance" :scroll-into-view="menuScrollIntoView" :show-scrollbar="false" scroll-with-animation scroll-y>
+        <scroll-view class="menus" :scroll-anchoring="true" :scroll-top="mainDistance" :scroll-into-view="menuScrollIntoView" :scroll-animation-duration="2000" :show-scrollbar="false" scroll-with-animation scroll-y>
           <view class="wrapper">
             <view class="list">
               <!-- 此处要注意 currentCateId和item.id都要为number类型；apifox设为了string-->
@@ -73,7 +73,7 @@
         </scroll-view>
         <!-- goods list begin -->
         <!-- 右侧商品列表 -->
-        <scroll-view :scroll-anchoring="true" class="goods" :scroll-into-view="scrollIntoView" :show-scrollbar="false" scroll-with-animation scroll-y @scroll="rightScroll" scrolltolower="scrollToBottom">
+        <scroll-view :scroll-anchoring="true" class="goods" :scroll-into-view="scrollIntoView" :show-scrollbar="false" :scroll-animation-duration="1000" scroll-with-animation scroll-y @scroll="rightScroll" scrolltolower="scrollToBottom">
           <view class="wrapper">
             <!-- 商品列表最上方的广告轮播图 -->
             <swiper class="ads" :id="'ads'" autoplay :interval="3000" indicator-dots>
@@ -480,7 +480,7 @@
         this.currentCateId = index;
         this.scrollIntoView = 'cate-' + this.goods[index].id;
         console.log('scrollIntoView', this.scrollIntoView);
-        return;
+          return;
         console.log('根据唯一的id跳转', id);
         //点击菜单项事件
         if (!this.sizeCalcState) {
