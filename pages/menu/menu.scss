@@ -4,7 +4,40 @@ page {
   height: 100%;
 }
 /* #endif */
-
+.hideCard {
+  animation-name: hideCard;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+@keyframes hideCard {
+  /* from表示动画的开始位置，也可以使用0%来表示。 */
+  from {
+  }
+  /* to表示动画的结束位置，也可以使用100%来表示。 */
+  to {
+    flex: 0;
+    margin-left: -140px;
+    display: none;
+  }
+}
+.showCard {
+  animation-name: showCard;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+@keyframes showCard {
+  /* from表示动画的开始位置，也可以使用0%来表示。 */
+  from {
+    flex: 0;
+    margin-left: -140px;
+    display: none;
+  }
+  /* to表示动画的结束位置，也可以使用100%来表示。 */
+  to {
+    flex: 0.5;
+    display: block;
+  }
+}
 .container {
   overflow: hidden;
   position: relative;
@@ -645,6 +678,12 @@ page {
   align-items: center;
   justify-content: space-between;
   z-index: 9999;
+  & .leftContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
   div {
     width: 100%;
     display: flex;
@@ -659,9 +698,9 @@ page {
     border-radius: 48rpx 0;
     box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.2);
     height: 100%;
+    display: flex;
     justify-content: center;
     align-items: center;
-    display: flex;
     flex-direction: column;
     width: 140rpx;
     background-color: #adb838;
@@ -685,7 +724,7 @@ page {
     font-size: $font-size-base;
   }
   .mark {
-    padding-left: 46rpx;
+    //padding-left: 46rpx;
     margin-right: 30rpx;
     position: relative;
 

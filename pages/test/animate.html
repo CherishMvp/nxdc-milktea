@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="myDiv">left</div>
+    <div onclick="animateDiv()">add</div>
+    <div onclick="animateDiv2()">remove</div>
+    <div class="A">
+      <div class="A1" id="A1"> A1 </div>
+      <div class="A2" onclick="HideA1()"> A2 </div>
+    </div>
+  </body>
+  <script>
+    function HideA1() {
+      const domA1 = document.getElementById('A1');
+      console.log('domA1', domA1);
+      domA1.classList.add('hide');
+    }
+    function animateDiv() {
+      const myDiv = document.getElementById('myDiv');
+
+      setTimeout(() => {
+        myDiv.classList.add('animate__bounceOutLeft');
+      }, 500);
+
+      myDiv.addEventListener('animationend', function () {
+        myDiv.style.display = 'none';
+      });
+    }
+    function animateDiv2() {
+      const myDiv = document.getElementById('myDiv');
+      setTimeout(() => {
+        myDiv.classList.remove('animate__bounceOutLeft');
+      }, 500);
+      myDiv.addEventListener('animationend', function () {
+        myDiv.style.display = 'block';
+      });
+    }
+  </script>
+  <style>
+    .flex0 {
+      flex: 0;
+    }
+    .A {
+      width: 200px;
+      height: 100px;
+      display: flex;
+    }
+
+    .A1 {
+      width: 20px;
+      background-color: red;
+      height: 100%;
+    }
+
+    .A2 {
+      flex: 1;
+      background-color: rgb(181, 181, 215);
+      height: 100%;
+    }
+    @keyframes hide {
+      from {
+      }
+
+      to {
+        flex: 0;
+        margin-left: -40px;
+        display: none;
+      }
+    }
+
+    .hide {
+      animation-name: hide;
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+    }
+    @keyframes animate__bounceOutLeft {
+      20% {
+        opacity: 1;
+        transform: translate3d(20px, 0, 0);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate3d(-2000px, 0, 0) scaleX(2.5) scaleY(0.2);
+      }
+    }
+
+    .animate__bounceOutLeft {
+      animation-name: animate__bounceOutLeft;
+      animation-duration: 1s;
+    }
+
+    @keyframes bounceOutLeft {
+      20% {
+        opacity: 1;
+        transform: translate3d(20px, 0, 0) scaleX(0.9);
+      }
+
+      to {
+        opacity: 0;
+        transform: translate3d(-2000px, 0, 0) scaleX(2);
+      }
+    }
+
+    .bounceOutLeft {
+      animation-name: bounceOutLeft;
+    }
+  </style>
+</html>

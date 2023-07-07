@@ -146,19 +146,20 @@
       <view v-else>
         <!-- 吸底工具栏 -->
         <view class="toolbar" v-if="cart.length > 0">
-          <view @tap="clickCard" class="isfree-card" v-if="isFreeCard">
+          <view :class="[{ hideCard: !isFreeCard, showCard: isFreeCard }]" @tap="clickCard" class="isfree-card">
             <uni-icons type="gift-filled" color="#fab714" size="30" />
             卡券{{ cardNumber }}张
           </view>
-          <view class="mark">
-            <image src="/static/images/menu/cart.png" class="cart-img" @tap="openCartPopup"></image>
-            <view class="tag">{{ getCartGoodsNumber }}</view>
+          <view class="leftContainer">
+            <view class="mark">
+              <image src="/static/images/menu/cart.png" class="cart-img" @tap="openCartPopup"></image>
+              <view class="tag">{{ getCartGoodsNumber }}</view>
+            </view>
+            <view class="price">
+              ￥{{ getCartGoodsPrice }}
+              <view style="font-size: 30rpx; font-weight: 300; text-decoration: line-through; margin-left: 8rpx">￥{{ 457 }}</view>
+            </view>
           </view>
-          <view class="price">
-            ￥{{ getCartGoodsPrice }}
-            <view style="font-size: 30rpx; font-weight: 300; text-decoration: line-through; margin-left: 8rpx">￥{{ 457 }}</view>
-          </view>
-
           <button type="default" style="background-color: #adb838" class="pay-btn" @tap="toPay" :disabled="disabledPay">
             {{ disabledPay ? `差${spread}元起送` : '去结算' }}
           </button>
@@ -321,6 +322,8 @@
         heightArr: [], // 存放每个类目的高度
         heightNumber: 0, // 一次递增的累积高度
         scrollIntoView: null,
+        isClicked: false,
+        isClicked2: false,
       };
     },
     async onLoad() {
@@ -405,6 +408,9 @@
         if (this.orderType != 'takeout') return;
         return parseFloat((this.store.min_price - this.getCartGoodsPrice).toFixed(2));
       },
+      calAmination() {
+        return this.isFreeCard ? 1 : 2;
+      },
     },
     methods: {
       ...mapMutations(['SET_ORDER_TYPE']),
@@ -436,6 +442,8 @@
           url: '/pages/address/address?is_choose=true',
         });
       },
+
+
       // 获取所有商品数据
       getProductAllData() {
         let heightArr = [];
@@ -480,22 +488,7 @@
         this.currentCateId = index;
         this.scrollIntoView = 'cate-' + this.goods[index].id;
         console.log('scrollIntoView', this.scrollIntoView);
-          return;
-        console.log('根据唯一的id跳转', id);
-        //点击菜单项事件
-        if (!this.sizeCalcState) {
-          this.calcSize();
-        }
-        this.currentCateId = id;
-        this.scrollIntoView = 'menu-' + id;
-        let itemTop = this.goods.find((item) => item.id == id);
-        console.log('itemTop', itemTop);
-        this.$nextTick(() => {
-          this.scrollTop = itemTop.top;
-          this.cateScrollTop = itemTop.top;
-        });
-        // console.log('this.cateScrollTop', this.cateScrollTop);
-        if (this.currentCateId == 88) this.cateScrollTop = 0;
+        return;
       },
       scrollToBottom() {
         console.log('onreachbottom');
@@ -651,8 +644,8 @@
       },
       openCartPopup() {
         //打开购物车列表popup,同时不显示卡券
-        this.isFreeCard = false;
-        this.$refs.popup.open('botom');
+        this.isFreeCard ? this.$refs.popup.open('botom') : this.$refs.popup.close();
+        this.isFreeCard = !this.isFreeCard;
         // 关闭之前的默认的弹出框
         // this.cartPopupVisible = !this.cartPopupVisible;
       },
@@ -687,7 +680,6 @@
         }
       },
       closePopup() {
-        console.log(11);
         this.isFreeCard = true;
         this.$refs.popup.close();
       },
