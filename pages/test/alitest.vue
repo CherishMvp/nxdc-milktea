@@ -1,15 +1,17 @@
 <template>
-  <div class="container">
-    <div class="box" @click="handleClick">
-      <span v-if="!isClicked">xx</span>
+  <div>
+    <div class="container">
+      <div class="box" @click="handleClick">
+        <span v-if="!isClicked">xx</span>
+      </div>
+      <div class="box2" :class="[{ slideOutLeft: isClicked, slideOutRight: isClicked2 }]" @click="handleClick">handleClick</div>
+      <div class="box3" @click="removeClass">removeClass</div>
     </div>
-    <div class="box2" :class="[{ slideOutLeft: isClicked, slideOutRight: isClicked2 }]" @click="handleClick">handleClick</div>
-    <div class="box3" @click="removeClass">removeClass</div>
-  </div>
-  <div class="A">
-    <div class="A1">xx</div>
-    <div class="A2">ee</div>
-    <div class="A3">vv</div>
+    <div class="A">
+      <div class="A1">xx</div>
+      <div class="A2">ee</div>
+      <div class="A3">vv</div>
+    </div>
   </div>
 </template>
 

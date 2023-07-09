@@ -9,10 +9,10 @@
           <view class="left" v-if="orderType == 'takein'">
             <view class="store-name">
               <view class="right">
-                <view class="dinein" :class="{ active: orderType == 'takein' }" @tap="SET_ORDER_TYPE('takein')">
+                <view class="dinein" :class="{ active: orderType == 'takein' }" @click="SET_ORDER_TYPE('takein')">
                   <text>自取</text>
                 </view>
-                <view class="takeout" :class="{ active: orderType == 'takeout' }" @tap="takout">
+                <view class="takeout" :class="{ active: orderType == 'takeout' }" @click="takout">
                   <text>外卖</text>
                 </view>
               </view>
@@ -30,10 +30,10 @@
           <view class="left overflow-hidden" v-else>
             <view class="store-name">
               <view class="right">
-                <view class="dinein" :class="{ active: orderType == 'takein' }" @tap="SET_ORDER_TYPE('takein')">
+                <view class="dinein" :class="{ active: orderType == 'takein' }" @click="SET_ORDER_TYPE('takein')">
                   <text>自取</text>
                 </view>
-                <view class="takeout" :class="{ active: orderType == 'takeout' }" @tap="takout">
+                <view class="takeout" :class="{ active: orderType == 'takeout' }" @click="takout">
                   <text>外卖</text>
                 </view>
               </view>
@@ -64,7 +64,7 @@
           <view class="wrapper">
             <view class="list">
               <!-- 此处要注意 currentCateId和item.id都要为number类型；apifox设为了string-->
-              <view class="menu" :id="`menu-${item.id}`" :class="{ current: index == currentCateId, sticky: index == currentCateId }" v-for="(item, index) in goods" :key="index" @tap.stop="handleMenuTap(item.id, index)">
+              <view class="menu" :id="`menu-${item.id}`" :class="{ current: index == currentCateId, sticky: index == currentCateId }" v-for="(item, index) in goods" :key="index" @click.stop="handleMenuTap(item.id, index)">
                 <text>{{ item.name }}</text>
                 <view class="dot" v-if="menuCartNum(item.id)">{{ menuCartNum(item.id) }}</view>
               </view>
@@ -78,7 +78,7 @@
             <!-- 商品列表最上方的广告轮播图 -->
             <swiper class="ads" :id="'ads'" autoplay :interval="3000" indicator-dots>
               <swiper-item v-for="(item, index) in ads" :key="index">
-                <image :src="item.image" fade-show="true" @tap="goImageDetail(item)"></image>
+                <image :src="item.image" fade-show="true" @click="goImageDetail(item)"></image>
               </swiper-item>
             </swiper>
             <!-- 右侧商品列表 -->
@@ -94,7 +94,7 @@
                 <view class="items">
                   <!-- 商品 begin -->
                   <view class="good" v-for="(good, key) in item.goods_list" :key="key">
-                    <image :src="good.images" class="image" @tap="showGoodDetailModal(item, good)"></image>
+                    <image :src="good.images" class="image" @click="showGoodDetailModal(item, good)"></image>
                     <view class="right">
                       <text class="name">{{ good.name }}</text>
                       <text class="tips">{{ good.content }}</text>
@@ -106,22 +106,16 @@
                         <div v-if="!isclose">
                           <view class="btn-group" v-if="good.use_property">
                             <!-- <span>{{ good.use_property }}</span> -->
-                            <button type="default" class="btn property_btn" hover-class="none" size="mini" @tap="showGoodDetailModal(item, good)"> 选规格 </button>
+                            <button type="default" class="btn property_btn" hover-class="none" size="mini" @click="showGoodDetailModal(item, good)"> 选规格 </button>
                             <view class="dot" v-if="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
                           </view>
                           <!-- 进行商品添加增删 -->
                           <view class="btn-group" v-else>
                             <!-- 左侧减少商品按钮 -->
-                            <uni-icons v-if="goodCartNum(good.id)" type="minus" size="55rpx" color="#919293" @click="handleReduceFromCart(item, good)"></uni-icons>
-                            <button type="default" v-if="goodCartNum(good.id) && false" class="btn reduce_btn" size="mini" hover-class="none" @tap="handleReduceFromCart(item, good)">
-                              <!-- <view class="iconfont iconsami-select"></view> -->
-                            </button>
+                            <uni-icons v-if="goodCartNum(good.id)" type="minus" size="60rpx" color="#919293" @click="handleReduceFromCart(item, good)"></uni-icons>
                             <view class="number" v-if="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
                             <!-- 右侧增加商品按钮,初始化时默认给1 -->
-                            <uni-icons type="plus-filled" size="55rpx" color="#adb838" @click="handleAddToCart(item, good, 1)"></uni-icons>
-                            <button v-if="false" type="default" class="btn add_btn" size="min" hover-class="none" @tap="handleAddToCart(item, good, 1)">
-                              <!-- <view class="iconfont iconadd-select"></view> -->
-                            </button>
+                            <uni-icons type="plus-filled" size="60rpx" color="#adb838" @click="handleAddToCart(item, good, 1)"></uni-icons>
                           </view>
                         </div>
                       </view>
@@ -146,13 +140,13 @@
       <view v-else>
         <!-- 吸底工具栏 -->
         <view class="toolbar" v-if="cart.length > 0">
-          <view :class="[{ hideCard: !isFreeCard, showCard: isFreeCard }]" @tap="clickCard" class="isfree-card">
+          <view :class="[{ hideCard: !isFreeCard, showCard: isFreeCard }]" @click="clickCard" class="isfree-card">
             <uni-icons type="gift-filled" color="#fab714" size="30" />
             卡券{{ cardNumber }}张
           </view>
           <view class="leftContainer">
             <view class="mark">
-              <image src="/static/images/menu/cart.png" class="cart-img" @tap="openCartPopup"></image>
+              <image src="/static/images/menu/cart.png" class="cart-img" @click="openCartPopup"></image>
               <view class="tag">{{ getCartGoodsNumber }}</view>
             </view>
             <view class="price">
@@ -160,7 +154,7 @@
               <view style="font-size: 30rpx; font-weight: 300; text-decoration: line-through; margin-left: 8rpx">￥{{ 457 }}</view>
             </view>
           </view>
-          <button type="default" style="background-color: #adb838" class="pay-btn" @tap="toPay" :disabled="disabledPay">
+          <button type="default" style="background-color: #adb838" class="pay-btn" @click="toPay" :disabled="disabledPay">
             {{ disabledPay ? `差${spread}元起送` : '去结算' }}
           </button>
         </view>
@@ -169,64 +163,62 @@
       <!-- 购物车栏 end -->
     </view>
     <!-- 商品详情模态框 begin -->
-    <modal :show="goodDetailModalVisible" class="good-detail-modal" color="#5A5B5C" width="90%" custom padding="0rpx" radius="12rpx">
-      <view class="cover">
-        <image v-if="good.images" :src="good.images" class="image"></image>
-        <view class="btn-group">
-          <image src="/static/images/menu/share-good.png"></image>
-          <image src="/static/images/menu/close.png" @tap="closeGoodDetailModal"></image>
-        </view>
-      </view>
-      <scroll-view class="detail" scroll-y>
-        <view class="wrapper">
-          <view class="basic">
-            <view class="name">{{ good.name }}</view>
-            <view class="tips">{{ good.content }}</view>
+    <myModal :show="goodDetailModalVisible" color="#5A5B5C" width="90%" custom padding="0rpx" radius="12rpx">
+      <view class="good-detail-modal">
+        <view class="cover">
+          <image v-if="good.images" :src="good.images" class="image"></image>
+          <view class="btn-group">
+            <image src="/static/images/menu/share-good.png"></image>
+            <image src="/static/images/menu/close.png" @click="closeGoodDetailModal"></image>
           </view>
-          <view class="properties" v-if="good.use_property">
-            <view class="property" v-for="(item, index) in good.property" :key="index">
-              <view class="title">
-                <text class="name">{{ item.name }}</text>
-                <view class="desc" v-if="item.desc">({{ item.desc }})</view>
-              </view>
-              <view class="values">
-                <view class="value" v-for="(value, key) in item.values" :key="key" :class="{ default: value.is_default }" @tap="changePropertyDefault(index, key)">
-                  {{ value.value }}
+        </view>
+        <scroll-view class="detail" scroll-y>
+          <view class="wrapper">
+            <view class="basic">
+              <view class="name">{{ good.name }}</view>
+              <view class="tips">{{ good.content }}</view>
+            </view>
+            <view class="properties" v-if="good.use_property">
+              <view class="property" v-for="(item, index) in good.property" :key="index">
+                <view class="title">
+                  <text class="name">{{ item.name }}</text>
+                  <view class="desc" v-if="item.desc">({{ item.desc }})</view>
+                </view>
+                <view class="values">
+                  <view class="value" v-for="(value, key) in item.values" :key="key" :class="{ default: value.is_default }" @click="changePropertyDefault(index, key)">
+                    {{ value.value }}
+                  </view>
                 </view>
               </view>
             </view>
           </view>
-        </view>
-      </scroll-view>
-      <div v-if="!isclose">
-        <view class="action">
-          <view class="left">
-            <view class="price">￥{{ good.price }}</view>
-            <view class="props" v-if="getGoodSelectedProps(good)">
-              {{ getGoodSelectedProps(good) }}
+        </scroll-view>
+        <div v-if="!isclose">
+          <view class="action">
+            <view class="left">
+              <view class="price">￥{{ good.price }}</view>
+              <view class="props" v-if="getGoodSelectedProps(good)">
+                {{ getGoodSelectedProps(good) }}
+              </view>
+            </view>
+            <!-- 同样的，打烊后不许操作购物内容 -->
+            <view class="btn-group">
+              <uni-icons type="minus" size="60rpx" color="#919293" @click="handlePropertyReduce"></uni-icons>
+              <view class="number">{{ good.number }}</view>
+              <uni-icons type="plus-filled" size="60rpx" color="#adb838" @click="handlePropertyAdd"></uni-icons>
             </view>
           </view>
-          <!-- 同样的，打烊后不许操作购物内容 -->
-          <view class="btn-group">
-            <button type="default" plain class="btn" size="mini" hover-class="none" @tap="handlePropertyReduce">
-              <view class="iconfont iconsami-select"></view>
-            </button>
-            <view class="number">{{ good.number }}</view>
-            <button type="default" class="btn" size="min" hover-class="none" @tap="handlePropertyAdd">
-              <view class="iconfont iconadd-select"></view>
-            </button>
+          <view class="add-to-cart-btn" @click="handleAddToCartInModal">
+            <view>加入购物车</view>
           </view>
-        </view>
-        <view class="add-to-cart-btn" @tap="handleAddToCartInModal">
-          <view>加入购物车</view>
-        </view>
-      </div>
-    </modal>
+        </div>
+      </view>
+    </myModal>
     <!-- 商品详情模态框 end -->
     <!-- 购物车详情popup -->
     <uni-popup type="bottom" background-color="#fff" ref="popup" :mask-click="true" @maskClick="closePopup">
       <view class="cart-popup">
-        <view class="top" @tap="handleCartClear">
+        <view class="top" @click="handleCartClear">
           <uni-icons type="trash" color="#adb838" size="26"></uni-icons>
           <text>清空</text>
         </view>
@@ -242,11 +234,11 @@
                   <!-- 进行商品添加增删 -->
                   <view class="btn-group">
                     <!-- 左侧减少商品按钮 -->
-                    <uni-icons v-if="goodCartNum(good.id)" type="minus" size="55rpx" color="#919293" @click="handleCartItemReduce(key)"></uni-icons>
+                    <uni-icons type="minus" size="60rpx" color="#919293" @click="handleCartItemReduce(key)"></uni-icons>
                     <!-- <view class="number">{{ goodCartNum(good.id) }}</view> -->
                     <!-- 右侧增加商品按钮,初始化时默认给1 -->
                     <view class="number">{{ good.number }}</view>
-                    <uni-icons v-if="goodCartNum(good.id)" type="plus-filled" size="55rpx" color="#adb838" @click="handleCartItemAdd(key)"></uni-icons>
+                    <uni-icons type="plus-filled" size="60rpx" color="#adb838" @click="handleCartItemAdd(key)"></uni-icons>
                   </view>
                 </view>
               </view>
@@ -280,12 +272,12 @@
 </template>
 
 <script>
-  import modal from '@/components/modal/modal';
+  import { modal as myModal } from '@/components/modal/modal';
   import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 
   export default {
     components: {
-      modal,
+      myModal,
     },
     data() {
       return {
@@ -443,15 +435,14 @@
         });
       },
 
-
       // 获取所有商品数据
       getProductAllData() {
         let heightArr = [];
         let heightNumber = 0; // 一次递增的累积高度
         const _dataLength = this.goods.length; // 类目数量
         for (let i = 0; i < _dataLength; i++) {
-          // 50 为类目的标题高度 200 为每个产品的高度
-          let height = 50 + 230 * this.goods[i].goods_list.length;
+          // 100 为类目的标题高度 200 为每个产品的高度(230改为200,去除margin-bottom)
+          let height = 100 + 200 * this.goods[i].goods_list.length;
           // 我们与上一个高度相加
           heightNumber += height;
           // +=  等于  heightNumber = heightNumber + height

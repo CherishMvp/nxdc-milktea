@@ -125,19 +125,29 @@
           <text>支付方式</text>
         </list-cell>
         <radio-group @change="radioChange">
-          <list-cell last :hover="false" v-for="(item, index) in items" :key="item.value">
+          <list-cell :hover="false">
             <view class="d-flex align-items-center justify-content-between w-100 disabled">
-              <view v-if="item.value == 'wallet'">
-                <span class="iconfont iconbalance line-height-100 payment-icon"></span>
-                <span class="flex-fill">{{ `余额支付（余额￥ (${currentSaveCount})` }}</span>
-                <span class="font-size-sm" style="margin-left: 80rpx" v-if="currentSaveCount < total">余额不足</span>
-              </view>
-              <view v-if="item.value == 'wechat'">
+              <span class="iconfont iconbalance line-height-100 payment-icon"></span>
+              <span class="flex-fill">{{ `余额支付（余额￥ (${currentSaveCount})` }}</span>
+              <span class="font-size-sm" style="margin: 0 20rpx 0 40rpx" v-if="currentSaveCount < total">余额不足</span>
+            </view>
+            <radio :value="'wallet'" :checked="false" :disabled="currentSaveCount < total" />
+          </list-cell>
+          <list-cell last :hover="false">
+            <view class="d-flex align-items-center justify-content-between w-100 disabled">
+              <!-- #ifdef MP-WEIXIN -->
+              <view>
                 <span class="iconfont iconwxpay line-height-100 payment-icon" style="color: #7eb73a"></span>
                 <span class="flex-fill">微信支付</span>
               </view>
-              <!-- <view class="iconfont iconradio-button-off line-height-100 checkbox"></view> -->
-              <radio :value="item.value" :checked="index === current" />
+              <!-- #endif -->
+              <!-- #ifdef MP-ALIPAY -->
+              <view>
+                <span class="iconfont iconwxpay line-height-100 payment-icon" style="color: #2689d4"></span>
+                <span class="flex-fill"> 支付宝支付</span>
+              </view>
+              <!-- #endif -->
+              <radio :value="getPlatform" :checked="true" class="" />
             </view>
           </list-cell>
         </radio-group>
@@ -161,7 +171,7 @@
       <view></view>
     </view>
     <!-- 付款栏 end -->
-    <modal :show="ensureAddressModalVisible" custom :mask-closable="false" :radius="0" width="90%">
+    <modal :show="ensureAddressModalVisible" custom :mask-closable="false" :radius="'0'" width="90%">
       <view class="modal-content">
         <view class="d-flex justify-content-end">
           <image src="/static/images/pay/close.png" style="width: 40rpx; height: 40rpx" @tap="ensureAddressModalVisible = false"></image>
@@ -201,20 +211,16 @@
         form: {
           remark: '',
         },
-        currentSaveCount: 100,
+        currentSaveCount: 1100,
         ensureAddressModalVisible: false,
+        payway: uni.getSystemInfoSync().uniPlatform,
         // 暂时只提供微信接口支付，充值卡暂不考虑
-        items: [
-          {
-            value: 'wechat',
-            name: '微信支付',
-            checked: 'true',
-          },
-          // {
-          //   value: 'wallet',
-          //   name: '余额支付',
-          // },
-        ],
+        paywayObject: {
+          'mp-weixin': '微信支付',
+          'mp-alipay': '支付宝支付',
+          wallet: '余额支付',
+        },
+
         current: 0,
       };
     },
@@ -225,6 +231,9 @@
       },
       amount() {
         return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0);
+      },
+      getPlatform() {
+        return uni.getSystemInfoSync().uniPlatform;
       },
     },
     onLoad(option) {
@@ -238,12 +247,8 @@
     methods: {
       ...mapMutations(['SET_ORDER']),
       radioChange(evt) {
-        for (let i = 0; i < this.items.length; i++) {
-          if (this.items[i].value === evt.detail.value) {
-            this.current = i;
-            break;
-          }
-        }
+        this.payway = evt.detail.value;
+        console.log('event: ', evt);
       },
       goToRemark() {
         uni.navigateTo({
@@ -289,8 +294,12 @@
         }
       },
       // 调起支付接口，支付后跳转成功，此处可以设计两个接口，如支付宝和微信两个不同情况，同时也可以使用uni.payment支付
+      // 这里要拿到当前的支付方式为余额还是alipay或者是wechat支付
       pay() {
-        uni.showLoading({ title: '加载中' });
+        console.log('paymentway', this.payway, this.paywayObject[this.payway]);
+        let paymentway = this.paywayObject[this.payway];
+        uni.showLoading({ title: `加载中，当前支付方式为${paymentway}` });
+
         //测试订单；orders为模拟堂食和外带的两种订单信息，in和out两种模式。
         let order = this.orderType == 'takein' ? orders[0] : orders[1];
         // 此处猜测status为商品的制作状态。5为完成，1为刚刚开始的状态
@@ -302,10 +311,14 @@
         this.SET_ORDER(order);
         // 支付成功后清除缓存中的购物车:结算时暂时不清除购物车内容
         // uni.removeStorageSync('cart');
-        uni.reLaunch({
-          url: '/pages/take-foods/take-foods',
-        });
-        uni.hideLoading();
+        // 2023-07-08 18:22:52 其实这一步应该跳转到结算界面，单独的一个结算界面，可以先在这个界面生成
+        //  订单数据
+        setTimeout(() => {
+          uni.reLaunch({
+            url: '/pages/take-foods/take-foods',
+          });
+          uni.hideLoading();
+        }, 3000);
       },
     },
   };

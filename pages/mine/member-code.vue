@@ -34,9 +34,19 @@
         </view>
         <!-- user grids end -->
         <!-- qrcode begin -->
-        <view class="qrcode d-flex just-content-center align-items-center"><canvas canvas-id="memberCode" style="width: 350rpx; height: 350rpx"></canvas></view>
+        <view class="qrcode d-flex just-content-center align-items-center">
+          <!-- TODO:后期全部换成uv-qrcode生成的内容 -->
+          <!-- #ifdef MP-WEIXIN||MP-ALIPAY -->
+          <canvas canvas-id="memberCode" style="width: 350rpx; height: 350rpx" />
+          <!-- #endif -->
+          <!-- #ifdef H5 -->
+          <view>
+            <uv-qrcode ref="qrcode" value="https://www.ai0626.online"></uv-qrcode>
+          </view>
+          <!-- #endif -->
+        </view>
         <!-- qrcode end -->
-        <view class="tips d-flex just-content-center align-items-center" style="margin-bottom: 50rpx">
+        <view class="tips d-flex just-content-center align-items-center" style="margin: 20rpx 0 40rpx 0">
           <view class="font-size-sm text-color-assist">支付前出示可累计积分，会员码每30秒更新</view>
         </view>
         <!-- #ifdef MP-WEIXIN -->
@@ -65,8 +75,9 @@
 <script>
   import { mapState } from 'vuex';
   import uQRCode from '@/common/uqrcode';
-
+  import tkiQrcode from '@/components/tki-qrcode.vue';
   export default {
+    components: {},
     data() {
       return {};
     },
@@ -85,7 +96,18 @@
       ...mapState(['member']),
     },
     methods: {
+      makeUvQrcode() {
+        this.$refs.qrcode.remake({
+          success: () => {
+            console.log('生成成功');
+          },
+          fail: (err) => {
+            console.log(err);
+          },
+        });
+      },
       makeMemberCode(i) {
+        console.log('start');
         uQRCode.make({
           canvasId: 'memberCode',
           componentInstance: this,
@@ -97,9 +119,10 @@
           fileType: 'jpg',
           correctLevel: uQRCode.defaults.correctLevel,
           success: (res) => {
-            console.log(res);
+            console.log('res', res);
           },
         });
+        console.log('over');
       },
       integrals() {
         uni.navigateTo({

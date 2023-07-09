@@ -71,3 +71,10 @@ uni-app 插件市场地址:[https://ext.dcloud.net.cn/plugin?id=1807](https://ex
 - 方案 2：`https://blog.csdn.net/caihuahuahua/article/details/119488894`
 - 方案 3：`https://blog.csdn.net/LizequaNNN/article/details/124433574`
 - 在支付宝小程序中，scroll-view 的滚动速度可以设置，具体参考官方定义：`https://opendocs.alipay.com/mini/component/scroll-view`(多查询官方文档)
+
+# 2023-07-08 15:04:53(要多思考)
+
+- 在支付宝小程序中，如果需要在自定义组件中使用样式（特别是 scss 嵌套等），则不能直接在该组件上直接使用 `class="myclass"`这种，否则如果有用到`.myclass { .itemA {}}`。。诸如此类的样式，会读取不到，正确做法是在自定义组件下再嵌套一个 div，将`class="myclass"`写在该 div 上。形成 `<customCompoennt> <div class="myclass" > xxxxx详细内容 </div>`
+- 同时兼容支付宝和微信小程序，使用`@tap`绑定事件，有概率出现在 ali 小程序中失效，如有点击事件失效的，可以使用`@click`绑定事件
+  - 参考链接:`https://juejin.cn/post/7199542948307648569`;`https://www.jianshu.com/p/d815910b0830`
+- qrcode 改用 uv 的组件库`https://www.uvui.cn/components/qrcode.html`
