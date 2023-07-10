@@ -85,7 +85,9 @@ uni-modal .uni-modal {
 .bg-base {
   background-color: $bg-color;
 }
-
+.bgcolor-default {
+  background-color: $color-primary;
+}
 .bg-white {
   background-color: #ffffff;
 }
@@ -301,7 +303,7 @@ uni-modal .uni-modal {
 .fixed-bottom {
   position: fixed;
   right: 0;
-  bottom: 0;
+  bottom: 20rpx;
   left: 0;
   z-index: 1030;
 }

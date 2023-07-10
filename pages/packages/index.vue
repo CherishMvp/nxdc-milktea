@@ -7,7 +7,7 @@
           <view class="font-size-lg text-color-base">{{ item.title }}</view>
           <view class="d-flex justify-content-between align-items-center">
             <view class="font-size-sm">￥{{ item.amount }}</view>
-            <button type="primary" size="mini" plain class="pay-btn">去购买</button>
+            <button type="default" size="mini" class="pay-btn bgcolor-default">去购买</button>
           </view>
         </view>
       </view>
@@ -40,8 +40,18 @@
     },
     methods: {
       async getPackages() {
+        console.log('下拉刷新获取内容');
         this.loading = true;
         this.packages = await this.$api('packages');
+        if (this.packages.length) {
+          setTimeout(() => {
+            uni.stopPullDownRefresh({
+              success: (result) => {
+                console.log('stop refresh');
+              },
+            });
+          }, 2000);
+        }
         this.loading = false;
       },
       pay(id) {
@@ -66,5 +76,9 @@
     padding: 0;
     line-height: 50rpx;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffff;
   }
 </style>

@@ -30,12 +30,12 @@
       <view class="font-size-extra-lg" style="margin-bottom: 40rpx">购买须知</view>
       <view class="font-size-base text-color-base"> 售卖时间：{{ package.start_at.split(' ')[0] }}~{{ package.end_at.split(' ')[0] }} </view>
       <view class="font-size-base text-color-base" style="margin-bottom: 30rpx"> 购买限制：无限制 </view>
-      <view class="font-size-sm text-color-assist pre-line">
+      <view class="font-size-sm text-color-assist pre-line" style="margin-bottom: 100rpx">
         {{ package.content }}
       </view>
     </view>
     <view class="pay-box d-flex just-content-center align-items-center position-fixed fixed-bottom bg-white">
-      <button type="primary" class="pay-btn font-size-base text-color-white rounded-pill" style="width: 90%; height: 80rpx; line-height: 80rpx"> ￥{{ package.amount }}购买 </button>
+      <button type="default" class="pay-btn font-size-base text-color-white rounded-pill bgcolor-default" style="width: 70%; height: 80rpx; line-height: 80rpx"> ￥{{ package.amount }}购买 </button>
     </view>
     <modal custom :show="couponDetailModalShow" @cancel="closeCouponDetailModal">
       <view class="d-flex flex-column">

@@ -1,98 +1,101 @@
 <template>
-  <view class="container">
-    <view class="banner">
-      <!-- <image src="https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg" mode="" class="bg"></image> -->
-      <swiper class="bg" id="ads" autoplay circular easing-function="easeOutCubic" :interval="3000" indicator-dots>
-        <swiper-item v-for="(item, index) in ads" :key="index">
-          <image class="bg" :src="item.image" fade-show="true" @tap="goImageDetail(item)"></image>
-        </swiper-item>
-      </swiper>
-      <view class="intro">
-        <view class="note">一杯奶茶，一口软欧包，在桑格利亚遇见两种美好</view>
-      </view>
-    </view>
-    <view class="content">
-      <view class="entrance">
-        <!-- <view class="headerbar">我是xxx</view> -->
-        <view class="headerbar">
-          <view class="text"> 您好，{{ isLogin ? member.nickname : '游客' }} </view>
+  <view :style="{ height: calculateWindowHeight }">
+    <scroll-view class="container" :scroll-anchoring="true" :scroll-animation-duration="2000" :show-scrollbar="false" scroll-with-animation scroll-y>
+      <view class="banner">
+        <!-- <image src="https://img-shop.qmimg.cn/s23107/2020/04/26/3eb7808bf105262604.jpg" mode="" class="bg"></image> -->
+        <swiper class="bg" id="ads" autoplay circular easing-function="easeOutCubic" :interval="3000" indicator-dots>
+          <swiper-item v-for="(item, index) in ads" :key="index">
+            <image class="bg" :src="item.image" fade-show="true" @tap="goImageDetail(item)"></image>
+          </swiper-item>
+        </swiper>
+        <view class="intro">
+          <view class="note">好喝</view>
         </view>
+      </view>
+      <view class="content">
+        <view class="entrance">
+          <!-- <view class="headerbar">我是xxx</view> -->
+          <view class="headerbar">
+            <view class="text"> 您好，{{ isLogin ? member.nickname : '游客' }} </view>
+          </view>
 
-        <view class="item" @tap="takein">
-          <image src="/static/images/index/zq.png" class="icon"></image>
-          <view class="title">自取</view>
-        </view>
-        <view class="item" @tap="takeout">
-          <image src="/static/images/index/wm.png" class="icon"></image>
-          <view class="title">外卖</view>
-        </view>
-      </view>
-      <view class="info">
-        <view class="integral_section" @tap="integrals">
-          <view class="top">
-            <!-- 积分优先取缓存中的值 -->
-            <text class="title">我的积分</text>
-            <text class="value">{{ pointNum || '暂未登录' }}</text>
+          <view class="item" @tap="takein">
+            <image src="/static/images/index/zq.png" class="icon"></image>
+            <view class="title">自取</view>
           </view>
-          <view class="bottom">
-            进入积分商城兑换桑格利亚券及周边好礼
-            <view class="iconfont iconarrow-right"></view>
+          <view class="item" @tap="takeout">
+            <image src="/static/images/index/wm.png" class="icon"></image>
+            <view class="title">外卖</view>
           </view>
         </view>
-        <view class="qrcode_section" @tap="memberCode">
-          <image src="/static/images/index/qrcode.png"></image>
-          <text>会员码</text>
-        </view>
-      </view>
-      <view class="navigators">
-        <view class="left">
-          <view class="grid flex-column just-content-center" @click="showNaviToast">
-            <view class="d-flex align-items-center">
-              <image src="/static/images/index/csc.png" class="mark-img"></image>
-              <view class="font-size-sm text-color-base">桑格利亚的茶商城</view>
+        <view class="info">
+          <view class="integral_section" @tap="integrals">
+            <view class="top">
+              <!-- 积分优先取缓存中的值 -->
+              <text class="title">我的积分</text>
+              <text class="value">{{ pointNum || '暂未登录' }}</text>
             </view>
-            <view class="text-color-assist" style="margin-left: 40rpx; font-size: 20rpx">优质茶礼盒，网红零食</view>
-          </view>
-          <view class="grid justify-content-end align-items-end">
-            <image src="/static/images/index/yzclh.png" class="yzclh-img" mode="heightFix"></image>
-          </view>
-        </view>
-        <view class="right">
-          <view class="tea-activity" @tap="invite">
-            <image src="/static/images/index/mcsb.png" class="mark-img"></image>
-            <view>买茶送包</view>
-            <view class="right-img">
-              <image src="/static/images/index/mcsb_bg.png" mode="widthFix"></image>
+            <view class="bottom">
+              进入积分商城兑换桑格利亚券及周边好礼
+              <view class="iconfont iconarrow-right"></view>
             </view>
           </view>
-          <view class="member-gifts" @tap="packages">
-            <image src="/static/images/index/hyjb.png" class="mark-img"></image>
-            <view>会员劵包</view>
-            <view class="right-img">
-              <image src="/static/images/index/hyjb_bg.png" mode="widthFix"></image>
+          <view class="qrcode_section" @tap="memberCode">
+            <image src="/static/images/index/qrcode.png"></image>
+            <text>会员码</text>
+          </view>
+        </view>
+        <view class="navigators">
+          <view class="left">
+            <view class="grid flex-column just-content-center" @click="showNaviToast">
+              <view class="d-flex align-items-center">
+                <image src="/static/images/index/csc.png" class="mark-img"></image>
+                <view class="font-size-sm text-color-base">桑格利亚的茶商城</view>
+              </view>
+              <view class="text-color-assist" style="margin-left: 40rpx; font-size: 20rpx">优质茶礼盒，网红零食</view>
+            </view>
+            <view class="grid justify-content-end align-items-end">
+              <image src="/static/images/index/yzclh.png" class="yzclh-img" mode="heightFix"></image>
+            </view>
+          </view>
+          <view class="right">
+            <view class="tea-activity" @tap="invite">
+              <image src="/static/images/index/mcsb.png" class="mark-img"></image>
+              <view>买茶送包</view>
+              <view class="right-img">
+                <image src="/static/images/index/mcsb_bg.png" mode="widthFix"></image>
+              </view>
+            </view>
+            <view class="member-gifts" @tap="packages">
+              <image src="/static/images/index/hyjb.png" class="mark-img"></image>
+              <view>会员劵包</view>
+              <view class="right-img">
+                <image src="/static/images/index/hyjb_bg.png" mode="widthFix"></image>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="member-news" @click="showNaviToast">
+          <view class="header">
+            <view class="title">会员新鲜事</view>
+            <view class="iconfont iconRightbutton"></view>
+          </view>
+          <view class="list">
+            <view class="item">
+              <image src="https://img-shop.qmimg.cn/s23107/2020/04/27/0039bf41c9ebd50a2c.jpg"></image>
+              <view class="title">"梅"你不行 | 霸气杨梅清爽回归</view>
             </view>
           </view>
         </view>
       </view>
-      <view class="member-news" @click="showNaviToast">
-        <view class="header">
-          <view class="title">会员新鲜事</view>
-          <view class="iconfont iconRightbutton"></view>
-        </view>
-        <view class="list">
-          <view class="item">
-            <image src="https://img-shop.qmimg.cn/s23107/2020/04/27/0039bf41c9ebd50a2c.jpg"></image>
-            <view class="title">"梅"你不行 | 霸气杨梅清爽回归</view>
-          </view>
-        </view>
-      </view>
-    </view>
+    </scroll-view>
   </view>
 </template>
 
 <script>
   import { mapState, mapGetters } from 'vuex';
   import { localInfo } from '@/api/index';
+  import { calculateWindowHeight as calHeight } from '../../common/getwindowHeight';
 
   export default {
     data() {
@@ -106,15 +109,23 @@
           { image: 'https://images.qmai.cn/s23107/2020/04/30/b3af19e0de8ed42f61.jpg?imageView2/2/w/600/h/600' },
           { image: 'https://img-shop.qmimg.cn/s23107/2020/04/17/8aeb78516d63864420.jpg?imageView2/2/w/600/h/600' },
         ],
+        statusBar: '',
+        windowHeight: '',
       };
     },
     computed: {
       ...mapState(['member']),
       ...mapGetters(['isLogin']),
+      calculateWindowHeight() {
+        return calHeight(this.windowHeight, this.statusBar); // 可使用窗口高度
+      },
     },
     onShow() {
       this.pointNum = localInfo('userinfo').pointNum;
       console.log('index onLoad', localInfo('userinfo').pointNum);
+    },
+    mounted() {
+      this.windowHeight = uni.getSystemInfoSync().windowHeight;
     },
     methods: {
       showNaviToast() {
@@ -174,7 +185,10 @@
     min-height: 100%;
   }
   /* #endif */
-
+  .container {
+    height: 100%;
+    overflow: hidden;
+  }
   .banner {
     position: static;
     width: 100%;

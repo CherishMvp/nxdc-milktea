@@ -9,7 +9,7 @@
           "transparentTitle": "always",
           "titlePenetrate": "YES",
           "allowsBounceVertical": "NO",
-          "disableScroll": false
+          "disableScroll": true
         }
       }
     },
@@ -34,9 +34,18 @@
     {
       "path": "pages/take-foods/take-foods",
       "style": {
-        "navigationBarTitleText": "Only One 桑格利亚",
+        // "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
-        "navigationBarBackgroundColor": "#ffffff"
+        "navigationBarBackgroundColor": "#ffffff",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true,
+        "mp-alipay": {
+          "transparentTitle": "always",
+          "titlePenetrate": "YES",
+          //下拉刷新前提
+          "allowsBounceVertical": "YES",
+          "disableScroll": true
+        }
       }
     },
     {

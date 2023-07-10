@@ -203,15 +203,16 @@
     mounted() {
       this.statusBar = uni.getSystemInfoSync().statusBarHeight;
       const rect = uni.getMenuButtonBoundingClientRect();
+      console.log('胶囊信息', rect);
       this.capsuleStyle = {
         left: `${rect.left}px`,
         top: `${rect.top}px`,
-        /* 其他胶囊按钮样式属性 */
+        /* 胶囊按钮样式属性 */
       };
       this.divStyle = {
-        left: `${rect.left - 140}px`,
+        left: `${rect.left - 1.5 * rect.width}px`,
         top: `${rect.top}px`,
-        /* 其他div样式属性 */
+        /*会员码位置样式属性；left位置需要减去胶囊的宽度 */
       };
       console.log('this.capule', this.capsuleStyle);
       console.log('this.style = ', this.divStyle);

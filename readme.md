@@ -78,3 +78,8 @@ uni-app 插件市场地址:[https://ext.dcloud.net.cn/plugin?id=1807](https://ex
 - 同时兼容支付宝和微信小程序，使用`@tap`绑定事件，有概率出现在 ali 小程序中失效，如有点击事件失效的，可以使用`@click`绑定事件
   - 参考链接:`https://juejin.cn/post/7199542948307648569`;`https://www.jianshu.com/p/d815910b0830`
 - qrcode 改用 uv 的组件库`https://www.uvui.cn/components/qrcode.html`
+
+# 2023-07-10 16:39:15
+
+- 像背景颜色这种地方，要在`@import '~@/static/style/app.scss';`里面修改
+- alipay 设置下拉刷新时，需要设置`"allowsBounceVertical": "YES",`以及在对应的页面开启下拉刷新功能
