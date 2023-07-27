@@ -62,7 +62,7 @@
       <view class="section-2">
         <view class="cart d-flex flex-column">
           <list-cell last v-for="(item, index) in cart" :key="index">
-            <view style="border-bottom: 0.5px solid lightgrey" class="w-100 d-flex flex-column">
+            <view style="border-bottom: 0.5px solid #e6e7e8" class="w-100 d-flex flex-column">
               <view class="d-flex align-items-center mb-10">
                 <view class="name-and-props overflow-hidden">
                   <view class="text-color-base font-size-lg">
@@ -95,6 +95,14 @@
             </list-cell>
           </template>
         </view>
+        <!-- 备注 begin -->
+        <list-cell arrow last @click="goToRemark">
+          <view class="d-flex flex-fill align-items-center justify-content-between overflow-hidden">
+            <view class="flex-shrink-0 mr-20">备注</view>
+            <view class="text-color-primary flex-fill text-truncate text-right">{{ form.remark || '点击填写备注' }}</view>
+          </view>
+        </list-cell>
+        <!-- 备注 end -->
         <list-cell arrow @click="goToPackages">
           <view class="flex-fill d-flex justify-content-between align-items-center">
             <view class="text-color-base">桑格利亚券</view>
@@ -153,14 +161,6 @@
         </radio-group>
       </view>
       <!-- 支付方式 end -->
-      <!-- 备注 begin -->
-      <list-cell arrow last @click="goToRemark">
-        <view class="d-flex flex-fill align-items-center justify-content-between overflow-hidden">
-          <view class="flex-shrink-0 mr-20">备注</view>
-          <view class="text-color-primary flex-fill text-truncate text-right">{{ form.remark || '点击填写备注' }}</view>
-        </view>
-      </list-cell>
-      <!-- 备注 end -->
     </view>
     <!-- 付款栏 begin -->
     <view class="w-100v pay-box position-fixed fixed-bottom d-flex align-items-center justify-content-between bg-white">
@@ -296,7 +296,6 @@
       // 调起支付接口，支付后跳转成功，此处可以设计两个接口，如支付宝和微信两个不同情况，同时也可以使用uni.payment支付
       // 这里要拿到当前的支付方式为余额还是alipay或者是wechat支付
       pay() {
-        console.log('paymentway', this.payway, this.paywayObject[this.payway]);
         let paymentway = this.paywayObject[this.payway];
         uni.showLoading({ title: `加载中，当前支付方式为${paymentway}` });
 
@@ -351,6 +350,8 @@
 
   .section-1 {
     margin-bottom: 30rpx;
+    overflow: hidden;
+    border-radius: 15px;
     .contact {
       .contact-tip {
         margin-left: 10rpx;
@@ -362,12 +363,16 @@
   }
 
   .section-2 {
+    overflow: hidden;
+    border-radius: 15px;
     .name-and-props {
       width: 65%;
     }
   }
 
   .payment {
+    overflow: hidden;
+    border-radius: 15px;
     margin-bottom: 30rpx;
 
     .disabled {

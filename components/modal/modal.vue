@@ -247,22 +247,22 @@
   }
 
   .primary {
-    background: #97af13;
+    background: #4f6237;
     color: #fff;
   }
 
   .primary-hover {
-    background: #97af13;
+    background: #4f6237;
     color: #e5e5e5;
   }
 
   .primary-outline {
-    color: #97af13;
+    color: #4f6237;
     background: none;
   }
 
   .primary-outline::after {
-    border: 1px solid #97af13;
+    border: 1px solid #4f6237;
   }
 
   .danger {

@@ -16,7 +16,7 @@ page {
   /* to表示动画的结束位置，也可以使用100%来表示。 */
   to {
     //flex: 0;
-    margin-left: -20vh;
+    margin-left: -140px;
     //display: none;
   }
 }
@@ -29,7 +29,7 @@ page {
   /* from表示动画的开始位置，也可以使用0%来表示。 */
   from {
     //flex: 0;
-    margin-left: -20vh;
+    margin-left: -140px;
     display: none;
   }
   /* to表示动画的结束位置，也可以使用100%来表示。 */
@@ -139,7 +139,7 @@ page {
 
 .nav {
   width: 100%;
-  height: 30vw;
+  // height: 18vh;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -150,6 +150,11 @@ page {
     background-color: #ffff;
 
     .left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 0;
       .store-name {
         display: flex;
         justify-content: flex-start;
@@ -247,7 +252,7 @@ page {
       align-items: center;
       color: $text-color-assist;
       font-size: $font-size-sm;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
 
       .iconfont {
         vertical-align: middle;
@@ -315,6 +320,11 @@ page {
     height: 40%;
 
     .left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 0;
       .store-name {
         display: flex;
         justify-content: flex-start;
@@ -974,8 +984,8 @@ page {
         }
 
         .image {
-          width: 120rpx;
-          height: 120rpx;
+          width: 160rpx;
+          height: 160rpx;
           margin-right: 20rpx;
           border-radius: 8rpx;
         }

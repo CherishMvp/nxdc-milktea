@@ -37,8 +37,13 @@
         </list-cell>
       </view>
       <view class="btn-section">
-        <button type="primary" size="mini" @click="setAddress">导入微信地址</button>
-        <button type="primary" size="mini" @tap="save">保存</button>
+        <!-- #ifdef MP-WEIXIN -->
+        <button class="bgcolor-default" size="mini" @click="setAddress"> 导入微信地址 </button>
+        <!-- #endif -->
+        <!-- #ifdef MP-ALIPAY -->
+        <button class="bgcolor-default" size="mini" @click="setAddress"> 导入支付宝地址 </button>
+        <!-- #endif -->
+        <button class="bgcolor-default" size="mini" @tap="save">保存</button>
       </view>
     </view>
   </view>
@@ -85,6 +90,7 @@
         var that = this;
         const res = await uni.chooseAddress();
         console.log('res: ', res);
+        // #ifdef MP-WEIXIN
         if (res[1].errMsg === 'chooseAddress:ok') {
           //   address.value = res;
           that.form.street = res[1].cityName + res[1].countyName + res[1].detailInfo;
@@ -101,12 +107,36 @@
           that.SET_ADDRESSES(addresses);
           //   uni.setStorageSync('address', res[1]);
         }
+        // #endif
+        // #ifdef MP-ALIPAY
+        if (res[1].errMsg === '9000') {
+          console.log('response', res[1]);
+          that.form.street = res[1].cityName + res[1].countyName + res[1].detailInfo;
+          that.form.accept_name = res[1].userName;
+          that.form.mobile = res[1].telNumber;
+          console.log('res-address', res);
+          console.log('this address', that.addresses);
+          let id = that.addresses.length;
+          that.form.id = id + 1;
+          //   const index = that.addresses.findIndex((item) => item.id == id);
+          const addresses = JSON.parse(JSON.stringify(that.addresses));
+          console.log('final address form', that.form);
+          addresses.splice(id, 0, that.form);
+          that.SET_ADDRESSES(addresses);
+        } else if (res[1].errMsg === '6001') {
+          uni.showToast({ title: '用户未选择地址' });
+        }
+        // #endif
       },
     },
   };
 </script>
 
 <style lang="scss" scoped>
+  .container {
+    width: 100vw;
+    height: 100vh;
+  }
   .form-box {
     width: 100%;
     height: 100%;

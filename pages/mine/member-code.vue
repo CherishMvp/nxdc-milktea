@@ -51,7 +51,7 @@
         </view>
         <!-- #ifdef MP-WEIXIN -->
         <view class="d-flex just-content-center align-items-center">
-          <button type="default" style="background-color: #adb838" class="wepay-btn" hover-class="none">
+          <button style="background-color: #4f6237" class="wepay-btn" hover-class="none">
             <image src="/static/images/mine/wechat.png"></image>
             <view>使用微信支付</view>
           </button>
@@ -59,7 +59,7 @@
         <!-- #endif -->
         <!-- #ifdef MP-ALIPAY -->
         <view class="d-flex just-content-center align-items-center">
-          <button type="default" style="background-color: #217cb0" class="wepay-btn" hover-class="none">
+          <button style="background-color: #217cb0" class="wepay-btn" hover-class="none">
             <image src="/static/images/mine/ali.png"></image>
             <view>使用支付宝支付</view>
           </button>

@@ -14,8 +14,11 @@
 
 /* 颜色变量 */
 /* 行为相关颜色 */
-$color-primary: #adb838;
-$color-default: #adb838;
+
+// $color-primary: #4f6237;
+// $color-default: #4f6237;
+$color-primary: #4f6237;
+$color-default: #4f6237;
 $color-alipay: #2689d4;
 $color-success: #4cd964;
 $color-warning: #fab714;
@@ -81,3 +84,5 @@ $box-shadow: 0 20rpx 20rpx -20rpx rgba(
   );
 
 @import '~@/static/iconfont/iconfont.scss';
+/* uni.scss */
+@import '@/uni_modules/uview-ui/theme.scss';

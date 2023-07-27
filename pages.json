@@ -1,10 +1,15 @@
 {
+  // 如果您是通过uni_modules形式引入uView，可以忽略此配置
+  "easycom": {
+    "^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
+  },
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
       "path": "pages/index/index",
       "style": {
         "navigationStyle": "custom",
+        "navigationBarTextStyle": "white",
         "mp-alipay": {
           "transparentTitle": "always",
           "titlePenetrate": "YES",
@@ -22,6 +27,7 @@
         // #endif
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff",
+        "disableScroll": true,
         "mp-alipay": {
           "transparentTitle": "always",
           "titlePenetrate": "YES",
@@ -34,17 +40,21 @@
     {
       "path": "pages/take-foods/take-foods",
       "style": {
-        // "navigationBarTitleText": "Only One 桑格利亚",
+        // #ifdef MP-WEIXIN
+        // "navigationBarTitleText": "取餐",
+        // #endif
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff",
+        // #ifdef MP-ALIPAY||MP-WEIXIN
         "navigationStyle": "custom",
+        // #endif
         "enablePullDownRefresh": true,
         "mp-alipay": {
           "transparentTitle": "always",
           "titlePenetrate": "YES",
           //下拉刷新前提
           "allowsBounceVertical": "YES",
-          "disableScroll": true
+          "disableScroll": false
         }
       }
     },
@@ -57,12 +67,13 @@
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff",
         "navigationStyle": "custom",
+        "enablePullDownRefresh": true,
         "mp-alipay": {
           "transparentTitle": "always",
           "titlePenetrate": "YES",
           //这两个配置才有用
           "allowsBounceVertical": "NO",
-          "disableScroll": true
+          "disableScroll": false
         }
       }
     },
@@ -71,7 +82,7 @@
       "style": {
         "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
-        "navigationBarBackgroundColor": "#ffffff"
+        "navigationBarBackgroundColor": "#E6E7E8"
       }
     },
     {
@@ -127,7 +138,7 @@
     {
       "path": "pages/address/add",
       "style": {
-        "navigationBarTitleText": "Only One 桑格利亚",
+        "navigationBarTitleText": "添加地址",
         "navigationBarTextStyle": "black",
         "navigationBarBackgroundColor": "#ffffff"
       }
@@ -253,9 +264,10 @@
       }
     },
     {
-      "path": "pages/test/alitest",
+      "path": "pages/test/index",
       "style": {
-        "navigationBarTitleText": "alitest"
+        "navigationBarTitleText": "index",
+        "navigationStyle": "custom"
       }
     }
   ],
@@ -269,16 +281,19 @@
   },
   "tabBar": {
     "color": "#919293",
-    "selectedColor": "#97AF13",
+    "selectedColor": "#4f6237",
     "backgroundColor": "#fff",
-    "mp-alipay": {
-      "borderStyle": "white"
-    },
     "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",
         "text": "首页",
+        "iconPath": "static/images/tabBar/index.png",
+        "selectedIconPath": "static/images/tabBar/index_selected.png"
+      },
+      {
+        "pagePath": "pages/test/index",
+        "text": "测试",
         "iconPath": "static/images/tabBar/index.png",
         "selectedIconPath": "static/images/tabBar/index_selected.png"
       },
@@ -297,12 +312,6 @@
       {
         "pagePath": "pages/mine/mine",
         "text": "我的",
-        "iconPath": "static/images/tabBar/mine.png",
-        "selectedIconPath": "static/images/tabBar/mine_selected.png"
-      },
-      {
-        "pagePath": "pages/test/alitest",
-        "text": "ali页面测试",
         "iconPath": "static/images/tabBar/mine.png",
         "selectedIconPath": "static/images/tabBar/mine_selected.png"
       }

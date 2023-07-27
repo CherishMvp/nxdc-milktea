@@ -2,7 +2,7 @@
   <view class="container">
     <view class="capsule" :style="capsuleStyle"></view>
     <view class="custom-div" :style="[divStyle]">
-      <button type="default" size="mini" class="hym-btn" @click="memberCode">
+      <button size="mini" class="hym-btn font-weight-normal" @click="memberCode">
         <image src="/static/images/mine/hym.png"></image>
         <text>会员码</text>
       </button>
@@ -33,7 +33,7 @@
             <view v-else class="font-size-lg font-weight-bold" @tap="login">请点击授权登录</view>
             <view class="font-size-sm text-color-assist"> 当前成长值{{ isLogin ? member.currentValue : 0 }}/{{ isLogin ? member.currentValue + member.needValue : 0 }} </view>
             <view class="w-100">
-              <progress percent="0" activeColor="#ADB838" height="8rpx" :percent="growthValue" border-radius="8rpx" />
+              <progress percent="0" activeColor="#4f6237" height="8rpx" :percent="growthValue" border-radius="8rpx" />
             </view>
           </view>
           <view class="level-benefit d-flex flex-shrink-0 align-items-center justify-content-end text-color-white bg-warning font-size-sm">
@@ -223,6 +223,18 @@
       console.log(3);
       this.updateInfo();
     },
+    onPullDownRefresh() {
+      uni.showLoading({
+        title: '刷新中',
+        mask: true,
+      });
+
+      setTimeout(() => {
+        uni.stopPullDownRefresh();
+        uni.hideLoading();
+        console.log('xx');
+      }, 2000);
+    },
     methods: {
       ...mapMutations(['SET_MEMBER']),
       updateInfo() {
@@ -372,7 +384,7 @@
 
   .hym-btn {
     position: relative;
-    color: $color-primary;
+    color: black;
     background-color: transparent;
     display: flex;
     align-items: center;

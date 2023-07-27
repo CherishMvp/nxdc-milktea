@@ -43,14 +43,14 @@
               <text>距离您 {{ store.distance_text }}</text>
             </view>
           </view>
-          <view class="left" v-else>
-            <view class="d-flex align-items-center overflow-hidden store-location">
+          <view class="left overflow-hidden" v-else>
+            <view class="d-flex align-items-center overflow-hidden">
               <image src="/static/images/order/location.png" style="width: 30rpx; height: 30rpx" class="mr-10"></image>
               <view class="font-size-medium text-color-base font-weight-bold text-truncate">
                 {{ address.street }}
               </view>
             </view>
-            <view class="font-size-sm text-color-assist overflow-hidden text-truncate store-location">
+            <view class="font-size-sm text-color-assist overflow-hidden text-truncate">
               由
               <text class="text-color-base" style="margin: 0 10rpx"> {{ store.name }}</text
               >配送
@@ -63,6 +63,61 @@
             <cc-noticeBar :noticeList="noticeList" colors="#9999" @click="itemClick"></cc-noticeBar>
           </view>
         </div>
+        <view style="display: none" class="header">
+          <view class="left" v-if="orderType == 'takein'">
+            <view class="store-name">
+              <view class="right">
+                <view class="dinein" :class="{ active: orderType == 'takein' }" @click="SET_ORDER_TYPE('takein')">
+                  <text>堂食</text>
+                </view>
+                <view class="takeout" :class="{ active: orderType == 'takeout' }" @click="takout">
+                  <text>外卖</text>
+                </view>
+              </view>
+            </view>
+            <view class="store-location">
+              <image src="/static/images/index/shop.png" style="width: 30rpx; height: 30rpx" class="mr-10"></image>
+              <text>{{ store.name }}</text>
+              <view class="iconfont iconarrow-right"></view>
+            </view>
+            <view class="store-location">
+              <image src="/static/images/order/location.png" style="width: 30rpx; height: 30rpx" class="mr-10"></image>
+              <text>距离您 {{ store.distance_text }}</text>
+            </view>
+          </view>
+          <view class="left overflow-hidden" v-else>
+            <view class="store-name">
+              <view class="right">
+                <view class="dinein" :class="{ active: orderType == 'takein' }" @click="SET_ORDER_TYPE('takein')">
+                  <text>堂食</text>
+                </view>
+                <view class="takeout" :class="{ active: orderType == 'takeout' }" @click="takout">
+                  <text>外卖</text>
+                </view>
+              </view>
+            </view>
+            <view class="d-flex align-items-center overflow-hidden">
+              <image src="/static/images/order/location.png" style="width: 30rpx; height: 30rpx" class="mr-10"></image>
+              <view class="font-size-medium text-color-base font-weight-bold text-truncate">
+                {{ address.street }}
+              </view>
+            </view>
+            <view class="font-size-sm text-color-assist overflow-hidden text-truncate">
+              由
+              <text class="text-color-base" style="margin: 0 10rpx"> {{ store.name }}</text
+              >配送
+            </view>
+          </view>
+        </view>
+        <!-- 横幅公告 -->
+        <view class="coupon" @click="buyCard">
+          <!-- <text class="title">"霸气mini卡"超级购券活动，赶紧去购买</text>
+          <view class="iconfont iconarrow-right"></view> -->
+          <view class="notice">
+            <!-- noticeList：通知数组 colors：设置文字颜色  @click:公告栏条目点击事件 -->
+            <cc-noticeBar :noticeList="noticeList" colors="#9999" @click="itemClick"></cc-noticeBar>
+          </view>
+        </view>
       </view>
       <!-- 整个下方内容区 -->
       <view class="content">
@@ -71,28 +126,16 @@
           <view class="wrapper">
             <view class="list">
               <!-- 此处要注意 currentCateId和item.id都要为number类型；apifox设为了string-->
-              <!-- 2023-07-22 17:35:42左侧菜单就是cid分类信息了，主要包括categoryName和cid -->
-              <view class="menu" :id="`menu-${item.cid}`" :class="{ current: index == currentCateId, sticky: index == currentCateId }" v-for="(item, index) in goods" :key="index" @click.stop="handleMenuTap(item.cid, index)">
-                <text>{{ item.categoryName }}</text>
-                <view class="dot" v-if="menuCartNum(item.cid)">{{ menuCartNum(item.cid) }}</view>
+              <view class="menu" :id="`menu-${item.id}`" :class="{ current: index == currentCateId, sticky: index == currentCateId }" v-for="(item, index) in goods" :key="index" @click.stop="handleMenuTap(item.id, index)">
+                <text>{{ item.name }}</text>
+                <view class="dot" v-if="menuCartNum(item.id)">{{ menuCartNum(item.id) }}</view>
               </view>
             </view>
           </view>
         </scroll-view>
         <!-- goods list begin -->
         <!-- 右侧商品列表 -->
-        <scroll-view
-          :scroll-anchoring="true"
-          :scroll-top="initScrollTop"
-          class="goods"
-          :scroll-into-view="scrollIntoView"
-          :show-scrollbar="false"
-          :scroll-animation-duration="1000"
-          scroll-with-animation
-          scroll-y
-          @scroll="rightScroll"
-          scrolltolower="scrollToBottom"
-        >
+        <scroll-view :scroll-anchoring="true" class="goods" :scroll-into-view="scrollIntoView" :show-scrollbar="false" :scroll-animation-duration="1000" scroll-with-animation scroll-y @scroll="rightScroll" scrolltolower="scrollToBottom">
           <view class="wrapper">
             <!-- 商品列表最上方的广告轮播图 -->
             <swiper class="ads" :id="'ads'" autoplay :interval="3000" indicator-dots>
@@ -103,19 +146,19 @@
             <!-- 右侧商品列表 -->
             <view class="list">
               <!-- category begin -->
-              <view class="category" v-for="(item, index) in goods" :key="index" :id="`cate-${item.cid}`">
+              <view class="category" v-for="(item, index) in goods" :key="index" :id="`cate-${item.id}`">
                 <!-- 每种商品的商品头 -->
                 <view class="title">
-                  <text>{{ item.categoryName }}</text>
-                  <image :src="item.icon" class="icon">我是分类图片</image>
+                  <text>{{ item.name }}</text>
+                  <image :src="item.icon" class="icon"></image>
                 </view>
                 <!-- 详细内容 -->
                 <view class="items">
                   <!-- 商品 begin -->
-                  <view class="good" v-for="(good, key) in item.products" :key="key">
-                    <image :src="imageSrc + good.images" class="image" @click="showGoodDetailModal(item, good)"></image>
+                  <view class="good" v-for="(good, key) in item.goods_list" :key="key">
+                    <image :src="good.images" class="image" @click="showGoodDetailModal(item, good)"></image>
                     <view class="right">
-                      <text class="name">{{ good.productName }}</text>
+                      <text class="name">{{ good.name }}</text>
                       <text class="tips">{{ good.content }}</text>
                       <view class="price_and_action">
                         <text class="price">￥{{ good.price }}</text>
@@ -126,13 +169,13 @@
                           <view class="btn-group" v-if="good.use_property">
                             <!-- <span>{{ good.use_property }}</span> -->
                             <button class="btn property_btn" hover-class="none" size="mini" @click="showGoodDetailModal(item, good)"> 选规格 </button>
-                            <view class="dot" v-if="goodCartNum(good.pid)">{{ goodCartNum(good.pid) }}</view>
+                            <view class="dot" v-if="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
                           </view>
                           <!-- 进行商品添加增删 -->
                           <view class="btn-group" v-else>
                             <!-- 左侧减少商品按钮 -->
-                            <uni-icons v-if="goodCartNum(good.pid)" type="minus" size="60rpx" color="#919293" @click="handleReduceFromCart(item, good)"></uni-icons>
-                            <view class="number" v-if="goodCartNum(good.pid)">{{ goodCartNum(good.pid) }}</view>
+                            <uni-icons v-if="goodCartNum(good.id)" type="minus" size="60rpx" color="#919293" @click="handleReduceFromCart(item, good)"></uni-icons>
+                            <view class="number" v-if="goodCartNum(good.id)">{{ goodCartNum(good.id) }}</view>
                             <!-- 右侧增加商品按钮,初始化时默认给1 -->
                             <uni-icons type="plus-filled" size="60rpx" color="#4f6237" @click="handleAddToCart(item, good, 1)"></uni-icons>
                           </view>
@@ -151,9 +194,9 @@
       </view>
       <!-- content end -->
       <!-- 购物车栏 begin -->
-      <view v-if="isclose" class="toolbar" style="bottom: 10px">
+      <view v-if="isclose" class="toolbar">
         <div>
-          <span style="color: #fafafa">休息中（营业时间：9:00-21:00）</span>
+          <span>休息中（营业时间：9:00-21:00）</span>
         </div>
       </view>
       <view v-else>
@@ -187,7 +230,7 @@
     <myModal @cancel="closeModal" :show="goodDetailModalVisible" color="#5A5B5C" width="90%" custom padding="0rpx" radius="12rpx">
       <view class="good-detail-modal">
         <view class="cover">
-          <image v-if="good.images" :src="imageSrc + good.images" class="image"></image>
+          <image v-if="good.images" :src="good.images" class="image"></image>
           <view class="btn-group">
             <image src="/static/images/menu/share-good.png"></image>
             <image src="/static/images/menu/close.png" @click="closeGoodDetailModal"></image>
@@ -196,7 +239,7 @@
         <scroll-view class="detail" scroll-y>
           <view class="wrapper">
             <view class="basic">
-              <view class="name">{{ good.productName }}</view>
+              <view class="name">{{ good.name }}</view>
               <view class="tips">{{ good.content }}</view>
             </view>
             <view class="properties" v-if="good.use_property">
@@ -237,7 +280,6 @@
     </myModal>
     <!-- 商品详情模态框 end -->
     <!-- 购物车详情popup -->
-    <!-- 2023-07-22 17:44:51购物车模块重新部署 -->
     <uni-popup type="bottom" background-color="#fff" ref="popup" :mask-click="true" @maskClick="closePopup">
       <view class="cart-popup">
         <view class="top" @click="handleCartClear">
@@ -247,7 +289,7 @@
         <scroll-view class="cart-list" scroll-y>
           <view class="wrapper">
             <view class="good" v-for="(good, key) in cart" :key="key">
-              <image :src="imageSrc + good.image" class="image" />
+              <image :src="good.image" class="image" />
               <view class="right">
                 <text class="name">{{ good.name }}</text>
                 <text v-if="good.use_property" class="tips">{{ good.props_text }}</text>
@@ -257,7 +299,7 @@
                   <view class="btn-group">
                     <!-- 左侧减少商品按钮 -->
                     <uni-icons type="minus" size="60rpx" color="#919293" @click="handleCartItemReduce(key)"></uni-icons>
-                    <!-- <view class="number">{{ goodCartNum(good.pid) }}</view> -->
+                    <!-- <view class="number">{{ goodCartNum(good.id) }}</view> -->
                     <!-- 右侧增加商品按钮,初始化时默认给1 -->
                     <view class="number">{{ good.number }}</view>
                     <uni-icons type="plus-filled" size="60rpx" color="#4f6237" @click="handleCartItemAdd(key)"></uni-icons>
@@ -336,7 +378,6 @@
         heightArr: [], // 存放每个类目的高度
         heightNumber: 0, // 一次递增的累积高度
         scrollIntoView: null,
-        imageSrc: 'https://miniprogram.ai0626.online/', //图片前缀
         colors: '#fa436a',
         noticeList: [
           {
@@ -360,11 +401,9 @@
             title: '国安家安得民心 保驾护航促治兴',
           },
         ],
-        initScrollTop: 0,
       };
     },
     async onLoad() {
-      // await this.getProductInfo()
       await this.init();
     },
     onShow() {
@@ -380,7 +419,7 @@
       const now = new Date(Date.now() + offsetDiff * 60 * 1000);
       // 判断当前时间是否在早上 9 点到晚上 9 点之间
       const hour = now.getHours();
-      const isBetween9and21 = hour >= 9 && hour < 25;
+      const isBetween9and21 = hour >= 9 && hour < 23;
       if (isBetween9and21) {
         this.isclose = false;
         console.log('当前时间在早上9点到晚上9点之间！');
@@ -471,23 +510,12 @@
       goImageDetail(item) {
         console.log('前往轮播图活动页面', item);
       },
-      async getProductInfo() {
-        let that = this;
-        uni.request({
-          url: 'http://localhost:4000/drink-category', //仅为示例，并非真实接口地址。
-          method: 'GET',
-          success: (res) => {
-            that.goods = res.data.data;
-            console.log('that.goods', that.goods);
-          },
-        });
-      },
       async init() {
         //页面初始化
         this.loading = true;
         await this.getStore();
         // this.goods = await this.$api('goods');
-        this.goods = await this.$api('mockData2');
+        this.goods = await this.$api('mockGoods');
         this.loading = false;
         this.cart = uni.getStorageSync('cart') || [];
         this.getProductAllData();
@@ -510,7 +538,7 @@
         const _dataLength = this.goods.length; // 类目数量
         for (let i = 0; i < _dataLength; i++) {
           // 100 为类目的标题高度 200 为每个产品的高度(230改为200,去除margin-bottom)
-          let height = 100 + 200 * this.goods[i].products.length;
+          let height = 100 + 200 * this.goods[i].goods_list.length;
           // 我们与上一个高度相加
           heightNumber += height;
           // +=  等于  heightNumber = heightNumber + height
@@ -529,7 +557,6 @@
         const { scrollTop } = e.detail;
         let _index = this.currentCateId; // 左边的高亮下标
         if (scrollTop > this.mainDistance) {
-          console.log('scrollTop', scrollTop, 'this.mainDistance', this.mainDistance);
           // 如果大于mainDistance表示用户上滑
           if (_index + 1 < this.heightArr.length && scrollTop >= this.heightArr[_index]) {
             this.currentCateId = _index + 1;
@@ -546,11 +573,7 @@
       },
       handleMenuTap(id, index) {
         this.currentCateId = index;
-        this.scrollIntoView = 'cate-' + this.goods[index].cid;
-        if (this.goods[index].cid == 8001) {
-          console.log('initScrollTop', this.initScrollTop);
-          this.initScrollTop = 0;
-        }
+        this.scrollIntoView = 'cate-' + this.goods[index].id;
         console.log('scrollIntoView', this.scrollIntoView);
         return;
       },
@@ -627,9 +650,9 @@
         //添加到购物车
         const index = this.cart.findIndex((item) => {
           if (good.use_property) {
-            return item.id === good.pid && item.props_text === good.props_text;
+            return item.id === good.id && item.props_text === good.props_text;
           } else {
-            return item.id === good.pid;
+            return item.id === good.id;
           }
         });
         if (index > -1) {
@@ -637,9 +660,9 @@
         } else {
           // TODO:这个地方会做商品属性处理添加进购物车
           this.cart.push({
-            id: good.pid,
-            cate_id: cate.cid,
-            name: good.productName,
+            id: good.id,
+            cate_id: cate.id,
+            name: good.name,
             price: good.price,
             number: num,
             image: good.images,
@@ -653,7 +676,7 @@
         console.log('universe', uni.getStorageSync('cart'));
       },
       handleReduceFromCart(item, good) {
-        const index = this.cart.findIndex((item) => item.id === good.pid);
+        const index = this.cart.findIndex((item) => item.id === good.id);
         this.cart[index].number -= 1;
         if (this.cart[index].number <= 0) {
           this.cart.splice(index, 1);

@@ -7,7 +7,7 @@
           <view class="font-size-lg text-color-base">{{ item.title }}</view>
           <view class="d-flex justify-content-between align-items-center">
             <view class="font-size-sm">￥{{ item.amount }}</view>
-            <button type="default" size="mini" class="pay-btn bgcolor-default">去购买</button>
+            <button size="mini" class="pay-btn bgcolor-default">去购买</button>
           </view>
         </view>
       </view>

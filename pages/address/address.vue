@@ -7,20 +7,22 @@
       </view>
       <template v-else>
         <uni-swipe-action>
-          <uni-swipe-action-item class="address-wrapper" :options="swipeOption" @click="handleSwipeClick(address.id)" v-for="(address, index) in addresses" :key="index">
-            <view class="address" @tap="chooseAddress(address)">
-              <view class="left flex-fill overflow-hidden mr-20">
-                <view class="font-size-lg font-weight-bold text-truncate" style="margin-bottom: 10rpx">{{ address.street }}</view>
-                <view class="font-size-sm text-color-assist"> {{ address.accept_name }} {{ !address.gender ? '先生' : '女士' }} {{ address.mobile }} </view>
+          <view class="address-wrapper">
+            <uni-swipe-action-item :options="swipeOption" @click="handleSwipeClick(address.id)" v-for="(address, index) in addresses" :key="index">
+              <view class="address" @tap="chooseAddress(address)">
+                <view class="left flex-fill overflow-hidden mr-20">
+                  <view class="font-size-lg font-weight-bold text-truncate" style="margin-bottom: 10rpx">{{ address.street }}</view>
+                  <view class="font-size-sm text-color-assist"> {{ address.accept_name }} {{ !address.gender ? '先生' : '女士' }} {{ address.mobile }} </view>
+                </view>
+                <image src="/static/images/edit.png" class="edit-icon" @tap.stop="edit(address.id)"></image>
               </view>
-              <image src="/static/images/edit.png" class="edit-icon" @tap.stop="edit(address.id)"></image>
-            </view>
-          </uni-swipe-action-item>
+            </uni-swipe-action-item>
+          </view>
         </uni-swipe-action>
       </template>
     </view>
     <view class="btn-box">
-      <button type="primary" size="default" @tap="add">新增地址</button>
+      <button class="bgcolor-default" size="default" @tap="add">新增地址</button>
     </view>
   </view>
 </template>
@@ -121,6 +123,7 @@
 
     .address {
       width: 100%;
+      height: 100%;
       padding: 40rpx 30rpx;
       background-color: #ffffff;
       display: flex;

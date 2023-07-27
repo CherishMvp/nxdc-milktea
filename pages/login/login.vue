@@ -19,7 +19,7 @@
       </button>
       <!-- #endif -->
       <!-- #ifdef MP-ALIPAY -->
-      <button type="default" style="background-color: #adb838" size="default" class="login-btn" open-type="getUserInfo" lang="zh_CN" @tap="getUserInfo">
+      <button style="background-color: #4f6237" size="default" class="login-btn" open-type="getUserInfo" lang="zh_CN" @tap="getUserInfo">
         <image src="/static/images/mine/ali.png"></image>
         支付宝一键登录
       </button>

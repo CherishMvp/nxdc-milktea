@@ -83,3 +83,15 @@ uni-app 插件市场地址:[https://ext.dcloud.net.cn/plugin?id=1807](https://ex
 
 - 像背景颜色这种地方，要在`@import '~@/static/style/app.scss';`里面修改
 - alipay 设置下拉刷新时，需要设置`"allowsBounceVertical": "YES",`以及在对应的页面开启下拉刷新功能
+
+# 2023-07-21 14:48:48
+
+- 对于自定义组件图标使用，最好不要使用相对路径，应该要放在 static 下绝对路径使用，打包时候才能正常使用
+
+# 2023-07-21 16:46:18
+
+- flex-start 和 start 作用是一样的，没什么区别。 flex-start 是早期的写法，后来规范后，和 grid 一样统一用了 start 来表示 如果你希望兼容性好点，就用 flex-start ，否则就用 start
+
+# 2023-07-22 19:18:41
+
+- 有一个问题，当使用 unirequest 读取内容的时候，左侧侧边栏的内容无法实时显示，如果直接用 json 文件的话可以

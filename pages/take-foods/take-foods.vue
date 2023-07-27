@@ -1,6 +1,6 @@
 <template>
   <view class="wrapper">
-    <!-- #ifdef MP-WEIXIN||MP-ALIPAY -->
+    <!-- #ifdef MP-ALIPAY|| MP-WEIXIN -->
     <uni-nav-bar :border="false" :height="calculateStatusBarHeight"></uni-nav-bar>
     <view class="header" :style="[divStyle]">
       <view class="w-100 font-size-lg text-color-base text-truncate">{{ order.store.name }}</view>
@@ -11,7 +11,18 @@
     </view>
     <!-- #endif -->
     <view :style="{ height: calculateWindowHeight }">
-      <scroll-view class="container" :scroll-anchoring="true" :scroll-animation-duration="2000" :show-scrollbar="false" scroll-with-animation scroll-y>
+      <scroll-view
+        :refresher-triggered="refreshTrigger"
+        :refresher-enabled="true"
+        @refresherrefresh="onRefresh"
+        refresher-background="#ffff"
+        class="container"
+        :scroll-anchoring="true"
+        :scroll-animation-duration="2000"
+        :show-scrollbar="false"
+        scroll-with-animation
+        scroll-y
+      >
         <view v-if="!Object.keys(order).length" class="d-flex w-100 h-100 flex-column just-content-center align-items-center">
           <image src="/static/images/loading.gif" class="drinks-img"></image>
           <view class="tips d-flex flex-column align-items-center font-size-base text-color-assist">
@@ -26,6 +37,21 @@
           <view class="order-box">
             <view class="bg-white">
               <view class="section">
+                <!-- #ifdef MP-WEIXIN1 -->
+                <!-- store info begin -->
+                <list-cell :hover="false">
+                  <view class="w-100 d-flex align-items-center">
+                    <view class="d-flex flex-column w-60">
+                      <view class="w-100 font-size-lg text-color-base text-truncate">{{ order.store.name }}</view>
+                    </view>
+                    <view class="d-flex justify-content-end align-items-center w-40">
+                      <image src="/static/images/order/mobile.png" style="width: 60rpx; height: 60rpx; margin-right: 30rpx"></image>
+                      <image src="/static/images/order/navigation.png" style="width: 60rpx; height: 60rpx"></image>
+                    </view>
+                  </view>
+                </list-cell>
+                <!-- store info end -->
+                <!-- #endif -->
                 <list-cell :hover="false" padding="50rpx 30rpx">
                   <view class="w-100 d-flex flex-column" style="margin-top: 40rpx">
                     <view class="d-flex align-items-center just-content-center" v-if="order.typeCate == 1">
@@ -81,8 +107,8 @@
                     <!-- steps end -->
                     <view v-if="order.status <= 1" class="d-flex just-content-center align-items-center font-size-base text-color-assist mb-40"> 您前面还有 <text class="text-color-primary mr-10 ml-10">4</text> 单待制作 </view>
                     <!-- goods begin：点单后的商品信息有哪些 -->
-                    <view class="w-100 d-flex flex-column position-relative mt-30" style="margin-bottom: -40rpx">
-                      <view style="border-bottom: 0.5px solid lightgrey" class="w-100 d-flex align-items-center mb-40" v-for="(good, index) in order.goods" :key="index">
+                    <view class="w-100 d-flex flex-column position-relative mt-30 mygoods" style="margin-bottom: -40rpx">
+                      <view class="w-100 d-flex align-items-center mb-40 lastItem" v-for="(good, index) in order.goods" :key="index">
                         <view class="d-flex flex-column w-60 overflow-hidden">
                           <view class="font-size-lg text-color-base mb-10 text-truncate">{{ good.name }}</view>
                           <view style="margin-bottom: 20rpx" class="font-size-sm text-color-assist text-truncate">{{ good.props_text }}</view>
@@ -189,6 +215,7 @@
         statusBar: '',
         windowHeight: '',
         divStyle: {},
+        refreshTrigger: false,
       };
     },
     onShow() {
@@ -212,11 +239,11 @@
       }
     },
     onPullDownRefresh() {
-      // uni.startPullDownRefresh({
-      //   success: (result) => {
-      //     console.log('refresh', result);
-      //   },
-      // });
+      uni.startPullDownRefresh({
+        success: (result) => {
+          console.log('refresh', result);
+        },
+      });
       setTimeout(() => {
         uni.stopPullDownRefresh({
           success: (result) => {
@@ -238,6 +265,7 @@
         top: `${rect.top}px`,
         /*会员码位置样式属性；left位置需要减去胶囊的宽度 */
       };
+      console.log('this.divStyle', this.divStyle);
     },
     computed: {
       ...mapState(['order', 'orderType']),
@@ -256,6 +284,14 @@
     },
     methods: {
       ...mapMutations(['SET_ORDER']),
+      onRefresh() {
+        this.refreshTrigger = true; //下拉刷新已经被触发
+        console.log('onRefresh ing', this.refreshTrigger);
+        setTimeout(() => {
+          this.refreshTrigger = false; //下拉刷新已经被触发
+          console.log('onRefresh over', this.refreshTrigger);
+        }, 3000);
+      },
       orders() {
         if (!this.$store.getters.isLogin) {
           uni.navigateTo({ url: '/pages/login/login' });
@@ -281,6 +317,14 @@
     background-color: $bg-color;
   }
   /* #endif */
+  .mygoods {
+    .lastItem {
+      border-bottom: 0.5px solid #e6e7e8;
+      &:nth-last-child(1) {
+        border-bottom: 0 !important;
+      }
+    }
+  }
 
   .header {
     position: absolute;
@@ -301,7 +345,7 @@
     overflow: hidden;
   }
   .order-box {
-    padding: 0 20rpx 20rpx 20rpx;
+    // padding: 0 20rpx 20rpx 20rpx;
     /* #ifdef H5 */
     margin-bottom: 100rpx;
     /* #endif */

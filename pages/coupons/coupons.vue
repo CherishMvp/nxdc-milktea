@@ -3,9 +3,9 @@
     <view class="exchange-box">
       <view class="input-box">
         <input type="text" placeholder="请输入兑换码" placeholder-class="text-color-assist font-size-base" />
-        <button type="primary">兑换</button>
+        <button class="bgcolor-default">兑换</button>
       </view>
-      <view class="font-size-sm text-color-primary line-height-2">查看兑换规则</view>
+      <view class="font-size-sm text-color-primary line-height-1">查看兑换规则</view>
     </view>
     <view class="tabbar">
       <view class="tab" :class="{ active: activeTabIndex == index }" v-for="(item, index) in tabs" :key="index" @tap="handleTab(index)">
@@ -43,7 +43,7 @@
 					<jyf-parser ref="couponExplain"></jyf-parser>
 				</pre>
         <view class="d-flex align-items-center just-content-center">
-          <button type="primary" @tap="useCoupon" class="use-coupon-btn">立即使用</button>
+          <button class="use-coupon-btn bgcolor-default" @tap="useCoupon">立即使用</button>
         </view>
       </view>
     </modal>
@@ -137,7 +137,7 @@
 
   .exchange-box {
     flex-shrink: 0;
-    height: 200rpx;
+    height: 20vh;
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -146,12 +146,13 @@
 
     .input-box {
       display: flex;
-      align-items: stretch;
+      align-items: center;
       width: 70%;
+      height: 50%;
       flex-shrink: 0;
       input {
         flex: 1;
-        height: 80rpx;
+        height: 50%;
         border: 1rpx solid #eee;
         border-right: 0;
         border-radius: 8rpx 0 0 8rpx;
@@ -160,6 +161,7 @@
         color: $text-color-base;
       }
       button {
+        height: 50%;
         border-radius: 0 8rpx 8rpx 0;
         display: flex;
         align-items: center;
