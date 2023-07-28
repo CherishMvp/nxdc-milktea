@@ -63,20 +63,23 @@
         <view class="cart d-flex flex-column">
           <list-cell last v-for="(item, index) in cart" :key="index">
             <view style="border-bottom: 0.5px solid #e6e7e8" class="w-100 d-flex flex-column">
-              <view class="d-flex align-items-center mb-10">
-                <view class="name-and-props overflow-hidden">
+              <view class="d-flex mb-10" style="justify-content: flex-start; align-items: flex-start">
+                <view style="flex: 1">
+                  <image style="width: 120rpx; height: 120rpx" :src="imageSrc + item.image" class="arrow" />
+                </view>
+                <view style="width: 50%; margin-left: 12px" class="name-and-props">
                   <view class="text-color-base font-size-lg">
                     {{ item.name }}
+                    <view style="font-size: 28rpx">x{{ item.number }}</view>
+                    <!-- if not props_text no show -->
+                    <view style="margin-bottom: 20rpx; white-space: nowrap" class="font-size-base text-color-assist">
+                      {{ item.props_text || '' }}
+                    </view>
                   </view>
                 </view>
-                <view class="d-flex flex-fill justify-content-between align-items-center text-color-base font-size-lg">
-                  <view>x{{ item.number }}</view>
+                <view style="flex: 1; justify-content: flex-end; margin-right: 8px" class="d-flex flex-fill align-items-center text-color-base font-size-lg">
                   <view>￥{{ item.price }}</view>
                 </view>
-              </view>
-              <!-- if not props_text no show -->
-              <view style="margin-bottom: 20rpx" class="text-truncate font-size-base text-color-assist">
-                {{ item.props_text || '' }}
               </view>
             </view>
           </list-cell>
@@ -109,7 +112,7 @@
             <view class="text-color-primary">超值购买优惠券大礼包</view>
           </view>
         </list-cell>
-        <list-cell arrow>
+        <list-cell arrow @click="goToGiftcard">
           <view class="flex-fill d-flex justify-content-between align-items-center">
             <view class="text-color-base">礼品卡</view>
             <view class="text-color-primary">请选择</view>
@@ -164,7 +167,7 @@
     </view>
     <!-- 付款栏 begin -->
     <view class="w-100v pay-box position-fixed fixed-bottom d-flex align-items-center justify-content-between bg-white">
-      <view class="font-size-sm" style="margin-left: 20rpx">合计：</view>
+      <view class="font-size-sm" style="margin-left: 28rpx">合计：</view>
       <view class="font-size-lg flex-fill">￥{{ amount }}</view>
       <view class="bg-primary h-100 d-flex align-items-center just-content-center text-color-white font-size-base" style="padding: 0 60rpx" @tap="submit"> 付款 </view>
       <view></view>
@@ -194,7 +197,7 @@
 </template>
 
 <script>
-  import { mapState, mapMutations } from 'vuex';
+  import { mapState, mapMutations, mapGetters } from 'vuex';
   import listCell from '@/components/list-cell/list-cell';
   import modal from '@/components/modal/modal';
   import orders from '@/api/orders';
@@ -220,7 +223,7 @@
           'mp-alipay': '支付宝支付',
           wallet: '余额支付',
         },
-
+        imageSrc: 'https://miniprogram.ai0626.online/', //图片前缀
         current: 0,
       };
     },
@@ -238,7 +241,9 @@
     },
     onLoad(option) {
       const { remark } = option;
-      this.cart = uni.getStorageSync('cart');
+      // this.cart = uni.getStorageSync('cart');
+      // 改为从vuex获取
+      this.cart = this.currentCart();
       remark && this.$set(this.form, 'remark', remark);
     },
     onShow() {
@@ -246,6 +251,8 @@
     },
     methods: {
       ...mapMutations(['SET_ORDER']),
+      ...mapGetters(['currentCart']),
+
       radioChange(evt) {
         this.payway = evt.detail.value;
         console.log('event: ', evt);
@@ -261,9 +268,24 @@
         });
       },
       goToPackages() {
-        uni.navigateTo({
-          url: '/pages/packages/index',
+        uni.showToast({
+          title: '敬请期待',
+          icon: 'loading',
+          mask: true,
         });
+        // uni.navigateTo({
+        //   url: '/pages/packages/index',
+        // });
+      },
+      goToGiftcard() {
+        uni.showToast({
+          title: '暂不满足购买条件哦',
+          icon: 'loading',
+          mask: true,
+        });
+        // uni.navigateTo({
+        //   url: '/pages/giftcard/giftcard',
+        // });
       },
       getExpTime() {
         // 获取本地时间与 UTC 时间的时间差（单位为分钟）
@@ -306,6 +328,7 @@
         console.log('当前提交的订单为：', order);
         // 这一步直接将order写入数据库就行了，展示页直接读取数据库的信息
         // 这里使用当前购物车的数据覆盖模拟order的数据，表示当前最新的订单内容
+        console.log('this.cart', this.cart);
         order.goods = this.cart;
         this.SET_ORDER(order);
         // 支付成功后清除缓存中的购物车:结算时暂时不清除购物车内容

@@ -242,7 +242,7 @@
       <view class="cart-popup">
         <view class="top" @click="handleCartClear">
           <uni-icons type="trash" color="#4f6237" size="26"></uni-icons>
-          <text>清空</text>
+          <text style="font-size: 26rpx; line-height: 26rpx">清空</text>
         </view>
         <scroll-view class="cart-list" scroll-y>
           <view class="wrapper">
@@ -364,10 +364,14 @@
       };
     },
     async onLoad() {
-      // await this.getProductInfo()
+      console.log('start');
+      await this.getProductInfo();
+      console.log('Product执行后输出');
       await this.init();
     },
-    onShow() {
+    async onShow() {
+      await this.getProductInfo();
+
       // #ifdef MP-ALIPAY
       my.hideBackHome();
       // #endif
@@ -452,6 +456,8 @@
     },
     methods: {
       ...mapMutations(['SET_ORDER_TYPE']),
+      ...mapMutations(['SET_CART']),
+      ...mapGetters(['currentCart']),
       ...mapActions(['getStore']),
       itemClick: function (item) {
         console.log('点击公告栏条目item = ' + JSON.stringify(item));
@@ -472,14 +478,22 @@
         console.log('前往轮播图活动页面', item);
       },
       async getProductInfo() {
+        // 判断是否有修改商品内容或价格等,防止购物车内容错乱；当前处理方法直接清空即可
         let that = this;
-        uni.request({
-          url: 'http://localhost:4000/drink-category', //仅为示例，并非真实接口地址。
-          method: 'GET',
-          success: (res) => {
-            that.goods = res.data.data;
-            console.log('that.goods', that.goods);
-          },
+        return new Promise((resolve, reject) => {
+          uni.request({
+            url: 'http://localhost:4000/drink-category', //仅为示例，并非真实接口地址。
+            method: 'GET',
+            // data: {},
+            success: (res) => {
+              that.goods = res.data.data;
+              console.log('that.goods', that.goods);
+              resolve('suc'); // 千万别忘写！！！
+            },
+            fail: (err) => {
+              reject('err');
+            },
+          });
         });
       },
       async init() {
@@ -487,9 +501,18 @@
         this.loading = true;
         await this.getStore();
         // this.goods = await this.$api('goods');
-        this.goods = await this.$api('mockData2');
+        uni.request({
+          url: '/drink-category',
+          method: 'GET',
+          success(res) {
+            console.log('resss', res);
+            this.goods = res.data.data;
+          },
+        });
+        // this.goods = await this.$api('mockData2');
         this.loading = false;
-        this.cart = uni.getStorageSync('cart') || [];
+        this.cart = this.currentCart() || [];
+        console.log('页面初始化，当前购物车内容为', this.cart);
         this.getProductAllData();
       },
       takout() {
@@ -649,8 +672,11 @@
           });
         }
         console.log('totally good', this.cart);
-        uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)));
-        console.log('universe', uni.getStorageSync('cart'));
+        this.SET_CART(this.cart);
+        let currentCart = this.currentCart();
+        console.log('vuex中的当前购物车数据', currentCart);
+        // uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)));
+        // console.log('universe', uni.getStorageSync('cart'));
       },
       handleReduceFromCart(item, good) {
         const index = this.cart.findIndex((item) => item.id === good.pid);
@@ -758,7 +784,10 @@
           return;
         }
         uni.showLoading({ title: '加载中' });
-        uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)));
+        // uni.setStorageSync('cart', JSON.parse(JSON.stringify(this.cart)));
+        this.SET_CART(this.cart);
+        let currentCart = this.currentCart();
+        console.log('vuex中的当前购物车数据22', currentCart);
         uni.navigateTo({
           url: '/pages/pay/pay',
         });

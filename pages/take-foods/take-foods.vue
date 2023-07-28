@@ -201,7 +201,7 @@
 
 <script>
   import listCell from '@/components/list-cell/list-cell';
-  import { mapState, mapMutations } from 'vuex';
+  import { mapState, mapMutations, mapGetters } from 'vuex';
   import orders from '@/api/orders';
   import { calculateWindowHeight as calHeight } from '../../common/getwindowHeight';
 
@@ -220,13 +220,15 @@
     },
     onShow() {
       console.log('takein onshow', Object.keys(this.order).length);
-      this.cart = uni.getStorageSync('cart');
+      // this.cart = uni.getStorageSync('cart');
+      this.cart = this.currentCart();
       // TODO:实际上order信息都要从后端返回。只有支付成功后，才会有这个order订单信息
       // 订单数据不能用缓存去做，直接读取服务器就行了。
       // 可以先从vuex读取是否有数据
       if (!Object.keys(this.order).length) {
         console.log('vuex无订单数据，直接从服务器获取', this.order);
         // 则直接从服务器或者缓存中读取
+        // 2023-07-28 18:02:00 暂时采用从vuex中获取，还需要组合一下内容
         let orderInfo = this.orderType == 'takein' ? orders[0] : orders[1];
         // 此处猜测status为商品的制作状态。4为完成，1为刚刚开始的状态；自取只有，1.2.4三种状态；外卖有1.2.3.4
         orderInfo = Object.assign(orderInfo, { status: 5 });
@@ -270,8 +272,9 @@
     computed: {
       ...mapState(['order', 'orderType']),
       getCartGoodsPrice() {
-        //计算购物车总价
-        this.cart = uni.getStorageSync('cart');
+        //计算购物车总价,暂时从vue心中获取
+        // this.cart = uni.getStorageSync('cart');
+        this.cart = this.currentCart();
         if (this.cart) return this.cart.reduce((acc, cur) => acc + cur.number * cur.price, 0);
         else return 0;
       },
@@ -284,6 +287,7 @@
     },
     methods: {
       ...mapMutations(['SET_ORDER']),
+      ...mapGetters(['currentCart']),
       onRefresh() {
         this.refreshTrigger = true; //下拉刷新已经被触发
         console.log('onRefresh ing', this.refreshTrigger);

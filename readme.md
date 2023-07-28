@@ -95,3 +95,13 @@ uni-app 插件市场地址:[https://ext.dcloud.net.cn/plugin?id=1807](https://ex
 # 2023-07-22 19:18:41
 
 - 有一个问题，当使用 unirequest 读取内容的时候，左侧侧边栏的内容无法实时显示，如果直接用 json 文件的话可以
+
+# 2023-07-28 15:48:24
+
+- unirequest 的请求异步问题，可以通过返回一个 promise 对象解决。
+- 对于改动商品价格后，旧的购物车仍然存在缓存的问题，后续再修改。
+- 优先解决订单结算购物车内容。
+
+# 2023-07-28 17:49:23
+
+- vuex 跟 pinia 不一样，state、getters 的数据初始化要在 vue 中的 computed 进行，其他如 mutation、actions 的此类要在 methods 中初始化。（computed 和 methods 要一一对应的意思）

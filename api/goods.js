@@ -11123,446 +11123,553 @@ export const mockGoods = [
   },
 ];
 export const mockData2 = [
-  {
-    cid: 8001,
-    categoryName: '奶茶',
-    products: [
-      {
-        pid: 1001,
-        productName: '奶茶1',
-        price: '34.00',
-        content: '好喝哈哈哈哈',
-        images: 'drinks/product_type/奶茶/奶茶1.jpg',
-        use_property: true,
-        property: [
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: false,
-                id: 26,
-                code: '88',
-                value: '半糖',
-              },
-              {
-                is_default: true,
-                id: 61,
-                code: '94',
-                value: '正常糖',
-              },
-              {
-                is_default: false,
-                id: 87,
-                code: '39',
-                value: '七分糖',
-              },
-            ],
-            name: '甜度',
-            aid: 70,
-            desc: '根据个人口味添加',
-          },
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: true,
-                id: 79,
-                code: '38',
-                value: '大杯',
-              },
-              {
-                is_default: false,
-                id: 67,
-                code: '18',
-                value: '中杯',
-              },
-              {
-                is_default: false,
-                id: 68,
-                code: '35',
-                value: '小杯',
-              },
-            ],
-            name: '杯型',
-            aid: 48,
-            desc: '大杯750ml，中杯550ml,小杯400ml',
-          },
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: true,
-                id: 35,
-                code: '89',
-                value: '冰的',
-              },
-              {
-                is_default: false,
-                id: 36,
-                code: '90',
-                value: '热',
-              },
-            ],
-            name: '温度',
-            aid: 35,
-            desc: '个人口味选择',
-          },
-        ],
-        propertyList: ['甜度', '杯型', '温度'],
-      },
-    ],
-  },
-  {
-    cid: 8002,
-    categoryName: '果茶',
-    products: [
-      {
-        pid: 1002,
-        productName: '商品2',
-        price: '12.00',
-        content: 'ggg',
-        images: 'drinks/product_type/果茶/商品2.jpg',
-        use_property: true,
-        property: [
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: false,
-                id: 26,
-                code: '88',
-                value: '半糖',
-              },
-              {
-                is_default: true,
-                id: 61,
-                code: '94',
-                value: '正常糖',
-              },
-              {
-                is_default: false,
-                id: 87,
-                code: '39',
-                value: '七分糖',
-              },
-            ],
-            name: '甜度',
-            aid: 70,
-            desc: '根据个人口味添加',
-          },
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: true,
-                id: 35,
-                code: '89',
-                value: '冰的',
-              },
-              {
-                is_default: false,
-                id: 36,
-                code: '90',
-                value: '热',
-              },
-            ],
-            name: '温度',
-            aid: 35,
-            desc: '个人口味选择',
-          },
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: true,
-                id: 79,
-                code: '38',
-                value: '大杯',
-              },
-              {
-                is_default: false,
-                id: 67,
-                code: '18',
-                value: '中杯',
-              },
-              {
-                is_default: false,
-                id: 68,
-                code: '35',
-                value: '小杯',
-              },
-            ],
-            name: '杯型',
-            aid: 48,
-            desc: '大杯750ml，中杯550ml,小杯400ml',
-          },
-        ],
-        propertyList: ['甜度', '温度', '杯型'],
-      },
-      {
-        pid: 1005,
-        productName: 'fxds',
-        price: '43.00',
-        content: '65',
-        images: 'drinks/product_type/果茶/fxds.jpg',
-        use_property: true,
-        property: [
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: true,
-                id: 35,
-                code: '89',
-                value: '冰的',
-              },
-              {
-                is_default: false,
-                id: 36,
-                code: '90',
-                value: '热',
-              },
-            ],
-            name: '温度',
-            aid: 35,
-            desc: '个人口味选择',
-          },
-        ],
-        propertyList: ['温度'],
-      },
-      {
-        pid: 1006,
-        productName: '哈哈',
-        price: '56.00',
-        content: 'svfsn',
-        images: 'drinks/product_type/果茶/哈哈.jpg',
-        use_property: true,
-        property: [
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: true,
-                id: 35,
-                code: '89',
-                value: '冰的',
-              },
-              {
-                is_default: false,
-                id: 36,
-                code: '90',
-                value: '热',
-              },
-            ],
-            name: '温度',
-            aid: 35,
-            desc: '个人口味选择',
-          },
-        ],
-        propertyList: ['温度'],
-      },
-      {
-        pid: 1007,
-        productName: 'smdfbsndfv',
-        price: '75.00',
-        content: 'sdfvjh',
-        images: 'drinks/product_type/果茶/smdfbsndfv.jpg',
-        use_property: false,
-        property: [],
-        propertyList: [],
-      },
-      {
-        pid: 1008,
-        productName: '76',
-        price: '65.00',
-        content: 'hh',
-        images: 'drinks/product_type/果茶/76.jpg',
-        use_property: false,
-        property: [],
-        propertyList: [],
-      },
-      {
-        pid: 1009,
-        productName: '77',
-        price: '77.00',
-        content: 'hgvchg',
-        images: 'drinks/product_type/果茶/77.jpg',
-        use_property: false,
-        property: [],
-        propertyList: [],
-      },
-    ],
-  },
-  {
-    cid: 8003,
-    categoryName: '咖啡',
-    products: [
-      {
-        pid: 1003,
-        productName: '咖啡1',
-        price: '34.00',
-        content: '好喝',
-        images: 'drinks/product_type/咖啡/咖啡1.jpg',
-        use_property: true,
-        property: [
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: true,
-                id: 79,
-                code: '38',
-                value: '大杯',
-              },
-              {
-                is_default: false,
-                id: 67,
-                code: '18',
-                value: '中杯',
-              },
-              {
-                is_default: false,
-                id: 68,
-                code: '35',
-                value: '小杯',
-              },
-            ],
-            name: '杯型',
-            aid: 48,
-            desc: '大杯750ml，中杯550ml,小杯400ml',
-          },
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: false,
-                id: 26,
-                code: '88',
-                value: '半糖',
-              },
-              {
-                is_default: true,
-                id: 61,
-                code: '94',
-                value: '正常糖',
-              },
-              {
-                is_default: false,
-                id: 87,
-                code: '39',
-                value: '七分糖',
-              },
-            ],
-            name: '甜度',
-            aid: 70,
-            desc: '根据个人口味添加',
-          },
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: true,
-                id: 35,
-                code: '89',
-                value: '冰的',
-              },
-              {
-                is_default: false,
-                id: 36,
-                code: '90',
-                value: '热',
-              },
-            ],
-            name: '温度',
-            aid: 35,
-            desc: '个人口味选择',
-          },
-        ],
-        propertyList: ['杯型', '甜度', '温度'],
-      },
-      {
-        pid: 1004,
-        productName: '咖啡2',
-        price: '56.00',
-        content: '55',
-        images: 'drinks/product_type/咖啡/咖啡2.jpg',
-        use_property: true,
-        property: [
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: false,
-                id: 26,
-                code: '88',
-                value: '半糖',
-              },
-              {
-                is_default: true,
-                id: 61,
-                code: '94',
-                value: '正常糖',
-              },
-              {
-                is_default: false,
-                id: 87,
-                code: '39',
-                value: '七分糖',
-              },
-            ],
-            name: '甜度',
-            aid: 70,
-            desc: '根据个人口味添加',
-          },
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: true,
-                id: 79,
-                code: '38',
-                value: '大杯',
-              },
-              {
-                is_default: false,
-                id: 67,
-                code: '18',
-                value: '中杯',
-              },
-              {
-                is_default: false,
-                id: 68,
-                code: '35',
-                value: '小杯',
-              },
-            ],
-            name: '杯型',
-            aid: 48,
-            desc: '大杯750ml，中杯550ml,小杯400ml',
-          },
-          {
-            is_open_checkbox: false,
-            values: [
-              {
-                is_default: true,
-                id: 35,
-                code: '89',
-                value: '冰的',
-              },
-              {
-                is_default: false,
-                id: 36,
-                code: '90',
-                value: '热',
-              },
-            ],
-            name: '温度',
-            aid: 35,
-            desc: '个人口味选择',
-          },
-        ],
-        propertyList: ['甜度', '杯型', '温度'],
-      },
-    ],
-  },
-];
+        {
+            "cid": 8001,
+            "categoryName": "奶茶",
+            "products": [
+                {
+                    "pid": 1001,
+                    "productName": "奶茶1",
+                    "price": "34.00",
+                    "content": "好喝哈哈哈哈",
+                    "images": "",
+                    "use_property": true,
+                    "property": [
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": false,
+                                    "id": 26,
+                                    "code": "88",
+                                    "value": "半糖"
+                                },
+                                {
+                                    "is_default": true,
+                                    "id": 61,
+                                    "code": "94",
+                                    "value": "正常糖"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 87,
+                                    "code": "39",
+                                    "value": "七分糖"
+                                }
+                            ],
+                            "name": "甜度",
+                            "aid": 70,
+                            "desc": "根据个人口味添加"
+                        },
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 79,
+                                    "code": "38",
+                                    "value": "大杯"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 67,
+                                    "code": "18",
+                                    "value": "中杯"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 68,
+                                    "code": "35",
+                                    "value": "小杯"
+                                }
+                            ],
+                            "name": "杯型",
+                            "aid": 48,
+                            "desc": "大杯750ml，中杯550ml,小杯400ml"
+                        },
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 35,
+                                    "code": "89",
+                                    "value": "冰的"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 36,
+                                    "code": "90",
+                                    "value": "热"
+                                }
+                            ],
+                            "name": "温度",
+                            "aid": 35,
+                            "desc": "个人口味选择"
+                        }
+                    ],
+                    "propertyList": [
+                        "甜度",
+                        "杯型",
+                        "温度"
+                    ]
+                },
+                {
+                    "pid": 1010,
+                    "productName": "7657324",
+                    "price": "345.00",
+                    "content": "士大夫似的",
+                    "images": "",
+                    "use_property": true,
+                    "property": [
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": false,
+                                    "id": 26,
+                                    "code": "88",
+                                    "value": "半糖"
+                                },
+                                {
+                                    "is_default": true,
+                                    "id": 61,
+                                    "code": "94",
+                                    "value": "正常糖"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 87,
+                                    "code": "39",
+                                    "value": "七分糖"
+                                }
+                            ],
+                            "name": "甜度",
+                            "aid": 70,
+                            "desc": "根据个人口味添加"
+                        },
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 79,
+                                    "code": "38",
+                                    "value": "大杯"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 67,
+                                    "code": "18",
+                                    "value": "中杯"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 68,
+                                    "code": "35",
+                                    "value": "小杯"
+                                }
+                            ],
+                            "name": "杯型",
+                            "aid": 48,
+                            "desc": "大杯750ml，中杯550ml,小杯400ml"
+                        },
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 35,
+                                    "code": "89",
+                                    "value": "冰的"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 36,
+                                    "code": "90",
+                                    "value": "热"
+                                }
+                            ],
+                            "name": "温度",
+                            "aid": 35,
+                            "desc": "个人口味选择"
+                        }
+                    ],
+                    "propertyList": [
+                        "甜度",
+                        "杯型",
+                        "温度"
+                    ]
+                }
+            ]
+        },
+        {
+            "cid": 8002,
+            "categoryName": "果茶",
+            "products": [
+                {
+                    "pid": 1002,
+                    "productName": "商品2",
+                    "price": "12.00",
+                    "content": "ggg",
+                    "images": "",
+                    "use_property": true,
+                    "property": [
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": false,
+                                    "id": 26,
+                                    "code": "88",
+                                    "value": "半糖"
+                                },
+                                {
+                                    "is_default": true,
+                                    "id": 61,
+                                    "code": "94",
+                                    "value": "正常糖"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 87,
+                                    "code": "39",
+                                    "value": "七分糖"
+                                }
+                            ],
+                            "name": "甜度",
+                            "aid": 70,
+                            "desc": "根据个人口味添加"
+                        },
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 35,
+                                    "code": "89",
+                                    "value": "冰的"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 36,
+                                    "code": "90",
+                                    "value": "热"
+                                }
+                            ],
+                            "name": "温度",
+                            "aid": 35,
+                            "desc": "个人口味选择"
+                        },
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 79,
+                                    "code": "38",
+                                    "value": "大杯"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 67,
+                                    "code": "18",
+                                    "value": "中杯"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 68,
+                                    "code": "35",
+                                    "value": "小杯"
+                                }
+                            ],
+                            "name": "杯型",
+                            "aid": 48,
+                            "desc": "大杯750ml，中杯550ml,小杯400ml"
+                        }
+                    ],
+                    "propertyList": [
+                        "甜度",
+                        "温度",
+                        "杯型"
+                    ]
+                },
+                {
+                    "pid": 1005,
+                    "productName": "fxds",
+                    "price": "43.00",
+                    "content": "65",
+                    "images": "",
+                    "use_property": true,
+                    "property": [
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 35,
+                                    "code": "89",
+                                    "value": "冰的"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 36,
+                                    "code": "90",
+                                    "value": "热"
+                                }
+                            ],
+                            "name": "温度",
+                            "aid": 35,
+                            "desc": "个人口味选择"
+                        }
+                    ],
+                    "propertyList": [
+                        "温度"
+                    ]
+                },
+                {
+                    "pid": 1006,
+                    "productName": "哈哈",
+                    "price": "56.00",
+                    "content": "svfsn",
+                    "images": "",
+                    "use_property": true,
+                    "property": [
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 35,
+                                    "code": "89",
+                                    "value": "冰的"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 36,
+                                    "code": "90",
+                                    "value": "热"
+                                }
+                            ],
+                            "name": "温度",
+                            "aid": 35,
+                            "desc": "个人口味选择"
+                        }
+                    ],
+                    "propertyList": [
+                        "温度"
+                    ]
+                },
+                {
+                    "pid": 1007,
+                    "productName": "smdfbsndfv",
+                    "price": "75.00",
+                    "content": "sdfvjh",
+                    "images": "",
+                    "use_property": false,
+                    "property": [],
+                    "propertyList": []
+                },
+                {
+                    "pid": 1008,
+                    "productName": "76",
+                    "price": "65.00",
+                    "content": "hh",
+                    "images": "",
+                    "use_property": false,
+                    "property": [],
+                    "propertyList": []
+                },
+                {
+                    "pid": 1009,
+                    "productName": "77",
+                    "price": "77.00",
+                    "content": "hgvchg",
+                    "images": "",
+                    "use_property": false,
+                    "property": [],
+                    "propertyList": []
+                }
+            ]
+        },
+        {
+            "cid": 8003,
+            "categoryName": "咖啡",
+            "products": [
+                {
+                    "pid": 1003,
+                    "productName": "咖啡1",
+                    "price": "34.00",
+                    "content": "好喝",
+                    "images": "",
+                    "use_property": true,
+                    "property": [
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 79,
+                                    "code": "38",
+                                    "value": "大杯"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 67,
+                                    "code": "18",
+                                    "value": "中杯"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 68,
+                                    "code": "35",
+                                    "value": "小杯"
+                                }
+                            ],
+                            "name": "杯型",
+                            "aid": 48,
+                            "desc": "大杯750ml，中杯550ml,小杯400ml"
+                        },
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": false,
+                                    "id": 26,
+                                    "code": "88",
+                                    "value": "半糖"
+                                },
+                                {
+                                    "is_default": true,
+                                    "id": 61,
+                                    "code": "94",
+                                    "value": "正常糖"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 87,
+                                    "code": "39",
+                                    "value": "七分糖"
+                                }
+                            ],
+                            "name": "甜度",
+                            "aid": 70,
+                            "desc": "根据个人口味添加"
+                        },
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 35,
+                                    "code": "89",
+                                    "value": "冰的"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 36,
+                                    "code": "90",
+                                    "value": "热"
+                                }
+                            ],
+                            "name": "温度",
+                            "aid": 35,
+                            "desc": "个人口味选择"
+                        }
+                    ],
+                    "propertyList": [
+                        "杯型",
+                        "甜度",
+                        "温度"
+                    ]
+                },
+                {
+                    "pid": 1004,
+                    "productName": "咖啡2",
+                    "price": "56.00",
+                    "content": "55",
+                    "images": "",
+                    "use_property": true,
+                    "property": [
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": false,
+                                    "id": 26,
+                                    "code": "88",
+                                    "value": "半糖"
+                                },
+                                {
+                                    "is_default": true,
+                                    "id": 61,
+                                    "code": "94",
+                                    "value": "正常糖"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 87,
+                                    "code": "39",
+                                    "value": "七分糖"
+                                }
+                            ],
+                            "name": "甜度",
+                            "aid": 70,
+                            "desc": "根据个人口味添加"
+                        },
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 79,
+                                    "code": "38",
+                                    "value": "大杯"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 67,
+                                    "code": "18",
+                                    "value": "中杯"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 68,
+                                    "code": "35",
+                                    "value": "小杯"
+                                }
+                            ],
+                            "name": "杯型",
+                            "aid": 48,
+                            "desc": "大杯750ml，中杯550ml,小杯400ml"
+                        },
+                        {
+                            "is_open_checkbox": false,
+                            "values": [
+                                {
+                                    "is_default": true,
+                                    "id": 35,
+                                    "code": "89",
+                                    "value": "冰的"
+                                },
+                                {
+                                    "is_default": false,
+                                    "id": 36,
+                                    "code": "90",
+                                    "value": "热"
+                                }
+                            ],
+                            "name": "温度",
+                            "aid": 35,
+                            "desc": "个人口味选择"
+                        }
+                    ],
+                    "propertyList": [
+                        "甜度",
+                        "杯型",
+                        "温度"
+                    ]
+                }
+            ]
+        }
+    ];

@@ -19,6 +19,8 @@ const store = new Vuex.Store({
   // 和pinia一样，相当于是计算属性computed
   getters: {
     isLogin: (state) => Object.keys(state.member).length > 0, //是否登录
+    currentCart: (state) => state.cart,
+    currentOrder: (state) => state.order,
   },
   //mutations和actions都是处理事件的方法，只是前者不支持异步处理函数。pinia中没有mutations
   mutations: {
@@ -51,6 +53,9 @@ const store = new Vuex.Store({
     async getStore({ commit }) {
       const store = await api('store');
       commit('SET_STORE', store);
+    },
+    async setCart({ commit }, cartInfo) {
+      commit('SET_CART', cartInfo);
     },
   },
 });
