@@ -482,7 +482,7 @@
         let that = this;
         return new Promise((resolve, reject) => {
           uni.request({
-            url: 'http://localhost:4000/drink-category', //仅为示例，并非真实接口地址。
+            url: this.$baseUrl + `/drink-category`, //仅为示例，并非真实接口地址。
             method: 'GET',
             // data: {},
             success: (res) => {

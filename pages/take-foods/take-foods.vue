@@ -276,7 +276,7 @@
         let that = this;
         return new Promise((resolve, reject) => {
           uni.request({
-            url: `http://localhost:4000/order/getOrderInfo/+${orderInfo}`,
+            url: this.$baseUrl + `/order/getOrderInfo/+${orderInfo}`,
             method: 'GET',
             success: ({ data }) => {
               that.SET_ORDER(data);
@@ -293,7 +293,7 @@
         console.log('iddd', orderNo);
         return new Promise((resolve, reject) => {
           uni.request({
-            url: `http://localhost:4000/order/getOrderBefore`,
+            url: this.$baseUrl + `/order/getOrderBefore`,
             method: 'POST',
             data: {
               id: orderNo,
@@ -329,7 +329,7 @@
         console.log('iddd', id);
         return new Promise((resolve, reject) => {
           uni.request({
-            url: `http://localhost:4000/order/getOrderMake`,
+            url: this.$baseUrl + `/order/getOrderMake`,
             method: 'POST',
             data: {
               id: id,

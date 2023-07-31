@@ -139,7 +139,7 @@
       getCurOrderNo(id) {
         return new Promise((resolve, reject) => {
           uni.request({
-            url: `http://localhost:4000/order/getOrderInfo/${id}`,
+            url: this.$baseUrl + `/order/getOrderInfo/${id}`,
             method: 'GET',
             success: ({ data, statusCode, header }) => {
               resolve(data.data);

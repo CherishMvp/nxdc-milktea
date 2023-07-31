@@ -330,7 +330,7 @@
         let that = this;
         return new Promise((resolve, reject) => {
           uni.request({
-            url: 'http://localhost:4000/order/createNewOrder',
+            url: this.$baseUrl + `/order/createNewOrder`,
             method: 'POST',
             data: orderInfo,
             success: ({ data }) => {

@@ -105,7 +105,7 @@
         });
         return new Promise((resolve) => {
           uni.request({
-            url: `http://localhost:4000/order/userOrder/${phoneNumber}`,
+            url: this.$baseUrl + `/order/userOrder/${phoneNumber}`,
             method: 'GET',
             success: ({ data }) => {
               this.orders = data.data;
