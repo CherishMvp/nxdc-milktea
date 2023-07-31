@@ -39,9 +39,9 @@
             <view class="flex-fill d-flex justify-content-between align-items-center">
               <view class="title flex-fill">联系电话</view>
               <view class="time">
-                <input class="text-right" placeholder="请输入手机号码" value="18666600000" />
+                <input class="text-right" placeholder="请输入手机号码" v-model="form.phoneNumber" />
               </view>
-              <view class="contact-tip font-size-sm">自动填写</view>
+              <view class="contact-tip font-size-sm" @click="getPhoneNumber">自动填写</view>
             </view>
           </list-cell>
         </template>
@@ -53,7 +53,7 @@
                 <view style="font-size: medium" class="mr-10">{{ expTime }}</view>
                 <image src="/static/images/navigator-1.png" class="arrow"></image>
               </view>
-              <view class="font-size-base text-color-primary"> 特殊时期减少接触，请修改下方订单备注 </view>
+              <view class="font-size-base text-color-primary">请修改下方订单备注 </view>
             </view>
           </list-cell>
         </template>
@@ -213,6 +213,7 @@
         expTime: '',
         form: {
           remark: '',
+          phoneNumber: '189784546846833',
         },
         currentSaveCount: 1100,
         ensureAddressModalVisible: false,
@@ -225,6 +226,7 @@
         },
         imageSrc: 'https://miniprogram.ai0626.online/', //图片前缀
         current: 0,
+        orderInfos: null,
       };
     },
     computed: {
@@ -260,6 +262,13 @@
       goToRemark() {
         uni.navigateTo({
           url: '/pages/remark/remark?remark=' + this.form.remark,
+        });
+      },
+      getPhoneNumber() {
+        uni.showToast({
+          title: '获取用户手机号码',
+          icon: 'success',
+          mask: true,
         });
       },
       chooseAddress() {
@@ -315,29 +324,55 @@
           this.pay();
         }
       },
+      async getOrderInfo(orderInfo) {
+        console.log('orderInfo', orderInfo);
+        // 判断是否有修改商品内容或价格等,防止购物车内容错乱；当前处理方法直接清空即可
+        let that = this;
+        return new Promise((resolve, reject) => {
+          uni.request({
+            url: 'http://localhost:4000/order/createNewOrder',
+            method: 'POST',
+            data: orderInfo,
+            success: ({ data }) => {
+              data.remark = this.form.remark;
+              that.SET_ORDER({ data });
+              console.log('that.SET_ORDER', that.SET_ORDER);
+              resolve(data); // 千万别忘写！！！
+            },
+            fail: (err) => {
+              reject(err);
+            },
+          });
+        });
+      },
       // 调起支付接口，支付后跳转成功，此处可以设计两个接口，如支付宝和微信两个不同情况，同时也可以使用uni.payment支付
       // 这里要拿到当前的支付方式为余额还是alipay或者是wechat支付
-      pay() {
+      async pay() {
         let paymentway = this.paywayObject[this.payway];
         uni.showLoading({ title: `加载中，当前支付方式为${paymentway}` });
 
-        //测试订单；orders为模拟堂食和外带的两种订单信息，in和out两种模式。
-        let order = this.orderType == 'takein' ? orders[0] : orders[1];
         // 此处猜测status为商品的制作状态。5为完成，1为刚刚开始的状态
-        order = Object.assign(order, { status: 1 });
-        console.log('当前提交的订单为：', order);
         // 这一步直接将order写入数据库就行了，展示页直接读取数据库的信息
-        // 这里使用当前购物车的数据覆盖模拟order的数据，表示当前最新的订单内容
-        console.log('this.cart', this.cart);
-        order.goods = this.cart;
-        this.SET_ORDER(order);
+        // 2023-07-29 11:11:08发起接口请求，将数据交给后端处理
+        const params = {
+          orderDetail: this.cart,
+          paymentway: paymentway,
+          totalPrice: this.total,
+          payStatus: 1, //0表示已下单,1表示制作中
+          phoneNumber: this.form.phoneNumber,
+          openId: 'zwt2675123sdf',
+        };
+        const orderInfo = await this.getOrderInfo(params);
+        console.log('orderInfoorderInfo', orderInfo);
+        this.orderInfos = orderInfo;
+        this.SET_ORDER({ orderInfo });
         // 支付成功后清除缓存中的购物车:结算时暂时不清除购物车内容
         // uni.removeStorageSync('cart');
         // 2023-07-08 18:22:52 其实这一步应该跳转到结算界面，单独的一个结算界面，可以先在这个界面生成
         //  订单数据
         setTimeout(() => {
           uni.reLaunch({
-            url: '/pages/take-foods/take-foods',
+            url: '/pages/take-foods/index',
           });
           uni.hideLoading();
         }, 3000);

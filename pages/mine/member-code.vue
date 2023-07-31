@@ -75,7 +75,7 @@
 <script>
   import { mapState } from 'vuex';
   import uQRCode from '@/common/uqrcode';
-  import tkiQrcode from '@/components/myqrcode/tki-qrcode.vue';
+  // import tkiQrcode from '@/components/myqrcode/tki-qrcode.vue';
   export default {
     components: {},
     data() {

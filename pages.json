@@ -38,17 +38,18 @@
       }
     },
     {
-      "path": "pages/take-foods/take-foods",
+      "path": "pages/take-foods/index",
       "style": {
         // #ifdef MP-WEIXIN
         // "navigationBarTitleText": "取餐",
         // #endif
         "navigationBarTextStyle": "black",
-        "navigationBarBackgroundColor": "#ffffff",
-        // #ifdef MP-ALIPAY||MP-WEIXIN
+        "navigationBarBackgroundColor": "#E6E7E8",
+        "backgroundColor": "#E6E7E8",
+        // #ifdef MP-ALIPAY
         "navigationStyle": "custom",
-        // #endif
         "enablePullDownRefresh": true,
+        // #endif
         "mp-alipay": {
           "transparentTitle": "always",
           "titlePenetrate": "YES",
@@ -266,8 +267,7 @@
     {
       "path": "pages/test/index",
       "style": {
-        "navigationBarTitleText": "index",
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "index"
       }
     }
   ],
@@ -304,7 +304,7 @@
         "selectedIconPath": "static/images/tabBar/drink_selected.png"
       },
       {
-        "pagePath": "pages/take-foods/take-foods",
+        "pagePath": "pages/take-foods/index",
         "text": "取餐",
         "iconPath": "static/images/tabBar/take.png",
         "selectedIconPath": "static/images/tabBar/take_selected.png"

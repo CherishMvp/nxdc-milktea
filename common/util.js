@@ -89,10 +89,27 @@ var dateUtils = {
     return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
   },
 };
-
+function myFormatTime(str) {
+  const date = new Date(str);
+  // Format the date to a normal time format
+  return date.toLocaleString();
+}
+function transPayState(stateCode) {
+  const stateMap = {
+    0: '已下单',
+    1: '制作中',
+    2: '请取餐',
+    3: '已完成',
+    4: '已取消',
+    5: '待支付',
+  };
+  return stateMap[stateCode];
+}
 module.exports = {
   formatTime,
   formatDateTime,
   formatLocation,
+  myFormatTime,
+  transPayState,
   dateUtils,
 };

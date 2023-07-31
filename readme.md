@@ -105,3 +105,11 @@ uni-app 插件市场地址:[https://ext.dcloud.net.cn/plugin?id=1807](https://ex
 # 2023-07-28 17:49:23
 
 - vuex 跟 pinia 不一样，state、getters 的数据初始化要在 vue 中的 computed 进行，其他如 mutation、actions 的此类要在 methods 中初始化。（computed 和 methods 要一一对应的意思）
+
+- 在 uniapp 的 vue 中，当父组件传值给子组件时，需要注意在子组件的 mounted 处理相关 props 的逻辑。即，记住一点，如果是 uniapp 相关的生命周期处理事件，则要在其对应的生命周期中处理，如果是 vue 相关的，则要在 vue 的生命周期中处理。典型的，如果一个组件在原先是通过 onload 来处理数据，如果数据修改成从父组件传来，则需要将在 mounted 中处理相对应的逻辑赋值。
+
+# 2023-07-31 17:09:37
+
+- 需要注意，在 pay 和 takefood 页面，当前的手机号码是固定的，手机号码当前作为用户 ID，后期也可以考虑使用 openID，
+- 逻辑 1：当 pay 页面付款时，要加上当前的手机号码信息和 payStatus 订单状态信息。进入 takefood 页面时，读取出当前手机号码用户中，payStatus 为 1 即制作中或者已下单的最近的一单信息。
+- 逻辑 2：对于前面还有几单制作中的数据，可以通过：以当前订单编号为基准，根据该编号的 createAt 字段，往前推的所有数据中，统计出所有 payStatus 为 1 即制作中的数据条数。

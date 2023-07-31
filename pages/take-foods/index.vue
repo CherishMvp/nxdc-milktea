@@ -5,7 +5,7 @@
         <view class="title">{{ item.title }}</view>
       </view>
     </view>
-    <TakeFoods v-if="activeTabIndex == '0'" />
+    <TakeFoods :isUpdate="isUpdate" v-if="activeTabIndex == '0'" />
     <HistoryOrders :isSon="true" :myorders="orders" v-if="activeTabIndex == '1'" />
   </view>
   <view class="loading" v-else>
@@ -15,7 +15,7 @@
 
 <script>
   import { mapMutations, mapActions } from 'vuex';
-  import TakeFoods from '../take-foods/take-foods.vue';
+  import TakeFoods from './take-foods.vue';
   import HistoryOrders from '../orders/orders.vue';
   export default {
     components: {
@@ -165,10 +165,18 @@
             ],
           },
         ],
+        isUpdate: false,
       };
     },
     async onLoad() {
       await this.init();
+    },
+    onShow() {
+      console.log('展示订单页面');
+      this.isUpdate = true;
+    },
+    onHide() {
+      this.isUpdate = false;
     },
     mounted() {},
     computed: {},
@@ -206,7 +214,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @import './menu.scss';
   .tabbar {
     flex-shrink: 0;
     width: 100%;
