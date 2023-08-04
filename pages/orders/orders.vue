@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <view class="orders-list d-flex flex-column w-100" style="padding: 20rpx; padding-bottom: 0">
+    <view v-if="hasData" class="orders-list d-flex flex-column w-100" style="padding: 20rpx; padding-bottom: 0">
       <view class="order-item" v-for="(item, index) in orders" :key="index" style="margin-bottom: 30rpx; border-radius: 20px; overflow: hidden" @tap="detail(item.orderNo)">
         <list-cell :hover="false">
           <view class="w-100 d-flex align-items-center">
@@ -46,6 +46,15 @@
         </list-cell>
       </view>
     </view>
+    <view v-else class="d-flex w-100 h-100 flex-column just-content-center align-items-center">
+      <image src="/static/images/loading.gif" class="drinks-img"></image>
+      <view class="tips d-flex flex-column align-items-center font-size-base text-color-assist">
+        <view>您还没有点单</view>
+        <view>快去犒劳一下自己吧~</view>
+      </view>
+      <button type="primary" class="drink-btn" size="default" @tap="menu">去点餐</button>
+      <!-- <view class="font-size-sm text-color-primary" @tap="orders">查看历史订单</view> -->
+    </view>
   </view>
 </template>
 
@@ -62,8 +71,9 @@
         page: 1,
         pageSize: 5,
         orders: [],
-        phoneNumber: '1897845468468',
+        phoneNumber: '189784546846855',
         imageSrc: 'https://miniprogram.ai0626.online/', //图片前缀
+        hasData: false,
       };
     },
     computed: {
@@ -85,6 +95,10 @@
       if (this.isSon) {
         // this.orders = this.myorders;
         this.orders = await this.getCurUserOrder(this.phoneNumber);
+        if (this.orders?.length) {
+          this.hasData = true;
+          return;
+        }
         setTimeout(() => {
           uni.hideLoading();
         }, 1000);
@@ -99,6 +113,12 @@
       await this.getCurUserOrder(this.phoneNumber);
     },
     methods: {
+      menu() {
+        console.log('xx');
+        uni.switchTab({
+          url: '/pages/menu/menu',
+        });
+      },
       async getCurUserOrder(phoneNumber) {
         uni.showLoading({
           title: '加载中',
@@ -148,4 +168,22 @@
   };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .drinks-img {
+    width: 260rpx;
+    height: 260rpx;
+  }
+
+  .tips {
+    margin: 60rpx 0 80rpx;
+    line-height: 48rpx;
+  }
+
+  .drink-btn {
+    width: 320rpx;
+    border-radius: 50rem !important;
+    margin-bottom: 40rpx;
+    font-size: $font-size-base;
+    line-height: 3;
+  }
+</style>

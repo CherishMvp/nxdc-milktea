@@ -18,7 +18,7 @@
 <script>
   export default {
     data() {
-      return {};
+      return { show: false };
     },
 
     components: {},
@@ -32,7 +32,10 @@
       },
     },
     methods: {
+      showPopupBottom() {},
       itemClick(item) {
+        // 吊起uview的popup
+        // this.open();
         this.$emit('click', item);
       },
     },
@@ -44,8 +47,9 @@
     display: flex;
     align-items: center;
     .left_icon {
-      width: 10%;
-      height: 24px;
+      width: 15px;
+      margin: 0 4px;
+      height: 15px;
     }
     .right_notice {
       flex: 1;

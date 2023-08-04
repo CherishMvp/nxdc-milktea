@@ -341,6 +341,8 @@
           left: 0,
           right: 0,
           bottom: 0,
+          borderRadius: '20px 20px 0 0',
+          overflow: 'hidden',
           paddingBottom: this.safeAreaInsets + 'px',
           backgroundColor: this.bg,
         };

@@ -206,7 +206,7 @@
         refreshTrigger: false,
         orderInfos: '',
         orderSingle: true,
-        phoneNumber: '189784546846833',
+        phoneNumber: '18159181867',
         payStatus: 1, //0为已下单，默认给0
         orderBefore: '',
         imageSrc: 'https://miniprogram.ai0626.online/', //图片前缀
@@ -310,7 +310,7 @@
         });
       },
       async getData() {
-        const currOrder = await this.getInitData();
+        const currOrder = await this.getInitData(this.phoneNumber);
         console.log('currOrder', currOrder.orderNo);
         if (!currOrder) return;
         this.orderBefore = await this.getMakeBefore(currOrder.orderNo, 1);
@@ -385,7 +385,7 @@
   /* #endif */
   .border {
     border-radius: 20px;
-    margin: 10px;
+    margin: 5px;
     overflow: hidden;
   }
   .mygoods {

@@ -250,7 +250,7 @@
         padding: 15rpx 0 0rpx 25rpx;
       }
       background-color: #fafafa;
-      font-size: medium;
+      font-size: 14px;
       font-weight: 300;
       border-radius: 10rpx 10rpx 0 10rpx;
       color: #4f6237;

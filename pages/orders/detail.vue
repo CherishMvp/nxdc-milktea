@@ -1,8 +1,9 @@
 <template>
   <view class="container" style="padding: 20rpx">
     <view style="padding-bottom: 100rpx">
-      <view class="bg-white">
-        <view class="section">
+      <!-- mno bg-coloor white -->
+      <view class="bg-white1">
+        <view class="section border">
           <!-- store info begin -->
           <list-cell :hover="false" v-if="false">
             <view class="w-100 d-flex align-items-center">
@@ -37,7 +38,7 @@
           </list-cell>
           <!-- goods end -->
         </view>
-        <view class="section">
+        <view class="section border">
           <!-- payment and amount begin -->
           <list-cell :hover="false" padding="50rpx 30rpx">
             <view class="w-100 d-flex flex-column">
@@ -53,7 +54,7 @@
           </list-cell>
           <!-- payment and amount end -->
         </view>
-        <view class="section">
+        <view class="section border">
           <!-- order info begin -->
           <list-cell :hover="false" padding="50rpx 30rpx">
             <view class="w-100 d-flex flex-column">
@@ -78,26 +79,28 @@
           <!-- order info end -->
         </view>
         <!-- order other info begin -->
-        <list-cell :hover="false" padding="50rpx 30rpx 20rpx" last>
-          <view class="w-100 d-flex flex-column">
-            <view class="pay-cell">
-              <view>取单号</view>
-              <view class="font-weight-bold">{{ order.takeNo }}</view>
+        <view class="section border">
+          <list-cell :hover="false" padding="50rpx 30rpx 20rpx" last>
+            <view class="w-100 d-flex flex-column">
+              <view class="pay-cell">
+                <view>取单号</view>
+                <view class="font-weight-bold">{{ order.takeNo }}</view>
+              </view>
+              <view class="pay-cell">
+                <view>享用方式</view>
+                <view class="font-weight-bold">自取</view>
+              </view>
+              <view class="pay-cell">
+                <view>取餐时间</view>
+                <view class="font-weight-bold">立即取餐</view>
+              </view>
+              <view class="pay-cell">
+                <view>备注</view>
+                <view class="font-weight-bold">{{ order.postscript || '无' }}</view>
+              </view>
             </view>
-            <view class="pay-cell">
-              <view>享用方式</view>
-              <view class="font-weight-bold">自取</view>
-            </view>
-            <view class="pay-cell">
-              <view>取餐时间</view>
-              <view class="font-weight-bold">立即取餐</view>
-            </view>
-            <view class="pay-cell">
-              <view>备注</view>
-              <view class="font-weight-bold">{{ order.postscript || '无' }}</view>
-            </view>
-          </view>
-        </list-cell>
+          </list-cell>
+        </view>
         <!-- order other info end -->
       </view>
       <view class="position-relative w-100" v-if="false">
@@ -174,7 +177,11 @@
     z-index: 10;
     border-radius: 100%;
   }
-
+  .border {
+    border-radius: 12px;
+    margin: 5px;
+    overflow: hidden;
+  }
   .section {
     position: relative;
 

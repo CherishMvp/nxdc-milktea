@@ -238,55 +238,80 @@
     <!-- 商品详情模态框 end -->
     <!-- 购物车详情popup -->
     <!-- 2023-07-22 17:44:51购物车模块重新部署 -->
-    <uni-popup type="bottom" background-color="#fff" ref="popup" :mask-click="true" @maskClick="closePopup">
-      <view class="cart-popup">
-        <view class="top" @click="handleCartClear">
-          <uni-icons type="trash" color="#4f6237" size="26"></uni-icons>
-          <text style="font-size: 26rpx; line-height: 26rpx">清空</text>
-        </view>
-        <scroll-view class="cart-list" scroll-y>
-          <view class="wrapper">
-            <view class="good" v-for="(good, key) in cart" :key="key">
-              <image :src="imageSrc + good.image" class="image" />
-              <view class="right">
-                <text class="name">{{ good.name }}</text>
-                <text v-if="good.use_property" class="tips">{{ good.props_text }}</text>
-                <view class="price_and_action">
-                  <text class="price">￥{{ good.price }}</text>
-                  <!-- 进行商品添加增删 -->
-                  <view class="btn-group">
-                    <!-- 左侧减少商品按钮 -->
-                    <uni-icons type="minus" size="60rpx" color="#919293" @click="handleCartItemReduce(key)"></uni-icons>
-                    <!-- <view class="number">{{ goodCartNum(good.pid) }}</view> -->
-                    <!-- 右侧增加商品按钮,初始化时默认给1 -->
-                    <view class="number">{{ good.number }}</view>
-                    <uni-icons type="plus-filled" size="60rpx" color="#4f6237" @click="handleCartItemAdd(key)"></uni-icons>
+    <div style="border-radius: 20px 0px 0px 20px; overflow: hidden">
+      <uni-popup type="bottom" background-color="#fff" ref="popup" :mask-click="true" @maskClick="closePopup">
+        <view class="cart-popup">
+          <view class="top" @click="handleCartClear">
+            <uni-icons type="trash" color="#4f6237" size="26"></uni-icons>
+            <text style="font-size: 26rpx; line-height: 26rpx">清空</text>
+          </view>
+          <scroll-view class="cart-list" scroll-y>
+            <view class="wrapper">
+              <view class="good" v-for="(good, key) in cart" :key="key">
+                <image :src="imageSrc + good.image" class="image" />
+                <view class="right">
+                  <text class="name">{{ good.name }}</text>
+                  <text v-if="good.use_property" class="tips">{{ good.props_text }}</text>
+                  <view class="price_and_action">
+                    <text class="price">￥{{ good.price }}</text>
+                    <!-- 进行商品添加增删 -->
+                    <view class="btn-group">
+                      <!-- 左侧减少商品按钮 -->
+                      <uni-icons type="minus" size="60rpx" color="#919293" @click="handleCartItemReduce(key)"></uni-icons>
+                      <!-- <view class="number">{{ goodCartNum(good.pid) }}</view> -->
+                      <!-- 右侧增加商品按钮,初始化时默认给1 -->
+                      <view class="number">{{ good.number }}</view>
+                      <uni-icons type="plus-filled" size="60rpx" color="#4f6237" @click="handleCartItemAdd(key)"></uni-icons>
+                    </view>
                   </view>
                 </view>
+                <hr />
               </view>
-              <hr />
+              <view class="item" v-if="orderType == 'takeout' && store.packing_fee">
+                <view class="left">
+                  <view class="name">包装费</view>
+                </view>
+                <view class="center">
+                  <text>￥{{ parseFloat(store.packing_fee) }}</text>
+                </view>
+                <view class="right invisible">
+                  <button plain size="mini" class="btn" hover-class="none">
+                    <view class="iconfont iconsami-select"></view>
+                  </button>
+                  <view class="number">1</view>
+                  <button class="btn" size="min" hover-class="none">
+                    <view class="iconfont iconadd-select"></view>
+                  </button>
+                </view>
+              </view>
             </view>
-            <view class="item" v-if="orderType == 'takeout' && store.packing_fee">
-              <view class="left">
-                <view class="name">包装费</view>
-              </view>
-              <view class="center">
-                <text>￥{{ parseFloat(store.packing_fee) }}</text>
-              </view>
-              <view class="right invisible">
-                <button plain size="mini" class="btn" hover-class="none">
-                  <view class="iconfont iconsami-select"></view>
-                </button>
-                <view class="number">1</view>
-                <button class="btn" size="min" hover-class="none">
-                  <view class="iconfont iconadd-select"></view>
-                </button>
-              </view>
-            </view>
-          </view>
-        </scroll-view>
+          </scroll-view>
+        </view>
+      </uni-popup>
+    </div>
+    <!-- notice的bottom popup -->
+    <u-popup safeAreaInsetBottom="false" :show="show" :round="10" mode="bottom" @close="close" @open="open">
+      <view>
+        <text>人生若只如初见，何事秋风悲画扇</text>
+        <div>门店公告</div>
+        <div class="poup">
+          <div class="header">
+            <h1>门店公告</h1>
+          </div>
+          <div class="content">
+            <h2>查看食品安全档案 》</h2>
+            <div class="text">
+              <h3>门店信息</h3>
+              <div class="main">
+                <h4>xx</h4>
+                <h4>xx</h4>
+                <h4>xx</h4>
+              </div>
+            </div>
+          </div>
+        </div>
       </view>
-    </uni-popup>
+    </u-popup>
   </view>
   <view class="loading" v-else>
     <image src="/static/images/loading.gif"></image>
@@ -304,7 +329,7 @@
     data() {
       return {
         isclose: false, //是否打烊
-        h: -4,
+        h: -10,
         isFreeCard: true,
         cardNumber: 0,
         scrollTop: '',
@@ -361,6 +386,7 @@
           },
         ],
         initScrollTop: 0,
+        show: false,
       };
     },
     async onLoad() {
@@ -459,7 +485,17 @@
       ...mapMutations(['SET_CART']),
       ...mapGetters(['currentCart']),
       ...mapActions(['getStore']),
+      open() {
+        this.show = true;
+        // console.log('open');
+      },
+      close() {
+        this.show = false;
+        // console.log('close');
+      },
       itemClick: function (item) {
+        this.show = true;
+        return;
         console.log('点击公告栏条目item = ' + JSON.stringify(item));
         uni.showModal({
           title: '点击公告栏条目',
@@ -804,5 +840,17 @@
     display: flex;
     flex-direction: column;
     background-color: #ffff;
+  }
+  .poup {
+    padding: 20px;
+    .header {
+      justify-content: center;
+      align-items: center;
+    }
+    .content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
   }
 </style>
