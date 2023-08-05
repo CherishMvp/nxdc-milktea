@@ -83,7 +83,8 @@
       "style": {
         "navigationBarTitleText": "Only One 桑格利亚",
         "navigationBarTextStyle": "black",
-        "navigationBarBackgroundColor": "#E6E7E8"
+        "navigationBarBackgroundColor": "#E6E7E8",
+        "disableScroll": true
       }
     },
     {

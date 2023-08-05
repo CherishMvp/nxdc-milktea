@@ -69,7 +69,7 @@
                 </view>
                 <view style="width: 50%; margin-left: 12px" class="name-and-props">
                   <view class="text-color-base font-size-lg">
-                    {{ item.name }}
+                    <span style="font-weight: bolder"> {{ item.name }}</span>
                     <view style="font-size: 28rpx">x{{ item.number }}</view>
                     <!-- if not props_text no show -->
                     <view style="margin-bottom: 20rpx; white-space: nowrap" class="font-size-base text-color-assist">
@@ -78,7 +78,7 @@
                   </view>
                 </view>
                 <view style="flex: 1; justify-content: flex-end; margin-right: 8px" class="d-flex flex-fill align-items-center text-color-base font-size-lg">
-                  <view>￥{{ item.price }}</view>
+                  ￥ <view style="font-weight: bolder">{{ item.price }}</view>
                 </view>
               </view>
             </view>

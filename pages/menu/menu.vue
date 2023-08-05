@@ -184,7 +184,7 @@
       <!-- 购物车栏 end -->
     </view>
     <!-- 商品详情模态框 begin -->
-    <myModal @cancel="closeModal" :show="goodDetailModalVisible" color="#5A5B5C" width="90%" custom padding="0rpx" radius="12rpx">
+    <u-popup @close="closeModal" :show="goodDetailModalVisible" safeAreaInsetBottom="false" color="#5A5B5C" :round="20" mode="bottom">
       <view class="good-detail-modal">
         <view class="cover">
           <image v-if="good.images" :src="imageSrc + good.images" class="image"></image>
@@ -234,7 +234,7 @@
           </view>
         </div>
       </view>
-    </myModal>
+    </u-popup>
     <!-- 商品详情模态框 end -->
     <!-- 购物车详情popup -->
     <!-- 2023-07-22 17:44:51购物车模块重新部署 -->
@@ -290,22 +290,23 @@
       </uni-popup>
     </div>
     <!-- notice的bottom popup -->
-    <u-popup safeAreaInsetBottom="false" :show="show" :round="10" mode="bottom" @close="close" @open="open">
+    <u-popup safeAreaInsetBottom="false" :show="show" :round="20" mode="bottom" @close="close" @open="open">
       <view>
-        <text>人生若只如初见，何事秋风悲画扇</text>
-        <div>门店公告</div>
         <div class="poup">
           <div class="header">
             <h1>门店公告</h1>
           </div>
           <div class="content">
-            <h2>查看食品安全档案 》</h2>
+            <div class="first">
+              <h2>查看食品安全档案 </h2>
+              <image src="/static/images/menu/arrow-right.png" style="margin-left: 5px; width: 30rpx; height: 30rpx" class="mr-10"></image>
+            </div>
             <div class="text">
               <h3>门店信息</h3>
               <div class="main">
-                <h4>xx</h4>
-                <h4>xx</h4>
-                <h4>xx</h4>
+                <h5>{{ poupContent }}</h5>
+                <h5>{{ poupContent }}</h5>
+                <h5>{{ poupContent }}</h5>
               </div>
             </div>
           </div>
@@ -366,27 +367,24 @@
         noticeList: [
           {
             id: 1,
-            title: '征程这些伟大精神 串连起中国共产党人的精神谱系',
+            title: '门店信息',
           },
           {
             id: 2,
-            title: '增强水运发展新动能 前5月港口货物吞吐量增长7.9%',
+            title: '通知2',
           },
           {
             id: 3,
-            title: '多地持续高温 各地采取措施积极应对',
+            title: '活动3',
           },
           {
             id: 4,
-            title: '中非经贸博览会见证中非合作深度',
-          },
-          {
-            id: 5,
-            title: '国安家安得民心 保驾护航促治兴',
+            title: '活动4',
           },
         ],
         initScrollTop: 0,
         show: false,
+        poupContent: 'xx',
       };
     },
     async onLoad() {
@@ -494,13 +492,16 @@
         // console.log('close');
       },
       itemClick: function (item) {
-        this.show = true;
-        return;
-        console.log('点击公告栏条目item = ' + JSON.stringify(item));
-        uni.showModal({
-          title: '点击公告栏条目',
-          content: '点击公告栏条目item = ' + JSON.stringify(item),
-        });
+        console.log('item', item);
+        this.poupContent = item.title;
+        console.log('poupContent', this.poupContent);
+        this.open();
+        // return;
+        // console.log('点击公告栏条目item = ' + JSON.stringify(item));
+        // uni.showModal({
+        //   title: '点击公告栏条目',
+        //   content: '点击公告栏条目item = ' + JSON.stringify(item),
+        // });
       },
 
       closeModal() {
@@ -842,15 +843,32 @@
     background-color: #ffff;
   }
   .poup {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
     padding: 20px;
     .header {
-      justify-content: center;
-      align-items: center;
+      text-align: center;
     }
     .content {
+      margin-top: 20px;
       display: flex;
-      flex-direction: row;
-      align-items: center;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      .first {
+        display: flex;
+        align-items: center;
+      }
+      .text {
+        .main {
+          color: #919293;
+          font-size: 12px;
+          h5 {
+            margin: 5px 0;
+          }
+        }
+      }
     }
   }
 </style>
